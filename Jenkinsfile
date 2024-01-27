@@ -36,7 +36,6 @@ pipeline {
 
                 // cleanup current user docker credentials
                 sh 'rm -f ~/.dockercfg ~/.docker/config.json || true'
-                sh 'docker system prune -a —volumes'
 
                 withDockerRegistry(credentialsId: "ecr:${REGION}:${AWS_CREDENTIALS_ID}", url: "https://${ECR_REPO_URI}") {
                     sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
@@ -54,6 +53,15 @@ pipeline {
                 }
             }
         }
+
+        stage('CleanUp Images'){
+
+            sh"""
+            docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
+            docker rmi ${IMAGE_NAME}:latest"
+            """
+        }
+
         stage('SLACK TEST') {
             steps {
                     slackSend(
