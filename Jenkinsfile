@@ -55,11 +55,23 @@ pipeline {
         }
 
         stage('CleanUp Images'){
+            steps {
+                sh
+                """
+                docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
+                docker rmi ${IMAGE_NAME}:latest"
+                """
+            }
+            post {
+            // 상단 steps의 성공 혹은 실패에 따라 수행할 동작 정의
+                failure {
+                    echo 'image cleanup failure'
+                }
+                success {
+                    echo 'image cleanup success'
+                }
+            }
 
-            sh"""
-            docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
-            docker rmi ${IMAGE_NAME}:latest"
-            """
         }
 
         stage('SLACK TEST') {
