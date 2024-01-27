@@ -1,85 +1,46 @@
 pipeline {
     agent any
+
     environment {
-        // 환경 변수 설정
-        ECR_REPO_URI = "853963783084.dkr.ecr.ap-northeast-2.amazonaws.com/frontend"
-        IMAGE_NAME = "frontend"
-        IMAGE_TAG = "${currentBuild.number}"
-        AWS_CREDENTIALS_ID = "AWS_J_T"
-        DEPLOYMENT_FILE = "node/deployment.yaml" // 파일 경로 수정
-        REGION = "ap-northeast-2"
+        REGION = 'ap-northeast-2'
+        ECR_PATH = '853963783084.dkr.ecr.ap-northeast-2.amazonaws.com'
+        ECR_IMAGE = 'backend'
+        AWS_CREDENTIAL_ID = 'AWS_ECR'
     }
+
     stages {
-        stage('image build') {
-        // 이미지 빌드
+        stage('Clone Repository') {
             steps {
-                // currentBuild.number = 젠킨스가 제공하는 빌드넘버 변수
-                // oolralra/fast-image:1 같은 형태로 이미지가 만들어 질 것.
-                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
-                sh "docker build -t ${IMAGE_NAME}:latest ."
-            }
-       
-            post {
-            // 상단 steps의 성공 혹은 실패에 따라 수행할 동작 정의
-                failure {
-                    echo 'image build failure'
-                }
-                success {
-                    echo 'image build success'
-                }
+                checkout scm
             }
         }
-        
-        stage('image push') {
-        // ECR 에 이미지 push
+
+        stage('Docker Build') {
             steps {
-
-                // cleanup current user docker credentials
-                sh 'rm -f ~/.dockercfg ~/.docker/config.json || true'
-
-                withDockerRegistry(credentialsId: "ecr:${REGION}:${AWS_CREDENTIALS_ID}", url: "https://${ECR_REPO_URI}") {
-                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
-                    sh "docker push ${IMAGE_NAME}:latest"
-                }
-            }
-       
-            post {
-            // 상단 steps의 성공 혹은 실패에 따라 수행할 동작 정의
-                failure {
-                    echo 'image push failure'
-                }
-                success {
-                    echo 'image push success'
+                script {
+                    docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}") {
+                        image = docker.build("${ECR_IMAGE}")
+                    }
                 }
             }
         }
 
-        stage('CleanUp Images'){
+        stage('Push to ECR') {
             steps {
-                sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
-                sh "docker rmi ${IMAGE_NAME}:latest"
-            }
-            post {
-            // 상단 steps의 성공 혹은 실패에 따라 수행할 동작 정의
-                failure {
-                    echo 'image cleanup failure'
-                }
-                success {
-                    echo 'image cleanup success'
+                script {
+                    docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}") {
+                        image.push("${env.BUILD_NUMBER}")
+                        image.push("latest")
+                    }
                 }
             }
-
         }
 
-        stage('SLACK TEST') {
+        stage('CleanUp Images') {
             steps {
-                    slackSend(
-                        channel: '#jenkins', // Slack 채널 이름 설정
-                        color: '#FF0000',    // 메시지 색상 설정
-                        message: 'TEST'      // 보낼 메시지 내용 설정
-                    )
-                }
+                sh "docker rmi ${ECR_IMAGE}:${env.BUILD_NUMBER}"
+                sh "docker rmi ${ECR_IMAGE}:latest"
+            }
         }
     }
-    
 }
