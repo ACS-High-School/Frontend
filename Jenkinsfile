@@ -33,6 +33,10 @@ pipeline {
         stage('image push') {
         // ECR 에 이미지 push
             steps {
+
+                // cleanup current user docker credentials
+                sh 'rm -f ~/.dockercfg ~/.docker/config.json || true'
+
                 withDockerRegistry(credentialsId: "ecr:${REGION}:${AWS_CREDENTIALS_ID}", url: "https://${ECR_REPO_URI}") {
                     sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                     sh "docker push ${IMAGE_NAME}:latest"
