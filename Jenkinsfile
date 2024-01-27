@@ -12,15 +12,6 @@ pipeline {
     }
 
     stages {
-        stage('SLACK TEST') {
-            steps {
-                    slackSend(
-                        channel: '#jenkins', // Slack 채널 이름 설정
-                        color: '#FF0000',    // 메시지 색상 설정
-                        message: 'TEST'      // 보낼 메시지 내용 설정
-                    )
-                }
-        }
 
         stage('image build') {
         // 이미지 빌드
@@ -45,7 +36,7 @@ pipeline {
         stage('image push') {
         // ECR 에 이미지 push
             steps {
-                withDockerRegistry([credentialsId: "ecr:${AWS_CREDENTIALS_ID}", url: "https://${ECR_REPO_URI}"]) {
+                withDockerRegistry([credentialsId: "${AWS_CREDENTIALS_ID}", url: "https://${ECR_REPO_URI}"]) {
                     sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                     sh "docker push ${IMAGE_NAME}:latest"
                 }
@@ -60,6 +51,16 @@ pipeline {
                     echo 'image push success'
                 }
             }
+        }
+
+        stage('SLACK TEST') {
+            steps {
+                    slackSend(
+                        channel: '#jenkins', // Slack 채널 이름 설정
+                        color: '#FF0000',    // 메시지 색상 설정
+                        message: 'TEST'      // 보낼 메시지 내용 설정
+                    )
+                }
         }
     }
 
