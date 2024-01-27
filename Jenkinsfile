@@ -5,7 +5,7 @@ pipeline {
         ECR_REPO_URI = "853963783084.dkr.ecr.ap-northeast-2.amazonaws.com/frontend"
         IMAGE_NAME = "frontend"
         IMAGE_TAG = "${currentBuild.number}"
-        AWS_CREDENTIALS_ID = "AWS_ECR"
+        AWS_CREDENTIALS_ID = "AWS_J_T"
         DEPLOYMENT_FILE = "node/deployment.yaml" // 파일 경로 수정
         REGION = "ap-northeast-2"
     }
