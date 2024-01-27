@@ -37,8 +37,8 @@ pipeline {
         // ECR 에 이미지 push
             steps {
                 script {
-                    sh "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${DOCKER_REPO_URI}"
-                    sh "docker push ${DOCKER_REPO_URI}:${IMAGE_TAG}"
+                    sh "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${ECR_REPO_URI}"
+                    sh "docker push ${ECR_REPO_URI}:${IMAGE_TAG}"
                 }
             }
         }
