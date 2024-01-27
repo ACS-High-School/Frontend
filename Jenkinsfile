@@ -4,7 +4,7 @@ pipeline {
     environment {
         REGION = 'ap-northeast-2'
         ECR_PATH = '853963783084.dkr.ecr.ap-northeast-2.amazonaws.com'
-        ECR_IMAGE = 'backend'
+        ECR_IMAGE = 'frontend'
         AWS_CREDENTIAL_ID = 'AWS_ECR'
     }
 
