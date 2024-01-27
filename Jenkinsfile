@@ -36,6 +36,7 @@ pipeline {
 
                 // cleanup current user docker credentials
                 sh 'rm -f ~/.dockercfg ~/.docker/config.json || true'
+                sh 'docker system prune -a —volumes'
 
                 withDockerRegistry(credentialsId: "ecr:${REGION}:${AWS_CREDENTIALS_ID}", url: "https://${ECR_REPO_URI}") {
                     sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
