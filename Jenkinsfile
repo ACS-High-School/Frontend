@@ -38,7 +38,8 @@ pipeline {
 
         stage('CleanUp Images') {
             steps {
-                sh "docker rmi ${ECR_IMAGE}:${env.BUILD_NUMBER}"
+                sh "docker rmi ${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_NUMBER}"
+                sh "docker rmi ${ECR_PATH}/${ECR_IMAGE}:latest"
                 sh "docker rmi ${ECR_IMAGE}:latest"
             }
         }
