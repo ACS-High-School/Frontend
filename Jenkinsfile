@@ -33,25 +33,16 @@ pipeline {
             }
         }
         
-        stage('image push') {
+        stage('image push to ECR') {
         // ECR 에 이미지 push
             steps {
-                withDockerRegistry(credentialsId: "ecr:${REGION}:${AWS_CREDENTIALS_ID}", url: "https://${ECR_REPO_URI}") {
-                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
-                    sh "docker push ${IMAGE_NAME}:latest"
-                }
-            }
-       
-            post {
-            // 상단 steps의 성공 혹은 실패에 따라 수행할 동작 정의
-                failure {
-                    echo 'image push failure'
-                }
-                success {
-                    echo 'image push success'
+                script {
+                    sh "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${DOCKER_REPO_URI}"
+                    sh "docker push ${DOCKER_REPO_URI}:${IMAGE_TAG}"
                 }
             }
         }
+       
 
         stage('SLACK TEST') {
             steps {
