@@ -44,6 +44,13 @@ pipeline {
                 sh "docker rmi ${ECR_IMAGE}:latest"
             }
         }
+        stage('Clean Workspace') {
+            steps {
+                sh "docker system prune -af"
+                cleanWs()
+        }    
+}
+
     }
     post {
         failure {
