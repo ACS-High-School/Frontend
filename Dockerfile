@@ -5,7 +5,7 @@ FROM node:14
 WORKDIR /app
 
 # 의존성 파일 복사 및 설치
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json ./ 
 RUN npm install
 
 # 나머지 파일 복사
