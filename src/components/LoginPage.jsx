@@ -9,6 +9,12 @@ const LoginForm = (props) => {
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
+  const handleSignUp = (data) => {
+    // 여기에 회원 가입 로직을 추가합니다.
+    console.log("회원 가입 데이터:", data);
+  };
+
+
   return (
     <form onSubmit={handleSubmit(props.onSubmit)} className="login">
       <div className="text_area">
@@ -48,7 +54,13 @@ const LoginForm = (props) => {
           <small role="alert">{errors.password.message}</small>
         )}
       </div>
+      <button type="submit">로그인</button>
+          {/* 회원 가입 버튼 */}
+          <button type="button" onClick={handleSignUp}>
+        회원 가입
+      </button>
     </form>
+
   );
 };
 
