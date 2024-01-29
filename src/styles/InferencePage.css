@@ -1,0 +1,16 @@
+/* InferencePage.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .block {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  .block:first-child {
+    margin-top: 0;
+  }
+  
