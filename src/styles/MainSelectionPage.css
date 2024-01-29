@@ -1,0 +1,55 @@
+.selection-container {
+    display: flex;
+    flex-direction: column; /* 상하 구조로 변경 */
+    height: 100vh; /* 전체 높이 */
+  }
+  
+  .inference-section, .fl-section {
+    flex: 1; /* 화면의 절반을 차지 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.3s;
+    cursor: pointer;
+  }
+  
+  .inference-section:hover {
+    background-color: #a2cffe; /* Inference 영역 hover시 변경될 색상 */
+  }
+  
+  .fl-section:hover {
+    background-color: #f0e68c; /* FL 영역 hover시 변경될 색상 */
+  }
+  
+  .fl-section {
+    position: relative; /* 로고와 버튼 위치를 위해 relative 설정 */
+  }
+  
+  .fl-content {
+    text-align: center;
+    transition: transform 0.3s;
+  }
+  
+  .fl-section .fl-logo {
+    display: block; /* 로고가 block 요소로 변경 */
+    transition: transform 0.3s;
+  }
+  
+  .fl-section .fl-button {
+    opacity: 0;
+    visibility: hidden;
+    margin-top: 10px; /* 버튼 간의 여백 */
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+  
+  .fl-section.hover .fl-button {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .fl-section.hover .fl-content {
+    transform: translateY(-20px); /* 로고와 버튼을 위로 이동 */
+  }
+  
+  /* 여기에 추가적인 스타일링을 작성하세요 */
+  
