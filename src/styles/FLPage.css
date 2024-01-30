@@ -1,0 +1,63 @@
+.fl-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 가로 축에서 중앙 정렬 */
+    justify-content: center; /* 세로 축에서 중앙 정렬 */
+    height: 100vh; /* 뷰포트 높이에 맞춰 전체 화면을 채웁니다 */
+    padding: 20px;
+    background: #f7f7f7;
+    box-sizing: border-box; /* 패딩을 포함한 전체 너비가 100%가 되도록 설정합니다 */
+  }
+  
+  
+  .countdown-timer {
+    font-size: 2em; /* 카운트다운 타이머 사이즈 증가 */
+    margin: 0 auto;
+    margin-bottom: 30px;
+  }
+  
+  .user-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2열 그리드로 설정 */
+    gap: 30px; /* 그리드 사이 간격 */
+    width: 100%;
+    max-width: 600px; /* 최대 너비 설정 */
+    margin: 0 auto; /* 상하 마진 0, 좌우 마진 자동으로 중앙 정렬 */
+  }
+  
+  
+  .user-component {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 파일 입력과 이름을 왼쪽 정렬 */
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #e6a478;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.05);
+    font-size: 1.2em; /* 유저 이름 사이즈 증가 */
+  }
+  
+  .user-component > span {
+    margin-bottom: 10px; /* 이름과 파일 입력 사이의 간격 */
+  }
+  
+  .user-component input[type="file"] {
+    font-size: 1em; /* 파일 입력 사이즈 조정 */
+  }
+
+  .user-component.uploaded {
+    background-color: #1bdd6c; /* 파일 업로드 시 색상 */
+  }
+  
+  .start-learning {
+    padding: 15px 30px;
+    font-size: 1.5em; /* 학습 시작 버튼 사이즈 증가 */
+    margin-top: 30px; /* 버튼과 유저 리스트 사이의 간격 */
+  }
+
+  .start-learning:hover {
+    background-color: #8cc1e4; /* 학습 시작 버튼 hover 색상 */
+  }
+  
+  /* 추가적인 미디어 쿼리를 사용하여 반응형 디자인을 고려하면 좋습니다. */
+  
