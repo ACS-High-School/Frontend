@@ -1,28 +1,29 @@
 .selection-container {
     display: flex;
-    flex-direction: column; /* 상하 구조로 변경 */
-    height: 100vh; /* 전체 높이 */
+    flex-direction: column;
+    height: 100vh;
   }
   
   .inference-section, .fl-section {
-    flex: 1; /* 화면의 절반을 차지 */
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s, transform 0.3s;
     cursor: pointer;
+    font-size: 50px; /* 글자 크기 증가 */
   }
   
   .inference-section:hover {
-    background-color: #a2cffe; /* Inference 영역 hover시 변경될 색상 */
+    background-color: #a2cffe;
   }
   
   .fl-section:hover {
-    background-color: #f0e68c; /* FL 영역 hover시 변경될 색상 */
+    background-color: #f0e68c;
   }
   
   .fl-section {
-    position: relative; /* 로고와 버튼 위치를 위해 relative 설정 */
+    position: relative;
   }
   
   .fl-content {
@@ -31,15 +32,21 @@
   }
   
   .fl-section .fl-logo {
-    display: block; /* 로고가 block 요소로 변경 */
+    display: block;
     transition: transform 0.3s;
   }
   
   .fl-section .fl-button {
     opacity: 0;
     visibility: hidden;
-    margin-top: 10px; /* 버튼 간의 여백 */
+    margin-top: 10px; /* 버튼 간격 유지 */
     transition: opacity 0.3s, visibility 0.3s;
+    font-size: 18px; /* 버튼 글자 크기 증가 */
+    padding: 10px 20px; /* 버튼 패딩 조정 */
+    margin-right: 10px; /* 버튼 사이 간격 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
   }
   
   .fl-section.hover .fl-button {
@@ -48,8 +55,11 @@
   }
   
   .fl-section.hover .fl-content {
-    transform: translateY(-20px); /* 로고와 버튼을 위로 이동 */
+    transform: translateY(-20px);
   }
   
-  /* 여기에 추가적인 스타일링을 작성하세요 */
+  /* 마지막 버튼의 오른쪽 마진 제거 */
+  .fl-section .fl-button:last-child {
+    margin-right: 0;
+  }
   
