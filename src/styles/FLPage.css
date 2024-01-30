@@ -12,24 +12,25 @@
   
   .countdown-timer {
     font-size: 2em; /* 카운트다운 타이머 사이즈 증가 */
-    margin: 0 auto;
     margin-bottom: 30px;
+    text-align: center; /* 텍스트 중앙 정렬 */
   }
   
   .user-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 2열 그리드로 설정 */
-    gap: 30px; /* 그리드 사이 간격 */
+    flex-wrap: wrap; /* 유저 컴포넌트들이 줄 바꿈될 수 있도록 설정 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    gap: 20px;
+    max-width: 800px; /* 최대 너비 설정 */
     width: 100%;
-    max-width: 600px; /* 최대 너비 설정 */
-    margin: 0 auto; /* 상하 마진 0, 좌우 마진 자동으로 중앙 정렬 */
   }
   
   
   .user-component {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* 파일 입력과 이름을 왼쪽 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
     padding: 20px;
     border-radius: 8px;
     background-color: #e6a478;
@@ -42,7 +43,7 @@
   }
   
   .user-component input[type="file"] {
-    font-size: 1em; /* 파일 입력 사이즈 조정 */
+    font-size: 0.7em; /* 파일 입력 사이즈 조정 */
   }
 
   .user-component.uploaded {
