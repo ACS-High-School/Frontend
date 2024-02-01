@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { authService } from './authService'; // authService 임포트
 import "../styles/SignUpPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.
+
 
 const SignForm = (props) => {
   const {
@@ -10,12 +12,41 @@ const SignForm = (props) => {
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
-  const onSubmit = (data) => {
-    // 여기에 회원가입 양식을 처리하는 로직을 추가하세요
-    console.log("양식 데이터 제출됨:", data);
-    // 부모 컴포넌트의 onSubmit 함수를 호출하려면 필요한 경우 아래와 같이 사용하세요
-    if (props.onSubmit) {
-      props.onSubmit(data);
+  const [showEmailVerification, setShowEmailVerification] = useState(false); // 이메일 인증 단계를 제어하는 상태 변수
+
+
+  const onSubmit = async (data) => {
+    try {
+      console.log(data.nickname);
+      console.log(data.email);
+      console.log(data.password);
+      const attributes = [
+        { Name: 'username', Value: data.email },
+        // 필요한 다른 속성들을 여기에 추가하세요.
+      ];
+      await authService.register(data.nickname, data.email, data.password);
+      // 회원가입 성공 후의 로직을 여기에 추가하세요.
+      setShowEmailVerification(true);
+      console.log("회원 생성 성공!")
+
+    } catch (error) {
+      console.error(error);
+    //   reset();
+      // 에러 처리 로직을 여기에 추가하세요.
+    }
+  };
+
+  const verifyCode = async (data) => {
+    try {
+        console.log(data.emailVerificationCode)
+      await authService.confirmCode(data.nickname, data.emailVerificationCode);
+      // 회원가입 성공 후의 로직을 여기에 추가하세요.
+      console.log("회원 인증 성공!")
+
+    } catch (error) {
+      console.error(error);
+    //   reset();
+      // 에러 처리 로직을 여기에 추가하세요.
     }
   };
 
@@ -102,6 +133,27 @@ const SignForm = (props) => {
             <small role="alert">{errors.passwordConfirm.message}</small>
           )}
         </div>
+        {/* 이메일 인증 코드 입력 필드와 버튼을 조건부 렌더링 */}
+        {showEmailVerification && (
+          <div className="email-verification">
+            <div>
+              <label htmlFor="emailVerificationCode">이메일 인증 코드</label>
+              <input
+                id="emailVerificationCode"
+                type="text"
+                placeholder="인증 코드를 입력하세요"
+                {...register("emailVerificationCode", {
+                  required: "이메일 인증 코드는 필수 입력입니다.",
+                })}
+              />
+              {errors.emailVerificationCode && (
+                <small role="alert">{errors.emailVerificationCode.message}</small>
+              )}
+            </div>
+            <button type="button" onClick={handleSubmit(verifyCode)}>인증 코드 전송</button>
+          </div>
+        )}
+
         <button type="submit">회원가입 완료</button>
       </form>
     </div>

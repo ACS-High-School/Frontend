@@ -54,3 +54,8 @@
     padding-bottom: 20px;
 }
   
+.email-verification {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px dashed #ccc; /* 구분선을 추가하여 시각적으로 구분 */
+  }
