@@ -1,6 +1,9 @@
 import React from "react";
 import { authService } from './authService'; // authService 임포트
 import { useForm } from "react-hook-form";
+
+import { GoogleLogin } from 'react-google-login';
+
 import { useNavigate } from "react-router-dom";
 
 import "../styles/LoginPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.
@@ -31,6 +34,22 @@ const LoginForm = (props) => {
   const handleSignUp = (data) => {
     navigate('/signup');
   }
+
+  const handleGoogleLoginSuccess = async (googleResponse) => {
+    // Google 로그인 성공 시 처리 로직
+    const { tokenId } = googleResponse;
+    try {
+      await authService.loginWithGoogle(tokenId);
+      navigate('/select');
+    } catch (error) {
+      console.error("Google 로그인 실패:", error);
+    }
+  };
+
+  const handleGoogleLoginFailure = (error) => {
+    console.error("Google 로그인 오류:", error);
+  };
+
 
   return (
     <div className="login-container">
@@ -78,7 +97,13 @@ const LoginForm = (props) => {
           )}
         </div>
         <button type="submit">로그인</button>
-
+        <GoogleLogin
+        clientId="774963043370-sp51e2e249iok1lbscq2pqu89rbjn7h9.apps.googleusercontent.com"
+        buttonText="Google로 로그인"
+        onSuccess={handleGoogleLoginSuccess}
+        onFailure={handleGoogleLoginFailure}
+        cookiePolicy={'single_host_origin'}
+        />
         {/* 회원 가입 버튼 */}
         <button type="button" onClick={handleSignUp}>
           회원 가입
