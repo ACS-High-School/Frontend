@@ -1,6 +1,8 @@
 // authService.js
 import { CognitoUser, CognitoUserPool, CognitoUserAttribute, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import { COGNITO_API } from '../config/config';
+import { CognitoIdentityCredentials } from 'aws-sdk/global';
+import AWS from 'aws-sdk/global';
 
 const userPool = new CognitoUserPool({
   UserPoolId: COGNITO_API.userPoolId,
@@ -83,7 +85,28 @@ export const authService = {
         },
       });
     });
+  },
+
+  loginWithGoogle: (googleTokenId) => {
+    return new Promise((resolve, reject) => {
+      AWS.config.credentials = new CognitoIdentityCredentials({
+        IdentityPoolId: 'ap-northeast-2_muqdGwq6z',
+        Logins: {
+          'accounts.google.com': googleTokenId
+        }
+      });
+
+      AWS.config.credentials.get((err) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(AWS.config.credentials);
+      });
+    });
   }
+
+
   
 
   // You can add other authentication functions here as needed
