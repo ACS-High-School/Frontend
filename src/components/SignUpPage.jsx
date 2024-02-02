@@ -20,14 +20,14 @@ const SignForm = (props) => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data.nickname);
+      console.log(data.username);
       console.log(data.email);
       console.log(data.password);
       const attributes = [
         { Name: 'username', Value: data.email },
         // 필요한 다른 속성들을 여기에 추가하세요.
       ];
-      await authService.register(data.nickname, data.email, data.password);
+      await authService.register(data.username, data.email, data.password);
       // 회원가입 성공 후의 로직을 여기에 추가하세요.
       setShowEmailVerification(true);
       console.log("회원 생성 성공!")
@@ -42,7 +42,7 @@ const SignForm = (props) => {
   const verifyCode = async (data) => {
     try {
         console.log(data.emailVerificationCode)
-        await authService.confirmCode(data.nickname, data.emailVerificationCode);
+        await authService.confirmCode(data.username, data.emailVerificationCode);
         // 회원가입 성공 후의 로직을 여기에 추가하세요.
         console.log("회원 인증 성공!")
         navigate('/');
@@ -76,12 +76,12 @@ const SignForm = (props) => {
           )}
         </div>
         <div>
-          <label htmlFor="nickname">닉네임</label>
+          <label htmlFor="username">닉네임</label>
           <input
-            id="nickname"
+            id="username"
             type="text"
             placeholder="닉네임을 입력하세요"
-            {...register("nickname", {
+            {...register("username", {
               required: "닉네임은 필수 입력입니다.",
               minLength: {
                 value: 3,
@@ -89,8 +89,8 @@ const SignForm = (props) => {
               },
             })}
           />
-          {errors.nickname && (
-            <small role="alert">{errors.nickname.message}</small>
+          {errors.username && (
+            <small role="alert">{errors.username.message}</small>
           )}
         </div>
         <div className="form-control__items">
@@ -105,6 +105,12 @@ const SignForm = (props) => {
                 value: 7,
                 message: "7자리 이상 비밀번호를 입력하세요.",
               },
+              validate: {
+                containsUpperCase: value =>
+                  /[A-Z]/.test(value) || "최소 1개 이상의 대문자가 포함되어야 합니다.",
+                containsSpecialChar: value =>
+                  /[!@#$%^&*(),.?":{}|<>]/.test(value) || "최소 1개 이상의 특수문자가 포함되어야 합니다."
+              }
             })}
           />
           {errors.password && (
