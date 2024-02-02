@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { authService } from './authService'; // authService 임포트
 import "../styles/SignUpPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.
 
 
 const SignForm = (props) => {
-  const {
+    const navigate = useNavigate();
+    const {
+
     register,
     getValues,
     handleSubmit,
@@ -39,10 +42,10 @@ const SignForm = (props) => {
   const verifyCode = async (data) => {
     try {
         console.log(data.emailVerificationCode)
-      await authService.confirmCode(data.nickname, data.emailVerificationCode);
-      // 회원가입 성공 후의 로직을 여기에 추가하세요.
-      console.log("회원 인증 성공!")
-
+        await authService.confirmCode(data.nickname, data.emailVerificationCode);
+        // 회원가입 성공 후의 로직을 여기에 추가하세요.
+        console.log("회원 인증 성공!")
+        navigate('/');
     } catch (error) {
       console.error(error);
     //   reset();
@@ -132,6 +135,8 @@ const SignForm = (props) => {
           {errors.passwordConfirm && (
             <small role="alert">{errors.passwordConfirm.message}</small>
           )}
+        <button type="submit">회원가입 완료</button>
+
         </div>
         {/* 이메일 인증 코드 입력 필드와 버튼을 조건부 렌더링 */}
         {showEmailVerification && (
@@ -154,7 +159,6 @@ const SignForm = (props) => {
           </div>
         )}
 
-        <button type="submit">회원가입 완료</button>
       </form>
     </div>
   );
