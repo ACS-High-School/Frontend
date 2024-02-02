@@ -55,5 +55,36 @@ export const authService = {
         });
   },
 
+  // login
+  login(email, password) {
+    return new Promise((resolve, reject) => {
+      const userData = {
+        Username: email,
+        Pool: userPool,
+      };
+  
+      const cognitoUser = new CognitoUser(userData);
+      const authDetails = new AuthenticationDetails({
+        Username: email,
+        Password: password,
+      });
+  
+      cognitoUser.authenticateUser(authDetails, {
+        onSuccess: (result) => {
+          // 사용자 인증 성공 시 실행될 로직
+          // 예: 세션 정보 얻기, 토큰 저장 등
+          console.log("로그인 성공", result);
+          resolve(result); // 성공 결과 반환
+        },
+        onFailure: (error) => {
+          // 인증 실패 시 실행될 로직
+          console.error("로그인 실패", error);
+          reject(error); // 에러 반환
+        },
+      });
+    });
+  }
+  
+
   // You can add other authentication functions here as needed
 };
