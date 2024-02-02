@@ -1,18 +1,36 @@
 import React from "react";
+import { authService } from './authService'; // authService 임포트
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+
 import "../styles/LoginPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.
 
 const LoginForm = (props) => {
+  const navigate = useNavigate(); 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
-  const handleSignUp = (data) => {
-    // 여기에 회원 가입 로직을 추가합니다.
-    console.log("회원 가입 데이터:", data);
+  const onLogin = async (data) => {
+    try {
+        console.log(data.email);
+        console.log(data.password);
+
+        await authService.login(data.email, data.password);
+        navigate('/select');
+  
+      } catch (error) {
+        console.error(error);
+      //   reset();
+        // 에러 처리 로직을 여기에 추가하세요.
+      }
   };
+
+  const handleSignUp = (data) => {
+    navigate('/signup');
+  }
 
   return (
     <div className="login-container">
@@ -21,7 +39,7 @@ const LoginForm = (props) => {
         {/* 로고 이미지를 이곳에 추가하거나 이미지 컴포넌트를 사용하세요 */}
         {/* 예: <img src="logo.png" alt="로고" className="logo" /> */}
       </div>
-      <form onSubmit={handleSubmit(props.onSubmit)} className="login-form">
+      <form onSubmit={handleSubmit(onLogin)} className="login-form">
         <div className="text_area">
           <label htmlFor="email">이메일</label>
           <input
@@ -60,6 +78,7 @@ const LoginForm = (props) => {
           )}
         </div>
         <button type="submit">로그인</button>
+
         {/* 회원 가입 버튼 */}
         <button type="button" onClick={handleSignUp}>
           회원 가입
