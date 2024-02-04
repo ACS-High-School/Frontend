@@ -2,11 +2,16 @@ import React from "react";
 import { authService } from './authService'; // authService 임포트
 import { useForm } from "react-hook-form";
 
-import { GoogleLogin } from 'react-google-login';
+import googleLogo from '../assets/googleLogo.svg'
+import { Amplify, Auth } from 'aws-amplify';
 
 import { useNavigate } from "react-router-dom";
 
 import "../styles/LoginPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.
+
+import awsConfig from '../aws-exports';
+
+Amplify.configure(awsConfig);
 
 const LoginForm = (props) => {
   const navigate = useNavigate(); 
@@ -97,13 +102,16 @@ const LoginForm = (props) => {
           )}
         </div>
         <button type="submit">로그인</button>
-        <GoogleLogin
-        clientId="774963043370-sp51e2e249iok1lbscq2pqu89rbjn7h9.apps.googleusercontent.com"
-        buttonText="Google로 로그인"
-        onSuccess={handleGoogleLoginSuccess}
-        onFailure={handleGoogleLoginFailure}
-        cookiePolicy={'single_host_origin'}
-        />
+        
+        {/* 구글 로그인 버튼 */}
+        <button type="submit" class="google-signin-btn" onClick={() =>
+                Auth.federatedSignIn({
+                    provider: 'Google',
+                })
+            }>
+            <img src={googleLogo}></img>
+        </button>
+
         {/* 회원 가입 버튼 */}
         <button type="button" onClick={handleSignUp}>
           회원 가입

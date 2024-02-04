@@ -56,3 +56,19 @@
     font-size: 14px;
   }
   
+/* 기존 CSS에 추가 */
+.google-signin-btn {
+    width: 100%; /* 버튼 너비를 로그인 및 회원 가입 버튼과 동일하게 설정 */
+    height: 50px; /* 버튼 높이를 로그인 및 회원 가입 버튼과 동일하게 설정 */
+    font-size: 16px; /* 필요에 따라 글꼴 크기를 조정 */
+    margin-top: 10px; /* 상단 여백 조정 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .google-signin-btn img {
+    margin-right: 10px; /* 이미지와 텍스트 사이의 여백 조정 */
+  }
+
+  
