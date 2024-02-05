@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import '../styles/InferencePage.css'; // 상대 경로를 사용하여 CSS 파일 임포트
-import Header from '../components/Header'; // Header 컴포넌트 임포트
+import '../styles/InferencePage.css';
+import Header from '../components/Header';
 
 function InferencePage() {
   const [taskTitle, setTaskTitle] = useState('');
@@ -25,21 +25,76 @@ function InferencePage() {
     setX2File(event.target.files[0]);
   };
 
-  const handleSubmit = () => {
-    console.log('Submitted', { taskTitle, model, x1File, x2File });
+  const uploadFile = async (file, subFolderPath) => {
+    const formData = new FormData();
+    formData.append('taskTitle', taskTitle);
+    formData.append('multipartFiles', file);
+    formData.append('subFolderPath', subFolderPath);
+    
+    try {
+      const response = await fetch('http://localhost:8080/inference/uploadFile', {
+        method: 'POST',
+        body: formData,
+      });
+
+      return response.ok;
+    } catch (error) {
+      console.error('Error during file upload:', error);
+      return false;
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (x1File && x2File) {
+      const uploadX1Success = await uploadFile(x1File, 'x1');
+      const uploadX2Success = await uploadFile(x2File, 'x2');
+
+      if (uploadX1Success && uploadX2Success) {
+        console.log('Files uploaded successfully');
+        setSubmitted(true);
+      } else {
+        console.error('Upload failed');
+      }
+    } else {
+      console.error('Both files are required');
+    }
     setSubmitted(true);
   };
 
-  const handleDownload = () => {
-    if (x2File) {
-      const url = URL.createObjectURL(x2File);
+  const handleDownload = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/inference/getFile', {
+        method: 'GET',
+      });
+  
+      if (!response.ok) {
+        throw new Error('Server response was not OK');
+      }
+  
+      // 파일 데이터를 Blob 형태로 추출합니다.
+      const blob = await response.blob();
+  
+      // Blob을 이용해 Object URL을 생성합니다.
+      const url = window.URL.createObjectURL(blob);
+  
+      // 가상의 <a> 태그를 만들어 파일 다운로드를 수행합니다.
       const a = document.createElement('a');
       a.href = url;
-      a.download = x2File.name;
+      // 'download' 속성에 파일명을 설정할 수 있습니다.
+      a.download = 'result.csv'; // 여기에 원하는 파일명을 입력하세요.
+      document.body.appendChild(a);
       a.click();
-      URL.revokeObjectURL(url);
+  
+      // 사용 후 Object URL을 정리합니다.
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+  
+    } catch (error) {
+      console.error('Download error:', error);
     }
   };
+  
+  
 
   return (
     <div className="container">
@@ -49,7 +104,7 @@ function InferencePage() {
         Model
         <select value={model} onChange={handleModelChange} className="block">
           <option value="">Select Model</option>
-          <option value="1">1</option>
+          <option value="1">model 1</option>
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
@@ -88,13 +143,13 @@ function InferencePage() {
       </label>
       
       <button onClick={handleSubmit} className="block">
-        제출 확인
+        Send
       </button>
 
       <h2>Output</h2>
       {submitted && x2File && (
         <button onClick={handleDownload} className="block">
-          Download X2 File
+          Download Result File
         </button>
       )}
     </div>
