@@ -1,21 +1,29 @@
-# 베이스 이미지 설정
-FROM node:14
+# Use a specific version of node to ensure compatibility.
+FROM node:14 AS build-stage
 
-# 작업 디렉토리 설정
+# Set the working directory in the Docker image.
 WORKDIR /app
 
-# 의존성 파일 복사 및 설치
-COPY package.json package-lock.json ./ 
+# Copy the package.json and package-lock.json (or yarn.lock) files.
+COPY package*.json ./
+
+# Install all dependencies.
 RUN npm install
 
-# 나머지 파일 복사
+# Copy the entire project to the Docker image.
 COPY . .
 
-# 애플리케이션 빌드
+# Build the application.
 RUN npm run build
 
-# 서버 실행
-FROM nginx:alpine
-COPY --from=0 /app/build /usr/share/nginx/html
+# Start a new stage to set up the production server.
+FROM nginx:alpine AS production-stage
+
+# Copy the build directory from the build-stage to the nginx server directory.
+COPY --from=build-stage /app/build /usr/share/nginx/html
+
+# Expose port 80 to the outside once the container has launched.
 EXPOSE 80
+
+# Start nginx with global directives and daemon off.
 CMD ["nginx", "-g", "daemon off;"]
