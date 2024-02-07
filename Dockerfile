@@ -1,29 +1,32 @@
-# Use a specific version of node to ensure compatibility.
+# 호환성을 위해 특정 버전의 node를 사용합니다.
 FROM node:14 AS build-stage
 
-# Set the working directory in the Docker image.
+# Docker 이미지 내에서 작업 디렉토리 설정.
 WORKDIR /app
 
-# Copy the package.json and package-lock.json (or yarn.lock) files.
+# package.json과 package-lock.json(또는 yarn.lock) 파일을 복사합니다.
 COPY package*.json ./
 
-# Install all dependencies.
+# 모든 의존성을 설치합니다.
 RUN npm install
 
-# Copy the entire project to the Docker image.
+# 전체 프로젝트를 Docker 이미지에 복사합니다.
 COPY . .
 
-# Build the application.
+# 애플리케이션을 빌드합니다.
 RUN npm run build
 
-# Start a new stage to set up the production server.
+# 프로덕션 서버를 설정하기 위해 새로운 단계를 시작합니다.
 FROM nginx:alpine AS production-stage
 
-# Copy the build directory from the build-stage to the nginx server directory.
+# build-stage에서 빌드 디렉토리를 nginx 서버 디렉토리로 복사합니다.
 COPY --from=build-stage /app/build /usr/share/nginx/html
 
-# Expose port 80 to the outside once the container has launched.
+# nginx.conf 파일을 복사합니다.
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# 컨테이너가 실행되면 외부로 80 포트를 노출합니다.
 EXPOSE 80
 
-# Start nginx with global directives and daemon off.
+# 글로벌 지시문과 함께 데몬이 아닌 상태로 nginx를 시작합니다.
 CMD ["nginx", "-g", "daemon off;"]
