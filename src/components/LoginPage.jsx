@@ -104,7 +104,7 @@ const LoginForm = (props) => {
         <button type="submit">로그인</button>
         
         {/* 구글 로그인 버튼 */}
-        <button type="submit" class="google-signin-btn" onClick={() =>
+        <button type="submit" className="google-signin-btn" onClick={() =>
                 Auth.federatedSignIn({
                     provider: 'Google',
                 })

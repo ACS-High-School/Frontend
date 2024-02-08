@@ -1,9 +1,9 @@
 {
   "authSelections": "userPoolOnly",
-  "resourceName": "frontend38877bcb",
+  "resourceName": "src7fd7ef2d",
   "serviceType": "imported",
   "region": "ap-northeast-2",
-  "usernameAttributes": [
+  "aliasAttributes": [
     "email"
   ],
   "authProvidersUserPool": [
