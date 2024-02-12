@@ -1,11 +1,19 @@
 // authService.js
 import { CognitoUser, CognitoUserPool, CognitoUserAttribute, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import { COGNITO_API } from '../config/config';
+import { CognitoJwtVerifier } from "aws-jwt-verify";
 
 const userPool = new CognitoUserPool({
   UserPoolId: COGNITO_API.userPoolId,
   ClientId: COGNITO_API.clientId,
 });
+
+// Verifier that expects valid access tokens:
+const verifier = CognitoJwtVerifier.create({
+    userPoolId: COGNITO_API.userPoolId,
+    tokenUse: "access",
+    clientId: COGNITO_API.clientId,
+  });
 
 // var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
@@ -70,10 +78,20 @@ export const authService = {
       });
   
       cognitoUser.authenticateUser(authDetails, {
-        onSuccess: (result) => {
+        onSuccess: async (result) => {
           // 사용자 인증 성공 시 실행될 로직
           // 예: 세션 정보 얻기, 토큰 저장 등
           console.log("로그인 성공", result);
+          const jwt = result.getAccessToken().getJwtToken();
+          try {
+            const payload = await verifier.verify(
+              jwt // the JWT as string
+            );
+            console.log("Token is valid. Payload:", payload);
+          } catch {
+            console.log("Token not valid!");
+          }
+
           resolve(result); // 성공 결과 반환
         },
         onFailure: (error) => {
