@@ -79,23 +79,36 @@ export const authService = {
   
       cognitoUser.authenticateUser(authDetails, {
         onSuccess: async (result) => {
-          // 사용자 인증 성공 시 실행될 로직
-          // 예: 세션 정보 얻기, 토큰 저장 등
           console.log("로그인 성공", result);
           const jwt = result.getAccessToken().getJwtToken();
-          try {
-            const payload = await verifier.verify(
-              jwt // the JWT as string
-            );
-            console.log("Token is valid. Payload:", payload);
-          } catch {
-            console.log("Token not valid!");
-          }
-
-          resolve(result); // 성공 결과 반환
+  
+          // 서버로 JWT 토큰 전송하는 부분
+          fetch('http://localhost:8080/select', {
+            method: 'POST', // 요청 메서드 (GET, POST, PUT 등)
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${123}` // 헤더에 바로 토큰 포함
+            },
+            body: JSON.stringify({ /* 서버로 보낼 데이터 */ })
+            ,
+            credentials: 'include',
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('서버 에러 발생');
+            }
+            return response.json(); // 서버로부터 받은 응답 처리
+          })
+          .then(data => {
+            console.log('서버로부터의 응답:', data);
+            resolve(result); // 성공 결과와 함께 프라미스를 완료
+          })
+          .catch(error => {
+            console.error('서버 요청 실패:', error);
+            reject(error); // 서버 요청 중 발생한 오류를 프라미스의 거부 이유로 전달
+          });
         },
         onFailure: (error) => {
-          // 인증 실패 시 실행될 로직
           console.error("로그인 실패", error);
           reject(error); // 에러 반환
         },
