@@ -24,6 +24,9 @@ RUN rm -rf /etc/nginx/conf.d
 # Custom Nginx configuration 파일을 복사합니다.
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# Build stage에서 생성된 빌드 파일들을 Nginx가 제공할 경로로 복사합니다.
+COPY --from=build /usr/src/app/build /usr/share/nginx/html
+
 # 80 포트를 외부에 노출시킵니다.
 EXPOSE 80
 
