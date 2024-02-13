@@ -1,32 +1,34 @@
-# 호환성을 위해 특정 버전의 node를 사용합니다.
-FROM node:14 AS build-stage
+# Build stage
+FROM node:14-alpine AS build
 
-# Docker 이미지 내에서 작업 디렉토리 설정.
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# package.json과 package-lock.json(또는 yarn.lock) 파일을 복사합니다.
+# package.json과 package-lock.json 파일을 먼저 복사합니다.
 COPY package*.json ./
 
-# 모든 의존성을 설치합니다.
+# 필요한 npm 패키지들을 설치합니다.
 RUN npm install
 
-# 전체 프로젝트를 Docker 이미지에 복사합니다.
+# 나머지 소스 파일들을 복사합니다.
 COPY . .
 
-# 애플리케이션을 빌드합니다.
+# React 앱을 빌드합니다.
 RUN npm run build
 
-# 프로덕션 서버를 설정하기 위해 새로운 단계를 시작합니다.
-FROM nginx:alpine AS production-stage
+# Run stage
+FROM nginx:stable-alpine
 
-# build-stage에서 빌드 디렉토리를 nginx 서버 디렉토리로 복사합니다.
-COPY --from=build-stage /app/build /usr/share/nginx/html
+# 기존의 Nginx 설정 파일들을 삭제합니다.
+RUN rm -rf /etc/nginx/conf.d
 
-# nginx.conf 파일을 복사합니다.
+# Custom Nginx configuration 파일을 복사합니다.
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# 컨테이너가 실행되면 외부로 80 포트를 노출합니다.
+# Build stage에서 생성된 빌드 파일들을 Nginx가 제공할 경로로 복사합니다.
+COPY --from=build /usr/src/app/build /usr/share/nginx/html
+
+# 80 포트를 외부에 노출시킵니다.
 EXPOSE 80
 
-# 글로벌 지시문과 함께 데몬이 아닌 상태로 nginx를 시작합니다.
+# Nginx를 foreground에서 실행합니다.
 CMD ["nginx", "-g", "daemon off;"]
