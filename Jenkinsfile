@@ -22,8 +22,10 @@ pipeline {
                                 file(credentialsId: 'config-file', variable: 'CONFIG')]) {
                                 sh 'mkdir -p src/config'
                                 // Credential 파일을 src/config 디렉토리에 복사
-                                sh 'cp $AWS_EXPORTS src/config/aws-exports.js'
-                                sh 'cp $CONFIG src/config/config.js'
+                                sh 'sudo cp $AWS_EXPORTS src/config/aws-exports.js'
+                                sh 'sudo chown jenkins:jenkins src/config/aws-exports.js'
+                                sh 'sudo cp $CONFIG src/config/config.js'
+                                sh 'sudo chown jenkins:jenkins src/config/config.js'
                 }
             }
         }
