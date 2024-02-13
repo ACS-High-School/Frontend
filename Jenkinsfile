@@ -20,10 +20,10 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'aws-exports-file', variable: 'AWS_EXPORTS'),
                                 file(credentialsId: 'config-file', variable: 'CONFIG')]) {
-                                sh 'sudo mkdir -p src/config'
+                                sh 'mkdir -p src/config'
                                 // Credential 파일을 src/config 디렉토리에 복사
-                                sh 'sudo cp $AWS_EXPORTS src/config/aws-exports.js'
-                                sh 'sudo cp $CONFIG src/config/config.js'
+                                sh 'cp $AWS_EXPORTS src/config/aws-exports.js'
+                                sh 'cp $CONFIG src/config/config.js'
                 }
             }
         }
