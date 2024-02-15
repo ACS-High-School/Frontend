@@ -3,7 +3,7 @@ import { authService } from './authService'; // authService 임포트
 import { useForm } from "react-hook-form";
 
 import googleLogo from '../assets/googleLogo.svg'
-import { Amplify, Auth } from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
 
 import { useNavigate } from "react-router-dom";
 
@@ -26,7 +26,7 @@ const LoginForm = (props) => {
         console.log(data.email);
         console.log(data.password);
 
-        await authService.login(data.email, data.password);
+        await authService.login({ username: data.email, password: data.password });
         navigate('/select');
   
       } catch (error) {
@@ -104,13 +104,13 @@ const LoginForm = (props) => {
         <button type="submit">로그인</button>
         
         {/* 구글 로그인 버튼 */}
-        <button type="submit" className="google-signin-btn" onClick={() =>
+        {/* <button type="submit" className="google-signin-btn" onClick={() =>
                 Auth.federatedSignIn({
                     provider: 'Google',
                 })
             }>
             <img src={googleLogo}></img>
-        </button>
+        </button> */}
 
         {/* 회원 가입 버튼 */}
         <button type="button" onClick={handleSignUp}>
