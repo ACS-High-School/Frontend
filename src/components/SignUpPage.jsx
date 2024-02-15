@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { authService } from './authService'; // authService 임포트
+
 import "../styles/SignUpPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.
 
 
@@ -27,7 +28,7 @@ const SignForm = (props) => {
         { Name: 'username', Value: data.email },
         // 필요한 다른 속성들을 여기에 추가하세요.
       ];
-      await authService.register(data.username, data.email, data.password);
+      await authService.register(data.username, data.password, data.email);
       // 회원가입 성공 후의 로직을 여기에 추가하세요.
       setShowEmailVerification(true);
       console.log("회원 생성 성공!")
@@ -41,17 +42,20 @@ const SignForm = (props) => {
 
   const verifyCode = async (data) => {
     try {
-        console.log(data.emailVerificationCode)
-        await authService.confirmCode(data.username, data.emailVerificationCode);
-        // 회원가입 성공 후의 로직을 여기에 추가하세요.
-        console.log("회원 인증 성공!")
-        navigate('/');
+      console.log(data.emailVerificationCode);
+      // Pass an object with username and confirmationCode properties
+      await authService.confirmCode({ 
+        username: data.username, 
+        confirmationCode: data.emailVerificationCode 
+      });
+      console.log("회원 인증 성공!"); // "Membership authentication success!"
+      navigate('/');
     } catch (error) {
       console.error(error);
-    //   reset();
-      // 에러 처리 로직을 여기에 추가하세요.
+      // Add error handling logic here
     }
   };
+  
 
   return (
     <div className="sign-form-container">
