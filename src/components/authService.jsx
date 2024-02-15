@@ -43,7 +43,6 @@ export const authService = {
             email,
 
           },
-          autoSignIn: true // Automatically sign the user in after registration
         }
       });
       console.log(`User registered with ID: ${userSub}`);
