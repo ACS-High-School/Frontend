@@ -5,7 +5,7 @@ import { CognitoJwtVerifier } from "aws-jwt-verify";
 
 import { Amplify } from 'aws-amplify';
 
-import { signUp, signIn, confirmSignUp } from 'aws-amplify/auth';
+import { signUp, signIn, confirmSignUp, signOut } from 'aws-amplify/auth';
 import { CookieStorage } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 
@@ -83,7 +83,16 @@ export const authService = {
       throw error; // Rethrow the error to be handled by the caller
     }
   },
- 
+  
+  // SignOut
+  // 로그아웃 기능
+  async handleSignOut() {
+    try {
+      await signOut({ global: true });
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
+  }
 
   // You can add other authentication functions here as needed
 };
