@@ -19,8 +19,17 @@ const authConfig = {
 Amplify.configure({
     Auth: authConfig
 });
+
+// 쿠키 설정
+const cookieStorage = new CookieStorage({
+    domain: "localhost",
+    path: "/",
+    expires: 7,
+    sameSite: "none",
+    secure: true,
+});
   
-cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage());
+cognitoUserPoolsTokenProvider.setKeyValueStorage(cookieStorage);
 
 
 // Verifier that expects valid access tokens:
