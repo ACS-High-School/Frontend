@@ -22,6 +22,60 @@ function getRefreshTokenFromCookies() {
     return null; // 'refreshToken'이 포함된 쿠키를 찾지 못한 경우
   }
 
+
+// 'accessToken'이 포함된 쿠키의 이름을 찾고, 해당 쿠키 값을 업데이트하는 함수
+function updateAccessTokenInCookie(newAccessToken) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      const [cookieName, cookieValue] = cookie.split('=');
+  
+      // 쿠키 이름에 'accessToken'이 포함되어 있다면, 해당 쿠키를 새 액세스 토큰 값으로 업데이트합니다.
+      if (cookieName.includes('accessToken')) {
+        const updatedCookie = `${cookieName}=${newAccessToken}; path=/; max-age=3600`; // max-age는 쿠키의 유효 시간을 설정합니다.
+        document.cookie = updatedCookie; // 쿠키 업데이트
+        break; // 쿠키를 찾았으니 루프를 종료합니다.
+      }
+    }
+  }
+
+// 응답 인터셉터 추가
+api.interceptors.response.use(
+    response => {
+      // 응답이 성공적으로 반환된 경우, 응답을 그대로 반환합니다.
+      return response;
+    },
+    async error => {
+      // 원본 요청을 저장합니다.
+      const originalRequest = error.config;
+  
+      // 401 에러가 발생했고, 이전에 재시도하지 않았다면
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true; // 재시도 했음을 표시합니다.
+  
+        try {
+          console.log("Access Token 재갱신")
+          // 토큰을 갱신합니다.
+          const newAccessToken = await refreshAccessToken();
+  
+          // 새 액세스 토큰으로 쿠키를 업데이트합니다.
+          updateAccessTokenInCookie(newAccessToken);
+  
+          // 원본 요청을 새 액세스 토큰으로 재시도합니다.
+          return api(originalRequest);
+        } catch (refreshError) {
+          // 토큰 갱신에 실패했다면 에러를 반환합니다.
+          return Promise.reject(refreshError);
+        }
+      }
+  
+      // 다른 모든 에러는 그대로 반환합니다.
+      return Promise.reject(error);
+    }
+  );
+  
+
+
 // 필요한 API 요청 함수들을 여기에 정의
 export const uploadFile = async (formData) => {
   try {
