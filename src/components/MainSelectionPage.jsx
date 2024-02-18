@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/MainSelectionPage.css';
+import SignOutButton from './SignOutButton';
 
 const SelectionPage = () => {
     const [hoverFL, setHoverFL] = useState(false);
@@ -21,6 +22,7 @@ const SelectionPage = () => {
 
     return (
         <div className="selection-container">
+            <SignOutButton />
             <div className="inference-section" onClick={() => window.location.href = '/inference'}>
                 Inference
             </div>
