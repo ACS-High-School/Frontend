@@ -1,5 +1,10 @@
 import axios from 'axios';
 import {COGNITO_API} from '../config/config';
+import { useNavigate } from "react-router-dom";
+import {authService} from '../components/authService';
+
+
+
 
 // Axios 인스턴스 생성
 const api = axios.create({
@@ -60,15 +65,16 @@ api.interceptors.response.use(
   
           // 새 액세스 토큰으로 쿠키를 업데이트합니다.
           updateAccessTokenInCookie(newAccessToken);
-  
           // 원본 요청을 새 액세스 토큰으로 재시도합니다.
           return api(originalRequest);
         } catch (refreshError) {
-          // 토큰 갱신에 실패했다면 에러를 반환합니다.
-          return Promise.reject(refreshError);
+            console.error("토큰 갱신 중 알 수 없는 에러 발생:", refreshError);
+            return Promise.reject(refreshError);
+          }
         }
-      }
-  
+        alert("다시 로그인 해주세요");
+        window.location.href = '/';
+        authService.handleSignOut();
       // 다른 모든 에러는 그대로 반환합니다.
       return Promise.reject(error);
     }
