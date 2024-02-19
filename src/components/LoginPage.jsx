@@ -13,7 +13,7 @@ import "../styles/LoginPage.css"; // 스타일링을 위한 CSS 파일을 임포
 
 import awsConfig from '../config/aws-exports';
 
-import api from '../api/api';
+import api, { verifyToken } from '../api/api';
 
 Amplify.configure(awsConfig);
 
@@ -31,10 +31,6 @@ const LoginForm = (props) => {
         console.log(data.password);
 
         await authService.login({ username: data.email, password: data.password });
-        
-        // api.post 요청을 기다립니다.
-        await api.post('/test');
-
         navigate('/select');
   
       } catch (error) {

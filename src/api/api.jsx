@@ -1,8 +1,6 @@
 import axios from 'axios';
 import {COGNITO_API} from '../config/config';
-import { useNavigate } from "react-router-dom";
 import {authService} from '../components/authService';
-
 
 
 
@@ -11,6 +9,18 @@ const api = axios.create({
   baseURL: 'http://localhost:8080',
   withCredentials: true,
 });
+
+// 토큰 유효성 검사 요청
+export const verifyToken = async () => {
+    try {
+      const response = await api.get('/verify');
+      console.log('토큰 유효성 검사 성공:', response.data);
+      // 추가 로직 처리 (예: 사용자 상태 업데이트)
+    } catch (error) {
+      console.error('토큰 유효성 검사 실패:', error.response);
+      // 오류 처리 로직 (예: 로그아웃 처리)
+    }
+  };
 
 // 쿠키에서 refreshToken 값을 가져오는 함수
 function getRefreshTokenFromCookies() {
