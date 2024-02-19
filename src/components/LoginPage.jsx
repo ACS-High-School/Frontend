@@ -32,7 +32,8 @@ const LoginForm = (props) => {
 
         await authService.login({ username: data.email, password: data.password });
         
-        api.post('/test');
+        // api.post 요청을 기다립니다.
+        await api.post('/test');
 
         navigate('/select');
   
