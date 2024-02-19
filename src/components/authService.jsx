@@ -10,7 +10,7 @@ const userPool = new CognitoUserPool({
 // var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
 export const authService = {
-  register(username, email, password, attributes) {
+  register(username, email, password, name, company, attributes) {
     return new Promise((resolve, reject) => {
     //   const newAttributes = attributes.map(attr => new CognitoUserAttribute(attr));
       
@@ -18,6 +18,14 @@ export const authService = {
         new CognitoUserAttribute({
           Name: 'email',
           Value: email,
+        }),
+        new CognitoUserAttribute({
+          Name: 'custom:name',
+          Value: name,
+        }),
+        new CognitoUserAttribute({
+          Name: 'custom:company',
+          Value: company,
         })
       ];
 
