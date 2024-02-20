@@ -13,8 +13,6 @@ import "../styles/LoginPage.css"; // 스타일링을 위한 CSS 파일을 임포
 
 import awsConfig from '../config/aws-exports';
 
-import api, { verifyToken } from '../api/api';
-
 Amplify.configure(awsConfig);
 
 const LoginForm = (props) => {
