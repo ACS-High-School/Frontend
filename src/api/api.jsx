@@ -51,11 +51,21 @@ function updateAccessTokenInCookie(newAccessToken) {
         document.cookie = updatedCookie; // 쿠키 업데이트
         break; // 쿠키를 찾았으니 루프를 종료합니다.
       }
+      else {
+        const updatedCookie = `accessToken=${newAccessToken}; path=/; max-age=3600`; // max-age는 쿠키의 유효 시간을 설정합니다.
+        document.cookie = updatedCookie; // 쿠키 업데이트
+      }
     }
   }
 
-// 응답 인터셉터 추가
-api.interceptors.response.use(
+//   api.interceptors.request.use(request => {
+//     // 모든 요청에 대해 _retry 플래그를 false로 초기화
+//     request._retry = false;
+//     return request;
+//   });
+  
+  // 응답 인터셉터 추가
+  api.interceptors.response.use(
     response => {
       // 응답이 성공적으로 반환된 경우, 응답을 그대로 반환합니다.
       return response;
@@ -64,32 +74,36 @@ api.interceptors.response.use(
       // 원본 요청을 저장합니다.
       const originalRequest = error.config;
   
-      // 401 에러가 발생했고, 이전에 재시도하지 않았다면
-      if (error.response.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true; // 재시도 했음을 표시합니다.
+      // /verify 경로에 대한 GET 요청이고, 401 에러가 발생했으며, 이전에 재시도하지 않았다면
+      if (originalRequest.url.includes('/verify') && originalRequest.method === 'get') {
+        if (error.response.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true; // 재시도 했음을 표시합니다.
   
-        try {
-          console.log("Access Token 재갱신")
-          // 토큰을 갱신합니다.
-          const newAccessToken = await refreshAccessToken();
-  
-          // 새 액세스 토큰으로 쿠키를 업데이트합니다.
-          updateAccessTokenInCookie(newAccessToken);
-          // 원본 요청을 새 액세스 토큰으로 재시도합니다.
-          return api(originalRequest);
-        } catch (refreshError) {
+          try {
+            // 토큰을 갱신합니다.
+            const newAccessToken = await refreshAccessToken();
+    
+            // 새 액세스 토큰으로 쿠키를 업데이트합니다.
+            updateAccessTokenInCookie(newAccessToken);
+            originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+            // 원본 요청을 새 액세스 토큰으로 재시도합니다.
+            return api(originalRequest);
+          } catch (refreshError) {
+            // 재시도 후에도 에러가 발생했다면 사용자에게 알림을 줍니다.
             console.error("토큰 갱신 중 알 수 없는 에러 발생:", refreshError);
+            alert("다시 로그인 해주세요");
+            window.location.href = '/';
+            authService.handleSignOut();
             return Promise.reject(refreshError);
           }
         }
-        alert("다시 로그인 해주세요");
-        window.location.href = '/';
-        authService.handleSignOut();
-      // 다른 모든 에러는 그대로 반환합니다.
-      return Promise.reject(error);
+      } else {
+
+        // /verify 경로나 GET 요청이 아닌 경우, 또는 이미 재시도한 경우 에러를 그대로 반환합니다.
+        return Promise.reject(error);
+      }
     }
   );
-  
 
 
 // 필요한 API 요청 함수들을 여기에 정의
