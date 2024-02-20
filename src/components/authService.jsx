@@ -45,14 +45,13 @@ export const authService = {
   async register(name, company, username, password, email) {
     try {
       const { userSub } = await signUp({
-        name,
-        company,
         username,
         password,
         options: {
           userAttributes: {
             email,
-
+            'custom:company':company,
+            'custom:name':name
           },
         }
       });
