@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { authService } from './authService'; // authService 임포트
+
 import "../styles/SignUpPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.
 
 
@@ -27,7 +28,7 @@ const SignForm = (props) => {
         { Name: 'username', Value: data.email },
         // 필요한 다른 속성들을 여기에 추가하세요.
       ];
-      await authService.register(data.username, data.email, data.password);
+      await authService.register(data.name, data.company, data.username, data.password, data.email);
       // 회원가입 성공 후의 로직을 여기에 추가하세요.
       setShowEmailVerification(true);
       console.log("회원 생성 성공!")
@@ -41,17 +42,20 @@ const SignForm = (props) => {
 
   const verifyCode = async (data) => {
     try {
-        console.log(data.emailVerificationCode)
-        await authService.confirmCode(data.username, data.emailVerificationCode);
-        // 회원가입 성공 후의 로직을 여기에 추가하세요.
-        console.log("회원 인증 성공!")
-        navigate('/');
+      console.log(data.emailVerificationCode);
+      // Pass an object with username and confirmationCode properties
+      await authService.confirmCode({ 
+        username: data.username, 
+        confirmationCode: data.emailVerificationCode 
+      });
+      console.log("회원 인증 성공!"); // "Membership authentication success!"
+      navigate('/');
     } catch (error) {
       console.error(error);
-    //   reset();
-      // 에러 처리 로직을 여기에 추가하세요.
+      // Add error handling logic here
     }
   };
+  
 
   return (
     <div className="sign-form-container">
@@ -74,6 +78,38 @@ const SignForm = (props) => {
           {errors.email && (
             <small role="alert">{errors.email.message}</small>
           )}
+        </div>
+        <div>
+            <label htmlFor="name">이름</label>
+            <input
+                id="name"
+                type="text"
+                placeholder="이름을 입력하세요"
+                {...register("name", {
+                    required: "이름은 필수 입력입니다.",
+                    minLength: {
+                        value: 2,
+                        message: "이름은 최소 2자 이상이어야 합니다.",
+                    },
+                })}
+            />
+            {errors.name && (
+                <small role="alert">{errors.name.message}</small>
+            )}
+        </div>
+        <div>
+            <label htmlFor="company">소속</label>
+            <input
+                id="company"
+                type="text"
+                placeholder="소속을 입력하세요"
+                {...register("company", {
+                    required: "소속은 필수 입력입니다.",
+                })}
+            />
+            {errors.company && (
+                <small role="alert">{errors.company.message}</small>
+            )}
         </div>
         <div>
           <label htmlFor="username">닉네임</label>

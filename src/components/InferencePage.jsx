@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/InferencePage.css';
 import Header from '../components/Header';
+import api from '../api/api';
 
 function InferencePage() {
   const [taskTitle, setTaskTitle] = useState('');
@@ -32,18 +33,15 @@ function InferencePage() {
     formData.append('subFolderPath', subFolderPath);
     
     try {
-      const response = await fetch('http://localhost:8080/inference/uploadFile', {
-        method: 'POST',
-        body: formData,
-      });
-
-      return response.ok;
+      const response = await api.post('/inference/uploadFile', formData);
+  
+      return response.status === 200; // Check if the response status is OK (200)
     } catch (error) {
       console.error('Error during file upload:', error);
       return false;
     }
   };
-
+  
   const handleSubmit = async () => {
     if (x1File && x2File) {
       const uploadX1Success = await uploadFile(x1File, 'x1');
@@ -63,25 +61,17 @@ function InferencePage() {
 
   const handleDownload = async () => {
     try {
-      const response = await fetch('http://localhost:8080/inference/getFile', {
-        method: 'GET',
+      const response = await api.get('/inference/getFile', {
+        responseType: 'blob', // Important for files
       });
   
-      if (!response.ok) {
-        throw new Error('Server response was not OK');
-      }
-  
-      // 파일 데이터를 Blob 형태로 추출합니다.
-      const blob = await response.blob();
-  
       // Blob을 이용해 Object URL을 생성합니다.
-      const url = window.URL.createObjectURL(blob);
+      const url = window.URL.createObjectURL(new Blob([response.data]));
   
       // 가상의 <a> 태그를 만들어 파일 다운로드를 수행합니다.
       const a = document.createElement('a');
       a.href = url;
-      // 'download' 속성에 파일명을 설정할 수 있습니다.
-      a.download = 'result.csv'; // 여기에 원하는 파일명을 입력하세요.
+      a.download = 'result.csv'; // Set the desired file name
       document.body.appendChild(a);
       a.click();
   

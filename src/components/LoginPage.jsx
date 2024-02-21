@@ -3,7 +3,9 @@ import { authService } from './authService'; // authService 임포트
 import { useForm } from "react-hook-form";
 
 import googleLogo from '../assets/googleLogo.svg'
-import { Amplify, Auth } from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
+
+import { signInWithRedirect, getCurrentUser } from "aws-amplify/auth";
 
 import { useNavigate } from "react-router-dom";
 
@@ -26,7 +28,7 @@ const LoginForm = (props) => {
         console.log(data.email);
         console.log(data.password);
 
-        await authService.login(data.email, data.password);
+        await authService.login({ username: data.email, password: data.password });
         navigate('/select');
   
       } catch (error) {
@@ -39,22 +41,6 @@ const LoginForm = (props) => {
   const handleSignUp = (data) => {
     navigate('/signup');
   }
-
-  const handleGoogleLoginSuccess = async (googleResponse) => {
-    // Google 로그인 성공 시 처리 로직
-    const { tokenId } = googleResponse;
-    try {
-      await authService.loginWithGoogle(tokenId);
-      navigate('/select');
-    } catch (error) {
-      console.error("Google 로그인 실패:", error);
-    }
-  };
-
-  const handleGoogleLoginFailure = (error) => {
-    console.error("Google 로그인 오류:", error);
-  };
-
 
   return (
     <div className="login-container">
@@ -105,10 +91,10 @@ const LoginForm = (props) => {
         
         {/* 구글 로그인 버튼 */}
         <button type="submit" className="google-signin-btn" onClick={() =>
-                Auth.federatedSignIn({
-                    provider: 'Google',
-                })
-            }>
+                signInWithRedirect({
+                provider: "Google",
+            })
+        }>
             <img src={googleLogo}></img>
         </button>
 
