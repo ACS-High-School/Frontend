@@ -23,13 +23,11 @@ const SignForm = (props) => {
       console.log(data.username);
       console.log(data.email);
       console.log(data.password);
-      console.log(data.name);
-      console.log(data.company);
       const attributes = [
         { Name: 'username', Value: data.email },
         // 필요한 다른 속성들을 여기에 추가하세요.
       ];
-      await authService.register(data.username, data.email, data.password, data.name, data.company);
+      await authService.register(data.username, data.email, data.password);
       // 회원가입 성공 후의 로직을 여기에 추가하세요.
       setShowEmailVerification(true);
       console.log("회원 생성 성공!")
@@ -76,38 +74,6 @@ const SignForm = (props) => {
           {errors.email && (
             <small role="alert">{errors.email.message}</small>
           )}
-        </div>
-        <div>
-            <label htmlFor="name">이름</label>
-            <input
-                id="name"
-                type="text"
-                placeholder="이름을 입력하세요"
-                {...register("name", {
-                    required: "이름은 필수 입력입니다.",
-                    minLength: {
-                        value: 2,
-                        message: "이름은 최소 2자 이상이어야 합니다.",
-                    },
-                })}
-            />
-            {errors.name && (
-                <small role="alert">{errors.name.message}</small>
-            )}
-        </div>
-        <div>
-            <label htmlFor="company">소속</label>
-            <input
-                id="company"
-                type="text"
-                placeholder="소속을 입력하세요"
-                {...register("company", {
-                    required: "소속은 필수 입력입니다.",
-                })}
-            />
-            {errors.company && (
-                <small role="alert">{errors.company.message}</small>
-            )}
         </div>
         <div>
           <label htmlFor="username">닉네임</label>
