@@ -90,7 +90,7 @@ pipeline {
             
                             // 변경 사항을 git에 커밋하고 푸시합니다.
                             sh "git add ${DEPLOYMENT_FILE}"
-                            sh "git commit -m 'Update the image tag to ${IMAGE_TAG}'"
+                            sh "git commit -m 'Update the frontend image tag to ${IMAGE_TAG}'"
                             sh "git push"
                         }
                     }
