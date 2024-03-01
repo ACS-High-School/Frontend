@@ -49,7 +49,7 @@ function App() {
           }
         />
         <Route
-          path="/fl"
+          path="/fl/:groupId"
           element={
             <ProtectedRoute>
               <FLPage />

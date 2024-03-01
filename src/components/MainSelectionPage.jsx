@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import '../styles/MainSelectionPage.css';
 import SignOutButton from './SignOutButton';
+import { useNavigate } from 'react-router-dom';
 
 const SelectionPage = () => {
+    const navigate = useNavigate(); // useNavigate 훅 사용
     const [hoverFL, setHoverFL] = useState(false);
     const [showGroupCode, setShowGroupCode] = useState(false); // 그룹 코드 표시 상태
     const [showJoinForm, setShowJoinForm] = useState(false); // 참여 폼 표시 상태
@@ -13,6 +15,7 @@ const SelectionPage = () => {
         setShowJoinForm(false); // 참여 폼 숨김
         const randomCode = Math.random().toString(36).substring(2, 8);
         setGroupCode(randomCode); // 랜덤 그룹 코드 설정
+        navigate(`/fl/${randomCode}`);
     };
 
     const handleJoinGroup = () => {
