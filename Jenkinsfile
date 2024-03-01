@@ -5,6 +5,8 @@ pipeline {
         REGION = 'ap-northeast-2'
         ECR_PATH = '853963783084.dkr.ecr.ap-northeast-2.amazonaws.com'
         ECR_IMAGE = 'frontend'
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
+        DEPLOYMENT_FILE = "deployment.yml" // 파일 경로 수정
         AWS_CREDENTIAL_ID = 'AWS_ECR'
     }
 
@@ -62,9 +64,39 @@ pipeline {
             steps {
                 sh "docker system prune -af"
                 cleanWs()
-        }    
-}
-
+            }    
+        }
+        
+        stage('Update Deployment File') {
+            steps {
+                script{
+                    previousBuildNumber = sh(script: "echo \$((IMAGE_TAG - 1))", returnStdout: true).trim()
+                }
+                
+                // GitHub 토큰을 사용하여 인증
+                withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                    script {
+                        // 다른 저장소로 전환
+                        sh "git clone https://${GITHUB_TOKEN}@github.com/ACS-High-School/Eks.git other-repo"
+                        sh "cd other-repo"
+                        
+                        dir('other-repo/web') {
+                            // 로컬 저장소 설정에 사용자 이름과 이메일 추가
+                            sh "git config user.email 'ejhjjp11@naver.com'"
+                            sh "git config user.name 'hjp1016'"
+                        
+                            // deployment.yaml 파일에서 이미지 태그를 업데이트합니다.
+                            sh "sed -i 's|${ECR_PATH}/${ECR_IMAGE}:${previousBuildNumber}|${ECR_PATH}/${ECR_IMAGE}:${IMAGE_TAG}|' ${DEPLOYMENT_FILE}"
+            
+                            // 변경 사항을 git에 커밋하고 푸시합니다.
+                            sh "git add ${DEPLOYMENT_FILE}"
+                            sh "git commit -m 'Update the image tag to ${IMAGE_TAG}'"
+                            sh "git push"
+                        }
+                    }
+                }
+            }
+        }
     }
     post {
         failure {
