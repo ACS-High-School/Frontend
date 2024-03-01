@@ -3,16 +3,27 @@ import '../styles/MainSelectionPage.css';
 import SignOutButton from './SignOutButton';
 import { useNavigate } from 'react-router-dom';
 
+import api from '../api/api';
+
 const SelectionPage = () => {
     const navigate = useNavigate(); // useNavigate 훅 사용
     const [hoverFL, setHoverFL] = useState(false);
     const [showJoinForm, setShowJoinForm] = useState(false); // 참여 폼 표시 상태
     const [groupCode, setGroupCode] = useState(''); // 그룹 코드 상태 추가
 
-    const handleCreateGroup = () => {
-        const randomCode = Math.random().toString(36).substring(2, 8);
+    const handleCreateGroup = async () => {
+        const randomCode = Math.floor(Math.random() * (10**6 - 10**5) + 10**5);
         setGroupCode(randomCode); // 랜덤 그룹 코드 설정
+
+        try {
+            await api.post('/group/create', { groupCode: randomCode });            
+            // 성공적으로 데이터를 보냈다면 추가적인 로직 처리
+        } catch (error) {
+            console.error('그룹 생성 중 오류 발생', error);
+            // 에러 처리 로직
+        }
         navigate(`/fl/${randomCode}`);
+
     };
 
     const handleJoinGroup = () => {
