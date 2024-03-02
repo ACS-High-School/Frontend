@@ -30,6 +30,31 @@ const SelectionPage = () => {
         setShowJoinForm(true); // 참여 폼 표시
     };
 
+    const handleSubmitJoin = async (event) => {
+        event.preventDefault(); // 폼 제출에 의한 페이지 리로드 방지
+    
+        const enteredGroupCode = parseInt(groupCode, 10); // 입력받은 그룹 코드를 int로 변환
+    
+        try {
+            const response = await api.post('/group/join', { groupCode: enteredGroupCode });
+            // 성공적으로 데이터를 보냈다면 추가적인 로직 처리
+            navigate(`/fl/${enteredGroupCode}`);
+        } catch (error) {
+            if (error.response && error.response.status === 409) {
+                // 409 에러 처리
+                alert('그룹이 이미 가득 찼습니다.'); // 사용자에게 알림 메시지 표시
+                window.location.reload(); // 페이지 다시 로드
+            } else {
+                console.error('그룹 참여 중 오류 발생', error);
+                // 기타 에러 처리 로직
+            }
+        }
+    };
+
+    const handleGroupCodeChange = (event) => {
+        setGroupCode(event.target.value);
+    };
+
     return (
         <div className="selection-container">
             <SignOutButton />
@@ -45,8 +70,8 @@ const SelectionPage = () => {
                             <button className="fl-button" onClick={handleJoinGroup}>그룹 참여</button>
                             {showJoinForm && (
                                 <form className="join-form">
-                                    <input type="text" placeholder="그룹 코드 입력" />
-                                    <button type="submit">참여</button>
+                                    <input type="text" placeholder="그룹 코드 입력" value={groupCode} onChange={handleGroupCodeChange} />
+                                    <button type="submit" onClick={handleSubmitJoin}>참여</button>
                                 </form>
                             )}
                         </>
