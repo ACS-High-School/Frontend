@@ -44,6 +44,10 @@ const SelectionPage = () => {
                 // 409 에러 처리
                 alert('그룹이 이미 가득 찼습니다.'); // 사용자에게 알림 메시지 표시
                 window.location.reload(); // 페이지 다시 로드
+            } else if (error.response && error.response.status === 404) {
+                // 409 에러 처리
+                alert('입력한 코드에 맞는 그룹은 존재하지 않습니다!'); // 사용자에게 알림 메시지 표시
+                window.location.reload(); // 페이지 다시 로드
             } else {
                 console.error('그룹 참여 중 오류 발생', error);
                 // 기타 에러 처리 로직
