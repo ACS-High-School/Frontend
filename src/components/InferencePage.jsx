@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import '../styles/InferencePage.css';
-import Header from '../components/Header';
 import api from '../api/api';
 
 function InferencePage() {
@@ -88,7 +87,6 @@ function InferencePage() {
 
   return (
     <div className="container">
-      <Header />
       <h2>Input</h2>
       <label className="block">
         Model
