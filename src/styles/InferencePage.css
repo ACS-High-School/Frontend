@@ -14,3 +14,15 @@
     margin-top: 0;
   }
   
+  /* 기본 버튼 스타일 */
+.button {
+  /* 버튼의 기본 스타일 정의 */
+  opacity: 1;
+  /* 다른 스타일 속성들 */
+}
+
+/* 비활성화된 버튼 스타일 */
+.button-disabled {
+  opacity: 0.5; /* 투명도 조절 */
+  cursor: not-allowed;
+}

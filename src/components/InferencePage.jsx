@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../styles/InferencePage.css';
 import Header from '../components/Header';
 import api from '../api/api';
+import Spinner from "../assets/spinner.gif"
 
 function InferencePage() {
   const [taskTitle, setTaskTitle] = useState('');
@@ -9,6 +10,7 @@ function InferencePage() {
   const [x1File, setX1File] = useState(null);
   const [x2File, setX2File] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false); // 스피너 상태를 관리하는 새로운 state
 
   const handleTaskTitleChange = (event) => {
     setTaskTitle(event.target.value);
@@ -33,7 +35,7 @@ function InferencePage() {
     formData.append('subFolderPath', subFolderPath);
     
     try {
-      const response = await api.post('/inference/uploadFile', formData);
+      const response = await api.post('/s3/uploadFile', formData);
   
       return response.status === 200; // Check if the response status is OK (200)
     } catch (error) {
@@ -43,25 +45,37 @@ function InferencePage() {
   };
   
   const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append('model', model); // 'model' 파라미터 추가
+    formData.append('taskTitle', taskTitle);
+
     if (x1File && x2File) {
       const uploadX1Success = await uploadFile(x1File, 'x1');
       const uploadX2Success = await uploadFile(x2File, 'x2');
 
       if (uploadX1Success && uploadX2Success) {
-        console.log('Files uploaded successfully');
-        setSubmitted(true);
+        try {
+          // 데이터베이스에 정보 저장 로직
+          const response = await api.post('/inference/upload', formData);
+          if (response.status === 200) {
+            // 처리 성공
+            console.log('Data saved successfully');
+          }
+        } catch (error) {
+          console.error('Error during data saving:', error);
+          setLoading(false); // 에러 발생 시 로딩 중지
+        }
       } else {
-        console.error('Upload failed');
+        console.error('File upload to S3 failed');
       }
-    } else {
-      console.error('Both files are required');
+      setLoading(true); // 버튼 클릭 시 로딩 시작
+      setSubmitted(true);
     }
-    setSubmitted(true);
   };
 
   const handleDownload = async () => {
     try {
-      const response = await api.get('/inference/getFile', {
+      const response = await api.get('/s3/getFile', {
         responseType: 'blob', // Important for files
       });
   
@@ -83,7 +97,6 @@ function InferencePage() {
       console.error('Download error:', error);
     }
   };
-  
   
 
   return (
@@ -132,12 +145,17 @@ function InferencePage() {
         {x2File && <p>Selected: {x2File.name}</p>}
       </label>
       
-      <button onClick={handleSubmit} className="block">
+      <button
+        onClick={handleSubmit}
+        className={`block button ${!model || !taskTitle || !x1File || !x2File ? 'button-disabled' : ''}`}
+        disabled={!model || !taskTitle || !x1File || !x2File}
+      >
         Send
       </button>
 
       <h2>Output</h2>
-      {submitted && x2File && (
+      {loading && <img src={Spinner} alt="Loading..." />}
+      {!loading && submitted && (
         <button onClick={handleDownload} className="block">
           Download Result File
         </button>
@@ -145,5 +163,6 @@ function InferencePage() {
     </div>
   );
 }
+
 
 export default InferencePage;
