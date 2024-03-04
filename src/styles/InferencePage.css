@@ -1,16 +1,15 @@
-/* InferencePage.css */
+/* InferencePage.css 변경 */
 
-.container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .block {
-    display: block;
-    margin-top: 10px;
-  }
-  
-  .block:first-child {
-    margin-top: 0;
-  }
-  
+.inference-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.inference-block {
+  display: block;
+  margin-top: 10px;
+}
+
+.inference-block:first-child {
+  margin-top: 0;
+}
