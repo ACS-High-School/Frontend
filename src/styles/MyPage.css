@@ -1,31 +1,108 @@
 /* MyPage.css */
 
 .profile-tabs {
-    display: flex;
-    justify-content: flex-start;
-    background-color: #FFFF99; /* 연한 노란색 배경 */
-    padding: 10px;
-  }
-  
-  .profile-tabs button {
-    background: none;
-    border: none;
-    color: black;
-    padding: 10px 20px;
-    margin-right: 10px; /* 탭 사이의 간격 */
-    cursor: pointer;
-    border-bottom: 3px solid transparent; /* 비활성 탭 하단 투명한 테두리 */
-  }
-  
-  .profile-tabs button.active {
-    border-bottom: 3px solid black; /* 활성 탭 하단 검은 테두리 */
-  }
-  
-  .tab-content {
-    border: 1px solid #ccc; /* 사각형 테두리 */
-    padding: 20px;
-    margin-top: 10px;
-    background-color: white; /* 사각형 배경색 */
-    height: 300px; /* 사각형 높이 */
-  }
-  
+  display: flex;
+  justify-content: flex-start;
+  background-color: #FFFF99; /* 연한 노란색 배경 */
+  padding: 10px;
+}
+
+.profile-tabs button {
+  background: none;
+  border: none;
+  color: black;
+  padding: 10px 20px;
+  margin-right: 10px; /* 탭 사이의 간격 */
+  cursor: pointer;
+  border-bottom: 3px solid transparent; /* 비활성 탭 하단 투명한 테두리 */
+}
+
+.profile-tabs button.active {
+  border-bottom: 3px solid black; /* 활성 탭 하단 검은 테두리 */
+}
+
+.tab-content {
+  border: 1px solid #ccc; /* 사각형 테두리 */
+  padding: 20px;
+  margin-top: 10px;
+  background-color: white; /* 사각형 배경색 */
+  height: 1000px; /* 사각형 높이 */
+}
+
+
+/* 테이블 전체 스타일 */
+.table {
+width: 100%; /* 테이블의 너비를 부모 요소에 맞춤 */
+border-collapse: collapse; /* 셀 사이의 간격 없앰 */
+margin-top: 20px; /* 테이블 상단 여백 */
+table-layout: fixed; /* 테이블 레이아웃 고정 */
+}
+
+/* 테이블 헤더 스타일 */
+.table th {
+background-color: #f2f2f2; /* 헤더 배경색 */
+color: #333; /* 텍스트 색상 */
+font-weight: bold; /* 글씨 굵기 */
+padding: 10px; /* 헤더 내부 여백 */
+border: 1px solid #ddd; /* 테두리 스타일 */
+text-align: left; /* 텍스트 정렬 */
+}
+
+/* 테이블 바디 스타일 */
+.table td {
+padding: 8px; /* 셀 내부 여백 */
+border: 1px solid #ddd; /* 셀 테두리 스타일 */
+}
+
+/* 테이블 로우 스타일 */
+.table tr:nth-child(even) {
+background-color: #f9f9f9; /* 짝수 줄 배경색 */
+}
+
+.table tr:hover {
+background-color: #f1f1f1; /* 마우스 오버시 로우 배경색 변경 */
+}
+
+.profileContainer {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+  text-align: left;
+}
+
+th {
+  background-color: #f8f9fa;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ced4da;
+}
+
+button {
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  border: none;
+  color: #fff;
+  background-color: #007bff;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
