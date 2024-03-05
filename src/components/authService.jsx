@@ -42,7 +42,7 @@ const verifier = CognitoJwtVerifier.create({
 
 export const authService = {
   // Updated register function using aws-amplify/auth's signUp
-  async register(name, company, username, password, email) {
+  async register(company, username, password, email) {
     try {
       const { userSub } = await signUp({
         username,
@@ -51,9 +51,10 @@ export const authService = {
           userAttributes: {
             email,
             'custom:company':company,
-            'custom:name':name
+            // 'custom:name':name
           },
-        }
+        },
+        autoSignIn: false
       });
       console.log(`User registered with ID: ${userSub}`);
       return userSub; // Return userSub as the function result
