@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/MainSelectionPage.css';
+import { useNavigate } from "react-router-dom";
+import api from '../api/api'; // API 호출을 위한 axios 인스턴스 또는 유사한 것
 
 const SelectionPage = () => {
     const navigate = useNavigate(); // useNavigate 훅 사용
