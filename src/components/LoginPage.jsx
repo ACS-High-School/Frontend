@@ -25,18 +25,23 @@ const LoginForm = (props) => {
 
   const onLogin = async (data) => {
     try {
-        console.log(data.email);
-        console.log(data.password);
-
-        await authService.login({ username: data.email, password: data.password });
-        navigate('/select');
+      console.log(data.email);
+      console.log(data.password);
   
-      } catch (error) {
-        console.error(error);
-      //   reset();
-        // 에러 처리 로직을 여기에 추가하세요.
+      await authService.login({ username: data.email, password: data.password });
+      navigate('/select');
+  
+    } catch (error) {
+      if (error instanceof Error && error.name === 'NotAuthorizedException') {
+        alert('잘못된 아이디나 비밀번호입니다.'); // 에러에 맞는 메시지 표시
+        window.location.reload(); // 페이지 리로드
+      } else {
+        // 다른 종류의 에러에 대한 처리
+        console.error('An error occurred:', error);
       }
+    }
   };
+  
 
   const handleSignUp = (data) => {
     navigate('/signup');
