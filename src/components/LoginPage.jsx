@@ -55,15 +55,10 @@ const LoginForm = (props) => {
           <input
             id="email"
             type="text"
-            placeholder="test@email.com"
+            placeholder="ID"
             className="text_input"
             {...register("email", {
-              required: "\n이메일은 필수 입력입니다.",
-              pattern: {
-                value:
-                  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
-                message: "\n이메일 형식에 맞지 않습니다.",
-              },
+              required: "\n 아이디는 필수 입력입니다.",
             })}
           />
           {errors.email && <small role="alert">{errors.email.message}</small>}
@@ -78,8 +73,8 @@ const LoginForm = (props) => {
             {...register("password", {
               required: "\n비밀번호는 필수 입력입니다.",
               minLength: {
-                value: 7,
-                message: "\n7자리 이상 비밀번호를 입력하세요.",
+                value: 8,
+                message: "\n8자리 이상 비밀번호를 입력하세요.",
               },
             })}
           />
