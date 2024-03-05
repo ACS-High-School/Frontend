@@ -5,7 +5,7 @@ import { Navbar, Nav, Container, Button } from "react-bootstrap";
 
 const Header = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // 현재 위치 확인을 위해 useLocation 사용
+  const location = useLocation();
 
   const handleSignOut = async () => {
     try {
@@ -18,8 +18,21 @@ const Header = () => {
 
   const isMyPage = location.pathname === "/mypage";
   const isHome = location.pathname === "/";
-  const isLogin = location.pathname === "/login"; // 로그인 페이지인지 확인하는 조건
-  const isSignUp = location.pathname === "/signup"; // 회원가입 페이지인지 확인하는 조건
+  const isLogin = location.pathname === "/login";
+  const isSignUp = location.pathname === "/signup";
+
+  // accessToken으로 끝나는 쿠키가 있는지 확인하는 함수
+  const hasAccessTokenCookie = () => {
+    const cookies = document.cookie.split("; ");
+    return cookies.some((cookie) => {
+      const parts = cookie.split("=");
+      const name = parts[0];
+      return name.split(".").pop() === "accessToken";
+    });
+  };
+
+  // accessToken 쿠키의 존재 여부
+  const hasAccessToken = hasAccessTokenCookie();
 
   return (
     <header>
@@ -27,7 +40,6 @@ const Header = () => {
         <Container>
           <Navbar.Brand href="/">B3O</Navbar.Brand>
           {!isLogin && (
-            // 로그인 페이지가 아닌 경우에만 Navbar.Toggle 및 Navbar.Collapse 표시
             <>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
@@ -40,8 +52,8 @@ const Header = () => {
                       Logout
                     </Button>
                   ) : (
-                    (isHome || isSignUp) && (
-                      // 홈 또는 회원가입 페이지인 경우 로그인 버튼 표시
+                    (isHome || isSignUp) &&
+                    !hasAccessToken && (
                       <Button
                         variant="outline-primary"
                         onClick={() => navigate("/login")}
@@ -51,7 +63,6 @@ const Header = () => {
                     )
                   )}
                   {!isHome && !isSignUp && !isMyPage && (
-                    // 홈, 회원가입, 마이페이지가 아닌 경우 프로필 링크 표시
                     <Nav.Link href="/mypage">Profile</Nav.Link>
                   )}
                 </Nav>
