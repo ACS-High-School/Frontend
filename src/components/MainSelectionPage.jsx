@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
 import '../styles/MainSelectionPage.css';
-import SignOutButton from './SignOutButton';
-import { useNavigate } from 'react-router-dom';
-
-import api from '../api/api';
 
 const SelectionPage = () => {
     const navigate = useNavigate(); // useNavigate 훅 사용
@@ -61,7 +57,6 @@ const SelectionPage = () => {
 
     return (
         <div className="selection-container">
-            <SignOutButton />
             <div className="inference-section" onClick={() => window.location.href = '/inference'}>
                 Inference
             </div>

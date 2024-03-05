@@ -1,19 +1,19 @@
-/* InferencePage.css */
+/* InferencePage.css 변경 */
 
-.container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .block {
-    display: block;
-    margin-top: 10px;
-  }
-  
-  .block:first-child {
-    margin-top: 0;
-  }
-  
+.inference-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.inference-block {
+  display: block;
+  margin-top: 10px;
+}
+
+.inference-block:first-child {
+  margin-top: 0;
+}
+
   /* 기본 버튼 스타일 */
 .button {
   /* 버튼의 기본 스타일 정의 */
@@ -26,3 +26,4 @@
   opacity: 0.5; /* 투명도 조절 */
   cursor: not-allowed;
 }
+
