@@ -143,10 +143,6 @@ const SignForm = (props) => {
             placeholder="*******"
             {...register("passwordConfirm", {
               required: "비밀번호 확인은 필수 입력입니다.",
-              minLength: {
-                value: 7,
-                message: "7자리 이상 비밀번호를 사용하세요.",
-              },
               validate: {
                 check: (val) => {
                   if (getValues("password") !== val) {
