@@ -80,16 +80,16 @@ const SignForm = (props) => {
           )}
         </div>
         <div>
-          <label htmlFor="username">아이디</label>
+          <label htmlFor="username">닉네임</label>
           <input
             id="username"
             type="text"
-            placeholder="아이디을 입력하세요"
+            placeholder="닉네임을 입력하세요"
             {...register("username", {
-              required: "아이디는 필수 입력입니다.",
+              required: "닉네임은 필수 입력입니다.",
               minLength: {
                 value: 3,
-                message: "아이디는 최소 3자 이상이어야 합니다.",
+                message: "닉네임는 최소 3자 이상이어야 합니다.",
               },
             })}
           />
@@ -155,7 +155,7 @@ const SignForm = (props) => {
           {errors.passwordConfirm && (
             <small role="alert">{errors.passwordConfirm.message}</small>
           )}
-        <button type="submit">회원가입 완료</button>
+        <button type="submit">이메일 인증 코드 발송</button>
 
         </div>
         {/* 이메일 인증 코드 입력 필드와 버튼을 조건부 렌더링 */}
@@ -175,7 +175,7 @@ const SignForm = (props) => {
                 <small role="alert">{errors.emailVerificationCode.message}</small>
               )}
             </div>
-            <button type="button" onClick={handleSubmit(verifyCode)}>인증 코드 전송</button>
+            <button type="button" onClick={handleSubmit(verifyCode)}>회원 가입 완료</button>
           </div>
         )}
 
