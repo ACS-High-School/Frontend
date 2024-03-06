@@ -6,6 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
+import HomePage from "./components/HomePage";
 import SignUpPage from "./components/SignUpPage";
 import MyPage from "./components/MyPage";
 import MainSelectionPage from "./components/MainSelectionPage";
@@ -27,6 +28,7 @@ function App() {
         <Container style={{ minHeight: "75vh" }}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route
               path="/mypage"

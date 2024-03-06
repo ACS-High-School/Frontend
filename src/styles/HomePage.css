@@ -1,0 +1,11 @@
+.home-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 전체 뷰포트 높이 */
+}
+
+.home-image {
+    max-width: 100%; /* 이미지가 컨테이너를 넘어서지 않도록 함 */
+    height: auto; /* 이미지의 원래 비율을 유지 */
+}
