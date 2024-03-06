@@ -28,7 +28,7 @@ const SignForm = (props) => {
         { Name: 'username', Value: data.email },
         // 필요한 다른 속성들을 여기에 추가하세요.
       ];
-      await authService.register(data.name, data.company, data.username, data.password, data.email);
+      await authService.register(data.company, data.username, data.password, data.email);
       // 회원가입 성공 후의 로직을 여기에 추가하세요.
       setShowEmailVerification(true);
       console.log("회원 생성 성공!")
@@ -80,22 +80,22 @@ const SignForm = (props) => {
           )}
         </div>
         <div>
-            <label htmlFor="name">이름</label>
-            <input
-                id="name"
-                type="text"
-                placeholder="이름을 입력하세요"
-                {...register("name", {
-                    required: "이름은 필수 입력입니다.",
-                    minLength: {
-                        value: 2,
-                        message: "이름은 최소 2자 이상이어야 합니다.",
-                    },
-                })}
-            />
-            {errors.name && (
-                <small role="alert">{errors.name.message}</small>
-            )}
+          <label htmlFor="username">아이디</label>
+          <input
+            id="username"
+            type="text"
+            placeholder="아이디을 입력하세요"
+            {...register("username", {
+              required: "아이디는 필수 입력입니다.",
+              minLength: {
+                value: 3,
+                message: "아이디는 최소 3자 이상이어야 합니다.",
+              },
+            })}
+          />
+          {errors.username && (
+            <small role="alert">{errors.username.message}</small>
+          )}
         </div>
         <div>
             <label htmlFor="company">소속</label>
@@ -111,24 +111,6 @@ const SignForm = (props) => {
                 <small role="alert">{errors.company.message}</small>
             )}
         </div>
-        <div>
-          <label htmlFor="username">닉네임</label>
-          <input
-            id="username"
-            type="text"
-            placeholder="닉네임을 입력하세요"
-            {...register("username", {
-              required: "닉네임은 필수 입력입니다.",
-              minLength: {
-                value: 3,
-                message: "닉네임은 최소 3자 이상이어야 합니다.",
-              },
-            })}
-          />
-          {errors.username && (
-            <small role="alert">{errors.username.message}</small>
-          )}
-        </div>
         <div className="form-control__items">
           <label htmlFor="password">비밀번호</label>
           <input
@@ -138,8 +120,8 @@ const SignForm = (props) => {
             {...register("password", {
               required: "비밀번호는 필수 입력입니다.",
               minLength: {
-                value: 7,
-                message: "7자리 이상 비밀번호를 입력하세요.",
+                value: 8,
+                message: "8자리 이상 비밀번호를 입력하세요.",
               },
               validate: {
                 containsUpperCase: value =>

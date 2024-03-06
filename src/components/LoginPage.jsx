@@ -25,18 +25,23 @@ const LoginForm = (props) => {
 
   const onLogin = async (data) => {
     try {
-        console.log(data.email);
-        console.log(data.password);
-
-        await authService.login({ username: data.email, password: data.password });
-        navigate('/select');
+      console.log(data.email);
+      console.log(data.password);
   
-      } catch (error) {
-        console.error(error);
-      //   reset();
-        // 에러 처리 로직을 여기에 추가하세요.
+      await authService.login({ username: data.email, password: data.password });
+      navigate('/select');
+  
+    } catch (error) {
+      if (error instanceof Error && error.name === 'NotAuthorizedException') {
+        alert('잘못된 아이디나 비밀번호입니다.'); // 에러에 맞는 메시지 표시
+        window.location.reload(); // 페이지 리로드
+      } else {
+        // 다른 종류의 에러에 대한 처리
+        console.error('An error occurred:', error);
       }
+    }
   };
+  
 
   const handleSignUp = (data) => {
     navigate('/signup');
@@ -55,15 +60,10 @@ const LoginForm = (props) => {
           <input
             id="email"
             type="text"
-            placeholder="test@email.com"
+            placeholder="ID"
             className="text_input"
             {...register("email", {
-              required: "\n이메일은 필수 입력입니다.",
-              pattern: {
-                value:
-                  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
-                message: "\n이메일 형식에 맞지 않습니다.",
-              },
+              required: "\n 아이디는 필수 입력입니다.",
             })}
           />
           {errors.email && <small role="alert">{errors.email.message}</small>}
@@ -78,8 +78,8 @@ const LoginForm = (props) => {
             {...register("password", {
               required: "\n비밀번호는 필수 입력입니다.",
               minLength: {
-                value: 7,
-                message: "\n7자리 이상 비밀번호를 입력하세요.",
+                value: 8,
+                message: "\n8자리 이상 비밀번호를 입력하세요.",
               },
             })}
           />
