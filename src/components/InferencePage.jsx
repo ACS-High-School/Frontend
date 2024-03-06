@@ -10,6 +10,7 @@ function InferencePage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [fileError, setFileError] = useState(false); // 파일 확장자 에러 상태
 
   const handleTaskTitleChange = (event) => {
     setTaskTitle(event.target.value);
@@ -20,7 +21,14 @@ function InferencePage() {
   };
 
   const handleDataFileChange = (event) => {
-    setDataFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file && file.name.endsWith('.csv')) {
+      setDataFile(file);
+      setFileError(false); // 올바른 파일 확장자
+    } else {
+      setDataFile(null);
+      setFileError(true); // 잘못된 파일 확장자
+    }
   };
 
   const uploadFile = async (file, subFolderPath) => {
@@ -118,10 +126,11 @@ function InferencePage() {
           <Form.Label column sm="2">Input Data</Form.Label>
           <Col sm="10">
             <Form.Control type="file" onChange={handleDataFileChange} className="mb-2"/>
+            {fileError && <Alert variant="danger" className="mt-2">파일은 .csv 확장자여야 합니다.</Alert>}
           </Col>
         </Form.Group>
 
-        <Button variant="primary" onClick={handleSubmit} disabled={!model || !taskTitle || !dataFile} className="mb-4" >
+        <Button variant="primary" onClick={handleSubmit} disabled={!model || !taskTitle || !dataFile || fileError} className="mb-4">
           Send
         </Button>
       </Form>
