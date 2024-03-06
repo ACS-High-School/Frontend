@@ -90,13 +90,6 @@ function MyPage() {
               <td></td>
             </tr>
             <tr>
-              <th>이름</th>
-              <td><input type="text" name="name" defaultValue={userData?.name} onChange={handleChange} /></td>
-              <td>
-                <button onClick={(e) => handleSubmit('name', e)}>수정</button>
-              </td>
-            </tr>
-            <tr>
               <th>닉네임</th>
               <td><input type="text" name="nickname" defaultValue={userData?.nickname} onChange={handleChange}/></td>
               <td>
