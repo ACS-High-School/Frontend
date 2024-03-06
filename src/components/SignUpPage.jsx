@@ -24,21 +24,24 @@ const SignForm = (props) => {
       console.log(data.username);
       console.log(data.email);
       console.log(data.password);
-      const attributes = [
-        { Name: 'username', Value: data.email },
-        // 필요한 다른 속성들을 여기에 추가하세요.
-      ];
       await authService.register(data.company, data.username, data.password, data.email);
       // 회원가입 성공 후의 로직을 여기에 추가하세요.
       setShowEmailVerification(true);
       console.log("회원 생성 성공!")
-
+  
     } catch (error) {
       console.error(error);
-    //   reset();
+      // 에러 메시지에 따라 다른 액션을 취할 수 있습니다.
+      if (error.message.includes("이미 존재하는 이메일입니다.")) {
+        alert("이미 존재하는 이메일입니다."); // 사용자에게 이미 존재하는 이메일임을 알립니다.
+      } else if (error.message.includes("이미 존재하는 사용자 이름입니다.")) {
+        alert("이미 존재하는 닉네임입니다."); // 사용자에게 이미 존재하는 이메일임을 알립니다.
+      }
+      // reset(); // 폼을 리셋하려면 주석을 해제하세요.
       // 에러 처리 로직을 여기에 추가하세요.
     }
   };
+  
 
   const verifyCode = async (data) => {
     try {
