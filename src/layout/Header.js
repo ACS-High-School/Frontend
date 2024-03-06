@@ -35,43 +35,32 @@ const Header = () => {
   const hasAccessToken = hasAccessTokenCookie();
 
   return (
-    <header>
-      <Navbar bg="light" expand="lg">
-        <Container>
-          <Navbar.Brand href="/">B3O</Navbar.Brand>
-          {!isLogin && (
-            <>
-              <Navbar.Toggle aria-controls="basic-navbar-nav" />
-              <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="ms-auto">
-                  {!isHome && !isSignUp && (
-                    <Nav.Link href="/select">Main</Nav.Link>
-                  )}
-                  {isMyPage ? (
-                    <Button variant="outline-danger" onClick={handleSignOut}>
-                      Logout
-                    </Button>
-                  ) : (
-                    (isHome || isSignUp) &&
-                    !hasAccessToken && (
-                      <Button
-                        variant="outline-primary"
-                        onClick={() => navigate("/login")}
-                      >
-                        Login
-                      </Button>
-                    )
-                  )}
-                  {!isHome && !isSignUp && !isMyPage && (
-                    <Nav.Link href="/mypage">Profile</Nav.Link>
-                  )}
-                </Nav>
-              </Navbar.Collapse>
-            </>
+<header>
+  <Navbar bg="dark" variant="dark" expand="lg">
+    <Container fluid> {/* fluid 속성으로 전체 너비 사용 */}
+      <Navbar.Brand href="/">B3O</Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="ms-auto"> {/* ms-auto로 오른쪽 정렬 */}
+          <Nav.Link href="/select">Main</Nav.Link>
+          {isMyPage ? (
+            <Button variant="outline-danger" onClick={handleSignOut}>
+              Logout
+            </Button>
+          ) : (
+            (isHome || isSignUp) &&
+            !hasAccessToken && (
+              <Button variant="outline-primary" onClick={() => navigate("/login")}>
+                Login
+              </Button>
+            )
           )}
-        </Container>
-      </Navbar>
-    </header>
+          <Nav.Link href="/mypage">Profile</Nav.Link>
+        </Nav>
+      </Navbar.Collapse>
+    </Container>
+  </Navbar>
+</header>
   );
 };
 
