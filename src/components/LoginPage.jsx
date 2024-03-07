@@ -60,10 +60,14 @@ const LoginForm = (props) => {
           <input
             id="email"
             type="text"
-            placeholder="ID"
+            placeholder="text@email.com"
             className="text_input"
             {...register("email", {
-              required: "\n 아이디는 필수 입력입니다.",
+              required: "이메일은 필수 입력입니다.",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "유효하지 않은 이메일 형식입니다."
+              }
             })}
           />
           {errors.email && <small role="alert">{errors.email.message}</small>}
