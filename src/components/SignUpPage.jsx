@@ -24,21 +24,24 @@ const SignForm = (props) => {
       console.log(data.username);
       console.log(data.email);
       console.log(data.password);
-      const attributes = [
-        { Name: 'username', Value: data.email },
-        // 필요한 다른 속성들을 여기에 추가하세요.
-      ];
       await authService.register(data.company, data.username, data.password, data.email);
       // 회원가입 성공 후의 로직을 여기에 추가하세요.
       setShowEmailVerification(true);
       console.log("회원 생성 성공!")
-
+  
     } catch (error) {
       console.error(error);
-    //   reset();
+      // 에러 메시지에 따라 다른 액션을 취할 수 있습니다.
+      if (error.message.includes("이미 존재하는 이메일입니다.")) {
+        alert("이미 존재하는 이메일입니다."); // 사용자에게 이미 존재하는 이메일임을 알립니다.
+      } else if (error.message.includes("이미 존재하는 사용자 이름입니다.")) {
+        alert("이미 존재하는 닉네임입니다."); // 사용자에게 이미 존재하는 이메일임을 알립니다.
+      }
+      // reset(); // 폼을 리셋하려면 주석을 해제하세요.
       // 에러 처리 로직을 여기에 추가하세요.
     }
   };
+  
 
   const verifyCode = async (data) => {
     try {
@@ -80,16 +83,16 @@ const SignForm = (props) => {
           )}
         </div>
         <div>
-          <label htmlFor="username">아이디</label>
+          <label htmlFor="username">닉네임</label>
           <input
             id="username"
             type="text"
-            placeholder="아이디을 입력하세요"
+            placeholder="닉네임을 입력하세요"
             {...register("username", {
-              required: "아이디는 필수 입력입니다.",
+              required: "닉네임은 필수 입력입니다.",
               minLength: {
                 value: 3,
-                message: "아이디는 최소 3자 이상이어야 합니다.",
+                message: "닉네임는 최소 3자 이상이어야 합니다.",
               },
             })}
           />
@@ -143,10 +146,6 @@ const SignForm = (props) => {
             placeholder="*******"
             {...register("passwordConfirm", {
               required: "비밀번호 확인은 필수 입력입니다.",
-              minLength: {
-                value: 7,
-                message: "7자리 이상 비밀번호를 사용하세요.",
-              },
               validate: {
                 check: (val) => {
                   if (getValues("password") !== val) {
@@ -159,7 +158,7 @@ const SignForm = (props) => {
           {errors.passwordConfirm && (
             <small role="alert">{errors.passwordConfirm.message}</small>
           )}
-        <button type="submit">회원가입 완료</button>
+        <button type="submit">이메일 인증 코드 발송</button>
 
         </div>
         {/* 이메일 인증 코드 입력 필드와 버튼을 조건부 렌더링 */}
@@ -179,7 +178,7 @@ const SignForm = (props) => {
                 <small role="alert">{errors.emailVerificationCode.message}</small>
               )}
             </div>
-            <button type="button" onClick={handleSubmit(verifyCode)}>인증 코드 전송</button>
+            <button type="button" onClick={handleSubmit(verifyCode)}>회원 가입 완료</button>
           </div>
         )}
 
