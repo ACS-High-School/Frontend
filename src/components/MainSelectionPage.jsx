@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import '../styles/MainSelectionPage.css';
 import { useNavigate } from "react-router-dom";
 import api from '../api/api'; // API 호출을 위한 axios 인스턴스 또는 유사한 것
+import FLPage from './FLPage'; // FLPage 컴포넌트를 임포트합니다.
 
 const SelectionPage = () => {
     const navigate = useNavigate(); // useNavigate 훅 사용
     const [hoverFL, setHoverFL] = useState(false);
     const [showJoinForm, setShowJoinForm] = useState(false); // 참여 폼 표시 상태
     const [groupCode, setGroupCode] = useState(''); // 그룹 코드 상태 추가
+    const [showFLPage, setShowFLPage] = useState(false); // FLPage 팝업 표시 여부
 
     const handleCreateGroup = async () => {
         const randomCode = Math.floor(Math.random() * (10**6 - 10**5) + 10**5);
@@ -20,7 +22,8 @@ const SelectionPage = () => {
             console.error('그룹 생성 중 오류 발생', error);
             // 에러 처리 로직
         }
-        navigate(`/fl/${randomCode}`);
+        window.open(`/fl/${randomCode}`, 'popup', 'width=600,height=400,left=200,top=200');
+        // navigate(`/fl/${randomCode}`);
 
     };
 
@@ -36,7 +39,9 @@ const SelectionPage = () => {
         try {
             const response = await api.post('/group/join', { groupCode: enteredGroupCode });
             // 성공적으로 데이터를 보냈다면 추가적인 로직 처리
-            navigate(`/fl/${enteredGroupCode}`);
+
+            window.open(`/fl/${enteredGroupCode}`, 'popup', 'width=600,height=400,left=200,top=200');
+            // navigate(`/fl/${enteredGroupCode}`);
         } catch (error) {
             if (error.response && error.response.status === 409) {
                 // 409 에러 처리
