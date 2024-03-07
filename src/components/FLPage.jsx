@@ -59,10 +59,10 @@ function FLPage() {
         {users.map(user => (
           <div key={user.id} className={`user-component ${user.fileUploaded ? 'uploaded' : ''}`}>
             <span>{user.name}</span>
-            <input type="file" onChange={() => handleFileUpload(user.id)} />
           </div>
         ))}
       </div>
+      <input type="file" onChange={() => handleFileUpload()} />
       {allFilesUploaded && (
         <button className="start-learning">학습 시작</button>
       )}
