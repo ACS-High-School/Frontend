@@ -5,7 +5,7 @@ import { CognitoJwtVerifier } from "aws-jwt-verify";
 
 import { Amplify } from 'aws-amplify';
 
-import { signUp, signIn, confirmSignUp, signOut } from 'aws-amplify/auth';
+import { signUp, signIn, confirmSignUp, signOut, resetPassword, confirmResetPassword, updatePassword } from 'aws-amplify/auth';
 import { CookieStorage } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 
@@ -103,7 +103,43 @@ export const authService = {
     } catch (error) {
       console.log('error signing out: ', error);
     }
-  }
+  },
+  
+  // 비밀번호 재설정 시작
+  async resetPassword(username) {
+    try {
+      const output = await resetPassword({ username });
+      // 여기서 output을 처리할 수 있습니다.
+      return output;
+    } catch (error) {
+      console.error('Reset password error:', error);
+      throw error;
+    }
+  },
+
+  // 비밀번호 재설정 확인
+  async confirmResetPassword(username, confirmationCode, newPassword) {
+    try {
+      await confirmResetPassword({ username, confirmationCode, newPassword });
+      // 비밀번호 재설정이 성공적으로 완료됨
+    } catch (error) {
+      console.error('Confirm reset password error:', error);
+      throw error;
+    }
+  },
+
+  // 비밀번호 업데이트
+  async updatePassword(oldPassword, newPassword) {
+    try {
+      await updatePassword({ oldPassword, newPassword });
+      // 비밀번호 업데이트가 성공적으로 완료됨
+    } catch (error) {
+      console.error('Update password error:', error);
+      throw error;
+    }
+  },
+
+
 
   // You can add other authentication functions here as needed
 };
