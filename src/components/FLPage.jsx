@@ -32,8 +32,24 @@ function FLPage() {
 
   const allFilesUploaded = users.every(user => user.fileUploaded);
 
+  // Jupyter Lab을 여는 함수
+  const openJupyterLab = () => {
+    // 여기에 Jupyter Lab 페이지를 여는 로직을 추가하세요.
+    // 예: window.open('Jupyter Lab URL');
+  };
+  
+  // 페이지를 새로고침하는 함수
+  const reloadPage = () => {
+    window.location.reload();
+  };
+  
+
   return (
     <div className="fl-page">
+      <div className="btn_header">
+        <button onClick={openJupyterLab} className="jupyter-lab-btn">Jupyter LAB</button>
+        <button onClick={reloadPage} className="reload-btn">Reload</button>
+      </div>  
       <div className="user-list">
         {users.map(user => (
           <div key={user.id} className={`user-component ${user.fileUploaded ? 'uploaded' : ''}`}>
