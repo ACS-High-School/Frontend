@@ -86,10 +86,10 @@ const SelectionPage = () => {
                             {!showDescriptionForm ? (
                                 <button className="fl-button" onClick={handleShowDescriptionForm}>그룹 생성</button>
                             ) : (
-                                <>
+                                <form className="create-form">
                                     <input type="text" placeholder="그룹 설명 입력" value={description} onChange={handleChangeDescription} />
-                                    <button className="fl-button" onClick={handleCreateGroup}>그룹 생성 확인</button>
-                                </>
+                                    <button type="button" onClick={handleCreateGroup}>그룹 생성 확인</button>
+                                </form>
                             )}
                             <button className="fl-button" onClick={handleJoinGroup}>그룹 참여</button>
                             {showJoinForm && (
