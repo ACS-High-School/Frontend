@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/MyPage.css'; // 스타일 시트 임포트
 import api from '../api/api'; // API 호출을 위한 axios 인스턴스 또는 유사한 것
+import { authService } from './authService';
 
 function MyPage() {
   const [activeTab, setActiveTab] = useState('edit');
@@ -48,9 +49,10 @@ function MyPage() {
 
   const UserProfile = ({ isLoading, setUserData }) => {
     const [form, setForm] = useState({
-      name: '',
-      nickname: '',
+      username: '',
       company: '',
+      newPassword: '',
+      confirmPassword: '',
     });
 
     const handleUpdate = async (field, newValue) => {
@@ -78,6 +80,22 @@ function MyPage() {
       const { name, value } = e.target;
       setForm(prevForm => ({ ...prevForm, [name]: value }));
     };
+
+    const handlePasswordChange = async (e) => {
+      e.preventDefault();
+  
+      try {
+        // authService를 사용하여 비밀번호 변경 로직을 추가하세요.
+        await authService.updatePassword(form.oldPassword, form.newPassword);
+        console.log('비밀번호가 성공적으로 변경되었습니다.');
+
+        // 비밀번호 변경 성공 후 필요한 작업 수행
+      } catch (error) {
+        console.error('비밀번호 변경 오류:', error);
+      
+        // 비밀번호 변경 실패 시 필요한 작업 수행
+      }
+    };
   
   
     return (
@@ -91,9 +109,9 @@ function MyPage() {
             </tr>
             <tr>
               <th>닉네임</th>
-              <td><input type="text" name="nickname" defaultValue={userData?.nickname} onChange={handleChange}/></td>
+              <td><input type="text" name="username" defaultValue={userData?.username} onChange={handleChange}/></td>
               <td>
-                <button onClick={(e) => handleSubmit('nickname', e)}>수정</button>
+                <button onClick={(e) => handleSubmit('username', e)}>수정</button>
               </td>
             </tr>
             <tr>
@@ -105,6 +123,29 @@ function MyPage() {
             </tr>
           </tbody>
         </table>
+        <form onSubmit={handlePasswordChange} className={styles.passwordChangeForm}>
+        <div>
+          <label htmlFor="newPassword">이전 비밀번호</label>
+          <input
+            type="password"
+            name="oldPassword"
+            value={form.oldPassword}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="confirmPassword">새 비밀번호</label>
+          <input
+            type="password"
+            name="newPassword"
+            value={form.newPassword}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <button type="submit">비밀번호 변경</button>
+      </form>
       </div>
     );
   };
