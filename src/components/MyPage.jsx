@@ -99,7 +99,11 @@ function MyPage() {
         }
 
         if (error.name === 'NotAuthorizedException' || error.message.includes('NotAuthorizedException')) {
-          alert('이전 비밀번호를 잘못 입력하셨습니다!.');
+          alert('이전 비밀번호를 잘못 입력하셨습니다!');
+        }
+        
+        if (error.name === 'InvalidPasswordException' || error.message.includes('InvalidPasswordException')) {
+          alert('새로운 비밀번호를 잘못 입력하셨습니다! \n대문자, 특수문자 1개 이상, 8 자리 이상 입력이 필요합니다!');
         }
         // 비밀번호 변경 실패 시 필요한 작업 수행
       }
