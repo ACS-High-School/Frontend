@@ -119,14 +119,10 @@ function MyPage() {
             <tr>
               <th>이메일</th>
               <td>{userData?.email}</td>
-              <td></td>
             </tr>
             <tr>
               <th>닉네임</th>
-              <td><input type="text" name="username" defaultValue={userData?.username} onChange={handleChange}/></td>
-              <td>
-                <button onClick={(e) => handleSubmit('username', e)}>수정</button>
-              </td>
+              <td>{userData?.username}</td>
             </tr>
             <tr>
               <th>소속 회사</th>
