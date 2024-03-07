@@ -97,6 +97,10 @@ function MyPage() {
         if (error.name === 'LimitExceededException' || error.message.includes('LimitExceededException')) {
           alert('비밀번호 변경 시도 횟수가 초과되었습니다. \n잠시 후 다시 시도해주세요.');
         }
+
+        if (error.name === 'NotAuthorizedException' || error.message.includes('NotAuthorizedException')) {
+          alert('이전 비밀번호를 잘못 입력하셨습니다!.');
+        }
         // 비밀번호 변경 실패 시 필요한 작업 수행
       }
     };
