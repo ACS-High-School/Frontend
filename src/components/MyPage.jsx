@@ -87,6 +87,8 @@ function MyPage() {
       try {
         // authService를 사용하여 비밀번호 변경 로직을 추가하세요.
         await authService.updatePassword(form.oldPassword, form.newPassword);
+        alert('비밀번호가 성공적으로 변경되었습니다!');
+        window.location.reload(); // 페이지 리로드
         console.log('비밀번호가 성공적으로 변경되었습니다.');
 
         // 비밀번호 변경 성공 후 필요한 작업 수행
