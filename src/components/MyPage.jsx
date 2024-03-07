@@ -92,7 +92,11 @@ function MyPage() {
         // 비밀번호 변경 성공 후 필요한 작업 수행
       } catch (error) {
         console.error('비밀번호 변경 오류:', error);
-      
+
+            // LimitExceededException 에러일 경우에만 alert 띄우기
+        if (error.name === 'LimitExceededException' || error.message.includes('LimitExceededException')) {
+          alert('비밀번호 변경 시도 횟수가 초과되었습니다. \n잠시 후 다시 시도해주세요.');
+        }
         // 비밀번호 변경 실패 시 필요한 작업 수행
       }
     };
