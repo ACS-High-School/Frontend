@@ -8,13 +8,7 @@
     background: #f7f7f7;
     box-sizing: border-box; /* 패딩을 포함한 전체 너비가 100%가 되도록 설정합니다 */
   }
-  
-  
-  .countdown-timer {
-    font-size: 2em; /* 카운트다운 타이머 사이즈 증가 */
-    margin-bottom: 30px;
-    text-align: center; /* 텍스트 중앙 정렬 */
-  }
+
   
   .user-list {
     display: grid;
@@ -59,6 +53,59 @@
   .start-learning:hover {
     background-color: #8cc1e4; /* 학습 시작 버튼 hover 색상 */
   }
+
+  /* 기존 스타일에 추가 */
+
+.btn_header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    /* background-color: #333; */
+    color: white;
+}
+    
+  .jupyter-lab-btn, .reload-btn {
+    padding: 10px 20px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .jupyter-lab-btn {
+    margin-right: 290px;
+  }
+
+  .jupyter-lab-btn:hover, .reload-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  /* 기존 .user-component 스타일 아래에 추가 */
+  .user-component.uploaded {
+    background-color: #28a745; /* 파일이 업로드된 사용자를 위한 배경색 */
+  }
+  
+
+  .btn-header-container {
+    display: flex;
+    width: 100%;
+    max-width: 800px; /* user-list와 동일한 최대 너비를 가집니다 */
+    justify-content: space-between; /* 버튼을 양 끝으로 배치 */
+    padding: 0 20px; /* 양쪽에 여백을 추가하여 버튼이 화면 가장자리에 닿지 않도록 합니다 */
+    
+  }
+  
+  .user-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 800px;
+    width: 100%;
+    /* 여기에 기존 .user-list 스타일을 계속 추가하세요 */
+  }
+  
   
   /* 추가적인 미디어 쿼리를 사용하여 반응형 디자인을 고려하면 좋습니다. */
   
