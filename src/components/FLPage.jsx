@@ -1,27 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/FLPage.css'; // 이 경로에 CSS 파일을 저장하세요.
-
-function useCountdown(targetDate) {
-    const getCountdownTime = () => targetDate - new Date().getTime();
-    const [countdownTime, setCountdownTime] = useState(getCountdownTime);
-  
-    useEffect(() => {
-      if (countdownTime <= 0) {
-        // 타이머가 0에 도달했을 때의 로직을 여기에 추가하세요.
-        return;
-      }
-  
-      // 정확한 1초 간격으로 카운트다운을 업데이트합니다.
-      const timerId = setTimeout(() => {
-        setCountdownTime(getCountdownTime());
-      }, 1000);
-  
-      // 컴포넌트가 언마운트될 때 타이머를 정리합니다.
-      return () => clearTimeout(timerId);
-    }, [countdownTime, targetDate]);
-  
-    return countdownTime;
-  }
+import api from '../api/api';
 
 function FLPage() {
   const [users, setUsers] = useState([
@@ -31,41 +10,45 @@ function FLPage() {
     { id: 4, name: 'User4', fileUploaded: false }
   ]);
 
+  useEffect(() => {
+    // axios를 사용하여 API 호출
+    api.get('/fl/users')
+        .then(response => {
+            const updatedUsers = response.data.map(user => ({
+                ...user,
+                fileUploaded: false // fileUploaded 상태를 초기화합니다.
+            }));
+            setUsers(updatedUsers); // 응답 데이터로 사용자 상태를 업데이트합니다.
+        })
+        .catch(error => console.error("There was an error!", error));
+}, []); // 빈 의존성 배열로 컴포넌트가 마운트될 때만 실행합니다.
 
-  // 남은 시간을 분:초 형태로 변환합니다.
-  const formatTime = () => {
-    const minutes = Math.floor(countdownTime / 60000);
-    const seconds = Math.floor((countdownTime % 60000) / 1000);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  // Jupyter Lab을 여는 함수
+  const openJupyterLab = () => {
+    // 여기에 Jupyter Lab 페이지를 여는 로직을 추가하세요.
+    // 예: window.open('Jupyter Lab URL');
   };
-
-  // 남은 시간 (예: 1시간 후)
-  const countdownTime = useCountdown(new Date().getTime() + 3600 * 1000);
-
-  const handleFileUpload = (userId) => {
-    setUsers(users.map(user =>
-      user.id === userId ? { ...user, fileUploaded: true } : user
-    ));
+  
+  // 페이지를 새로고침하는 함수
+  const reloadPage = () => {
+    window.location.reload();
   };
-
-  const allFilesUploaded = users.every(user => user.fileUploaded);
+  
 
   return (
     <div className="fl-page">
-      <div className="countdown-timer">
-        남은 시간: {new Date(countdownTime).toISOString().substr(11, 8)}
-      </div>
+      <div className="btn_header">
+        <button onClick={openJupyterLab} className="jupyter-lab-btn">Jupyter LAB</button>
+        <button onClick={reloadPage} className="reload-btn">Reload</button>
+      </div>  
       <div className="user-list">
         {users.map(user => (
           <div key={user.id} className={`user-component ${user.fileUploaded ? 'uploaded' : ''}`}>
             <span>{user.name}</span>
-            <input type="file" onChange={() => handleFileUpload(user.id)} />
+            <span>{`(${user.username})`}</span>
           </div>
         ))}
       </div>
-      {allFilesUploaded && (
-        <button className="start-learning">학습 시작</button>
-      )}
     </div>
   );
 }
