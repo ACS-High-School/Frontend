@@ -21,15 +21,16 @@ Amplify.configure({
 });
 
 // 쿠키 설정
-const cookieStorage = new CookieStorage({
-    domain: "localhost",
-    path: "/",
-    expires: 7,
-    sameSite: "none",
-    secure: true,
-});
+// const cookieStorage = new CookieStorage({
+//     domain: "localhost",
+//     path: "/",
+//     expires: 7,
+//     sameSite: "none",
+//     secure: true,
+// });
   
-cognitoUserPoolsTokenProvider.setKeyValueStorage(cookieStorage);
+// cognitoUserPoolsTokenProvider.setKeyValueStorage(cookieStorage);
+cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage);
 
 
 // Verifier that expects valid access tokens:
