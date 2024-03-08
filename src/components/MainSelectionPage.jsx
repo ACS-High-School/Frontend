@@ -51,7 +51,7 @@ const SelectionPage = () => {
             const response = await api.post('/group/join', { groupCode: enteredGroupCode });
             // 성공적으로 데이터를 보냈다면 추가적인 로직 처리
 
-            window.open(`/fl/${enteredGroupCode}`, 'popup', 'width=600,height=400,left=200,top=200');
+            window.open(`/fl/${enteredGroupCode}`, 'popup', 'width=600,height=500,left=200,top=200');
             // navigate(`/fl/${enteredGroupCode}`);
         } catch (error) {
             if (error.response && error.response.status === 409) {
