@@ -23,15 +23,6 @@ function FLPage() {
         .catch(error => console.error("There was an error!", error));
 }, []); // 빈 의존성 배열로 컴포넌트가 마운트될 때만 실행합니다.
 
-
-  const handleFileUpload = (userId) => {
-    setUsers(users.map(user =>
-      user.id === userId ? { ...user, fileUploaded: true } : user
-    ));
-  };
-
-  const allFilesUploaded = users.every(user => user.fileUploaded);
-
   // Jupyter Lab을 여는 함수
   const openJupyterLab = () => {
     // 여기에 Jupyter Lab 페이지를 여는 로직을 추가하세요.
@@ -58,10 +49,6 @@ function FLPage() {
           </div>
         ))}
       </div>
-      <input type="file" onChange={() => handleFileUpload()} />
-      {allFilesUploaded && (
-        <button className="start-learning">학습 시작</button>
-      )}
     </div>
   );
 }
