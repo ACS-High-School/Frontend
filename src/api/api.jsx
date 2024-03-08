@@ -89,17 +89,6 @@ api.interceptors.response.use(
   );
   
 
-
-// 필요한 API 요청 함수들을 여기에 정의
-export const uploadFile = async (formData) => {
-  try {
-    const response = await api.post('/inference/uploadFile', formData);
-    return response.data; // 응답 데이터 반환
-  } catch (error) {
-    throw error; // 오류 처리를 위해 에러를 던집니다.
-  }
-};
-
 // refreshToken을 사용하여 accessToken을 갱신하는 함수
 export const refreshAccessToken = async () => {
     const refreshTokenValue = getRefreshTokenFromCookies();
