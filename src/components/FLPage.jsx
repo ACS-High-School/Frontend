@@ -17,6 +17,8 @@ function FLPage() {
 
   const [currentUser, setCurrentUser] = useState(null);
 
+  const [jupyterLabUrl, setjupyterLabUrl] = useState(null);
+
   useEffect(() => {
     setIsLoading(true); // API 요청 시작 시 로딩 상태를 true로 설정
     api.post('/group/users', { groupCode })
@@ -24,6 +26,7 @@ function FLPage() {
         const updatedUsers = users.map((user, index) => {
           const serverUser = response.data[`user${index + 1}`];
           setCurrentUser(response.data.currentUser);
+          setjupyterLabUrl(response.data.jupyterLabUrl);
           return serverUser
             ? { ...user, username: serverUser.username }
             : { ...user, username: '아직 입장 안함' }; // 정보가 없으면 "아직 입장 안함"으로 설정
@@ -44,7 +47,7 @@ function FLPage() {
   // Jupyter Lab을 여는 함수
   const openJupyterLab = () => {
     // 여기에 Jupyter Lab 페이지를 여는 로직을 추가하세요.
-    // 예: window.open('Jupyter Lab URL');
+    window.open(jupyterLabUrl);
   };
   
   // 페이지를 새로고침하는 함수
