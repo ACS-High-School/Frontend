@@ -15,12 +15,15 @@ function FLPage() {
 
   const { groupCode } = useParams(); // useParams를 사용하여 URL에서 groupCode를 가져옵니다.
 
+  const [currentUser, setCurrentUser] = useState(null);
+
   useEffect(() => {
     setIsLoading(true); // API 요청 시작 시 로딩 상태를 true로 설정
     api.post('/group/users', { groupCode })
       .then(response => {
         const updatedUsers = users.map((user, index) => {
           const serverUser = response.data[`user${index + 1}`];
+          setCurrentUser(response.data.currentUser);
           return serverUser
             ? { ...user, username: serverUser.username }
             : { ...user, username: '아직 입장 안함' }; // 정보가 없으면 "아직 입장 안함"으로 설정
@@ -64,6 +67,10 @@ function FLPage() {
             <div key={user.id} className={`user-component ${user.fileUploaded ? 'uploaded' : ''}`}>
               <span>{user.name}</span>
               <span>{user.username}</span> {/* "아직 입장 안함" 메시지는 API 응답 처리 시 추가됨 */}
+              {/* currentUser와 user의 username이 같은 경우 "현재 유저" 표시 추가 */}
+              {currentUser && currentUser.username === user.username && (
+                <span className="current-user-tag"> (현재 유저)</span>
+              )}
             </div>
           ))
         )}
