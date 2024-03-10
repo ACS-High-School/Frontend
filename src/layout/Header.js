@@ -20,6 +20,7 @@ const Header = () => {
   const isHome = location.pathname === "/";
   const isLogin = location.pathname === "/login";
   const isSignUp = location.pathname === "/signup";
+  const isFLPage = location.pathname.startsWith("/fl/"); 
 
   // accessToken으로 끝나는 쿠키가 있는지 확인하는 함수
   const hasAccessTokenCookie = () => {
@@ -35,32 +36,51 @@ const Header = () => {
   const hasAccessToken = hasAccessTokenCookie();
 
   return (
-<header>
-  <Navbar bg="dark" variant="dark" expand="lg">
-    <Container fluid> {/* fluid 속성으로 전체 너비 사용 */}
-      <Navbar.Brand href="/">B3O</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="ms-auto"> {/* ms-auto로 오른쪽 정렬 */}
-          <Nav.Link href="/select">Main</Nav.Link>
-          {isMyPage ? (
-            <Button variant="outline-danger" onClick={handleSignOut}>
-              Logout
-            </Button>
+    <header>
+      <Navbar bg="light" expand="lg">
+        <Container>
+          {isFLPage ? (
+            // FL Page에서는 B3O 로고만 보이고, 클릭 비활성화
+            <Navbar.Brand style={{ pointerEvents: "none" }}>B3O</Navbar.Brand>
           ) : (
-            (isHome || isSignUp) &&
-            !hasAccessToken && (
-              <Button variant="outline-primary" onClick={() => navigate("/login")}>
-                Login
-              </Button>
-            )
+            // 다른 페이지에서는 기존 로직 유지
+            <>
+              <Navbar.Brand href="/">B3O</Navbar.Brand>
+              {!isLogin && (
+                <>
+                  <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                  <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="ms-auto">
+                      {!isHome && !isSignUp && (
+                        <Nav.Link href="/select">Main</Nav.Link>
+                      )}
+                      {isMyPage ? (
+                        <Button variant="outline-danger" onClick={handleSignOut}>
+                          Logout
+                        </Button>
+                      ) : (
+                        (isHome || isSignUp) &&
+                        !hasAccessToken && (
+                          <Button
+                            variant="outline-primary"
+                            onClick={() => navigate("/login")}
+                          >
+                            Login
+                          </Button>
+                        )
+                      )}
+                      {!isHome && !isSignUp && !isMyPage && (
+                        <Nav.Link href="/mypage">Profile</Nav.Link>
+                      )}
+                    </Nav>
+                  </Navbar.Collapse>
+                </>
+              )}
+            </>
           )}
-          <Nav.Link href="/mypage">Profile</Nav.Link>
-        </Nav>
-      </Navbar.Collapse>
-    </Container>
-  </Navbar>
-</header>
+        </Container>
+      </Navbar>
+    </header>
   );
 };
 
