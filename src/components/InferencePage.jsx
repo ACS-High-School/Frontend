@@ -10,9 +10,11 @@ function InferencePage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const [downloadFileName, setDownloadFileName] = useState('');
   const [inferenceStatus, setInferenceStatus] = useState(''); // inference 상태 저장
   const [fileError, setFileError] = useState(false); // 파일 확장자 에러 상태
+  const [downloadUrl, setDownloadUrl] = useState(''); // 다운로드 URL 상태 추가
+  const [inferenceId, setInferenceId] = useState(null); // 인퍼런스 ID 상태 추가
+  const [alert, setAlert] = useState({ show: false, message: '', variant: '' });
 
   const statusIntervalRef = useRef();
 
@@ -47,25 +49,20 @@ function InferencePage() {
       const inferenceResponse = await api.post('/inference/upload', formData);
 
       if (inferenceResponse.status === 200 && dataFile) {
+        setInferenceId(inferenceResponse.data._id);
 
-        // inferenceResponse에서 output 값을 받아서 저장
-        const outputFileName = inferenceResponse.data.output;
-
-        // 상태 업데이트
-        setDownloadFileName(outputFileName);
-
-        // inferenceResponse에서 input 값을 받아서 그것을 taskTitle로 사용
         const newTaskTitle = inferenceResponse.data.input;
-
         // S3에 파일 업로드하기
         const uploadSuccess = await uploadFile(dataFile, 'input', newTaskTitle);
 
         if (uploadSuccess) {
           console.log('File uploaded successfully');
+          setAlert({ show: true, message: '파일이 성공적으로 업로드 되었습니다.', variant: 'success' });
           setUploadSuccess(true); // 업로드 성공 상태 설정
           setInferenceStatus('processing');
         } else {
           console.error('File upload to S3 failed');
+          setAlert({ show: true, message: '처리 중 오류가 발생했습니다.', variant: 'danger' });
         }
       }
     } catch (error) {
@@ -77,27 +74,31 @@ function InferencePage() {
   };
 
   const checkInferenceStatus = async () => {
-    try {
-      const response = await api.get('/result', {
-        params: { taskTitle }, 
-      });
-      if (response.data.stats === 'complete') {
-        setInferenceStatus('complete');
-        clearInterval(statusIntervalRef.current); // useRef를 통해 접근
+    if (inferenceId) { // inferenceId가 있는 경우에만 상태 체크
+      try {
+        const response = await api.get(`/inference/result/${inferenceId}`);
+        if (response.data.stats === 'complete') {
+          setInferenceStatus('complete');
+          setDownloadUrl(response.data.result);
+          clearInterval(statusIntervalRef.current);
+        }
+      } catch (error) {
+        console.error('인퍼런스 상태 확인 중 오류가 발생했습니다:', error);
       }
-    } catch (error) {
-      console.error('Error checking inference status:', error);
     }
   };
 
   useEffect(() => {
     if (uploadSuccess) {
-      statusIntervalRef.current = setInterval(() => {
-        checkInferenceStatus();
-      }, 3000); // 3초마다 상태 체크
+      statusIntervalRef.current = setInterval(checkInferenceStatus, 3000);
     }
-    return () => clearInterval(statusIntervalRef.current); // 컴포넌트 언마운트 시 인터벌 정리
-  }, [uploadSuccess]);
+    return () => clearInterval(statusIntervalRef.current);
+  }, [uploadSuccess, inferenceId]); // useEffect의 의존성 배열에 inferenceId 추가
+
+  const handleDownload = () => {
+    window.location.href = downloadUrl; // 설정된 URL에서 파일 다운로드
+  };
+
 
   // uploadFile 함수 수정
   const uploadFile = async (file, subFolderPath, taskTitle) => {
@@ -115,40 +116,13 @@ function InferencePage() {
     }
   };
 
-  const handleDownload = async () => {
-    try {
-      const subFolderPath = "output"; // 다운로드할 파일이 위치한 서버 측 폴더 경로
-
-      // 파일 다운로드 요청
-      const response = await api.get('/s3/download', {
-        params: {
-          fileName: downloadFileName, // 서버로부터 받은 파일 이름 사용
-          subFolderPath: subFolderPath // 정의된 subFolderPath 사용
-        },
-        responseType: 'blob', // 중요: 파일 다운로드를 위해 blob 타입으로 설정
-      });
-  
-      // Blob을 이용해 Object URL을 생성합니다.
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-
-      // 가상의 <a> 태그를 만들어 파일 다운로드를 수행합니다.
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = downloadFileName; // 서버로부터 받은 파일 이름을 사용
-      document.body.appendChild(a);
-      a.click();
-
-      // 사용 후 Object URL을 정리합니다.
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-    } catch (error) {
-      console.error('Download error:', error);
-    }
-};
-
   return (
     <Container className="mt-5">
+      {alert.show && (
+      <Alert variant={alert.variant} onClose={() => setAlert({ ...alert, show: false })} dismissible>
+        {alert.message}
+      </Alert>
+      )}
       <h2 className="mb-4">Input</h2>
       <Form>
         <Form.Group as={Row} className="mb-3" controlId="formModel">
