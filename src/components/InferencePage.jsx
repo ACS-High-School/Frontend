@@ -118,11 +118,6 @@ function InferencePage() {
 
   return (
     <Container className="mt-5">
-      {alert.show && (
-      <Alert variant={alert.variant} onClose={() => setAlert({ ...alert, show: false })} dismissible>
-        {alert.message}
-      </Alert>
-      )}
       <h2 className="mb-4">Input</h2>
       <Form>
         <Form.Group as={Row} className="mb-3" controlId="formModel">
@@ -152,6 +147,12 @@ function InferencePage() {
             {fileError && <Alert variant="danger" className="mt-2">파일은 .csv 확장자여야 합니다.</Alert>}
           </Col>
         </Form.Group>
+
+        {alert.show && (
+        <Alert variant={alert.variant} onClose={() => setAlert({ ...alert, show: false })} dismissible>
+          {alert.message}
+        </Alert>
+        )}
 
         <Button variant="primary" onClick={handleSubmit} disabled={!model || !taskTitle || !dataFile || fileError} className="mb-4">
           Send
