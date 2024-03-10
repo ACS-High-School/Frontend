@@ -60,7 +60,7 @@ function FLPage() {
     <div className="fl-page">
       <div className="btn_header">
         <button onClick={openJupyterLab} className="jupyter-lab-btn">Jupyter LAB</button>
-        <button onClick={reloadPage} className="reload-btn">Reload</button>
+        <button onClick={reloadPage} className="reload-btn"></button>
       </div>  
       <div className="user-list">
         {isLoading ? (
