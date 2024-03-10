@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../styles/MyPage.css'; // 스타일 시트 임포트
 import api from '../api/api'; // API 호출을 위한 axios 인스턴스 또는 유사한 것
 import { authService } from './authService';
+import { Button } from 'react-bootstrap';
 
 function MyPage() {
   const [activeTab, setActiveTab] = useState('edit');
@@ -161,31 +162,49 @@ function MyPage() {
   };
   
   
-  // 인퍼런스 데이터를 표로 렌더링하는 컴포넌트
-  const InferenceTable = () => {
-    return (
-      <table className='table'>
-        <thead>
-          <tr> 
-            <th>Title</th>
-            <th>Model</th>
-            <th>Date</th>
-            <th>Result</th>
-            {/* 기타 필요한 테이블 헤더 */}
+// 인퍼런스 데이터를 표로 렌더링하는 컴포넌트
+const InferenceTable = () => {
+  // 파일 다운로드를 처리하는 함수
+  const handleDownload = (downloadUrl) => {
+    window.location.href = downloadUrl; // 다운로드 URL로 이동하여 다운로드 시작
+  };
+
+  // 날짜 포맷을 변경하는 함수 (예시 포맷)
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  return (
+    <table className='table'>
+      <thead>
+        <tr> 
+          <th>Title</th>
+          <th>Model</th>
+          <th>Date</th>
+          <th>Result</th>
+          {/* 기타 필요한 테이블 헤더 */}
+        </tr>
+      </thead>
+      <tbody>
+        {inferenceData.map((inference) => (
+          <tr key={inference._id}>
+            <td>{inference.title}</td>
+            <td>{inference.model}</td>
+            <td>{formatDate(inference.date)}</td>
+            <td>
+              <Button 
+                variant="primary" 
+                onClick={() => handleDownload(inference.result)}
+              >
+                Download
+              </Button>
+            </td>
+            {/* 기타 필요한 테이블 데이터 셀 */}
           </tr>
-        </thead>
-        <tbody>
-          {inferenceData.map((inference) => (
-            <tr key={inference._id}>
-              <td>{inference.title}</td>
-              <td>{inference.model}</td>
-              <td>{formatDate(inference.date)}</td>
-              <td>{inference.result}</td>
-              {/* 기타 필요한 테이블 데이터 셀 */}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        ))}
+      </tbody>
+    </table>
     );
   };
 
