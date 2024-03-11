@@ -37,8 +37,8 @@ const Header = () => {
 
   return (
     <header>
-      <Navbar bg="light" expand="lg">
-        <Container>
+      <Navbar bg="dark" variant="dark" expand="lg">
+        <Container fluid>
           {isFLPage ? (
             // FL Page에서는 B3O 로고만 보이고, 클릭 비활성화
             <Navbar.Brand style={{ pointerEvents: "none" }}>B3O</Navbar.Brand>
