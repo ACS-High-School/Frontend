@@ -119,5 +119,15 @@
     padding: 10px 20px; /* 적절한 패딩으로 버튼 크기 조정 */
   }
   
+  /* Ready 상태인 사용자의 스타일 */
+  .ready {
+        background-color: #daf7a6; /* 예시 색상 */
+    }
+  
+  /* 'Ready' 태그 스타일 */
+  .ready-tag {
+    color: green;
+    font-weight: bold;
+  }
   
   
