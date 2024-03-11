@@ -69,11 +69,7 @@ pipeline {
         }
         
         stage('Update Deployment File') {
-            steps {
-                script{
-                    previousBuildNumber = sh(script: "echo \$((IMAGE_TAG - 1))", returnStdout: true).trim()
-                }
-                
+            steps {                
                 // GitHub 토큰을 사용하여 인증
                 withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
                     script {
@@ -87,7 +83,7 @@ pipeline {
                             sh "git config user.name 'hjp1016'"
                         
                             // deployment.yaml 파일에서 이미지 태그를 업데이트합니다.
-                            sh "sed -i 's|${ECR_PATH}/${ECR_IMAGE}:${previousBuildNumber}|${ECR_PATH}/${ECR_IMAGE}:${IMAGE_TAG}|' ${DEPLOYMENT_FILE}"
+                            sh "sed -i 's|${ECR_PATH}/${ECR_IMAGE}:[^ ]*|${ECR_PATH}/${ECR_IMAGE}:${IMAGE_TAG}|' ${DEPLOYMENT_FILE}"
             
                             // 변경 사항을 git에 커밋하고 푸시합니다.
                             sh "git add ${DEPLOYMENT_FILE}"
