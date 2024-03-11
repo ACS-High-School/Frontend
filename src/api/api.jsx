@@ -1,12 +1,13 @@
 import axios from 'axios';
 import {COGNITO_API} from '../config/config';
 import {authService} from '../components/authService';
+export const API_BASE_URL = process.env.REACT_APP_API_ROOT;
 
 
 
 // Axios 인스턴스 생성
 const api = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: `${API_BASE_URL}`,
   withCredentials: true,
 });
 
