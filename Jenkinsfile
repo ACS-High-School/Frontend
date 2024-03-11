@@ -21,13 +21,17 @@ pipeline {
         stage('Config File Prepare') {
             steps {
                 withCredentials([file(credentialsId: 'aws-exports-file', variable: 'AWS_EXPORTS'),
-                                file(credentialsId: 'config-file', variable: 'CONFIG')]) {
+                                file(credentialsId: 'config-file', variable: 'CONFIG'),
+                                file(credentialsId: 'env.production', variable: 'ENV_PRODUCTION')]) {
                                 sh 'mkdir -p src/config'
                                 // Credential 파일을 src/config 디렉토리에 복사
                                 sh 'sudo cp $AWS_EXPORTS src/config/aws-exports.js'
                                 sh 'sudo chmod 664 src/config/aws-exports.js'
                                 sh 'sudo cp $CONFIG src/config/config.js'
                                 sh 'sudo chmod 664 src/config/config.js'
+                                // .env.production.local 파일을 프로젝트 루트에 복사
+                                sh 'sudo cp $ENV_PRODUCTION .env.production.local'
+                                sh 'sudo chmod 664 .env.production.local'
                 }
             }
         }
