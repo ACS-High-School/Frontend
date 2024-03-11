@@ -5,10 +5,10 @@ import { useParams } from 'react-router-dom';
 
 function FLPage() {
   const [users, setUsers] = useState([
-    { id: 1, name: 'User1', fileUploaded: false },
-    { id: 2, name: 'User2', fileUploaded: false },
-    { id: 3, name: 'User3', fileUploaded: false },
-    { id: 4, name: 'User4', fileUploaded: false }
+    { id: 1, name: 'User1' },
+    { id: 2, name: 'User2' },
+    { id: 3, name: 'User3' },
+    { id: 4, name: 'User4' }
   ]);
 
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
@@ -19,6 +19,9 @@ function FLPage() {
 
   const [jupyterLabUrl, setjupyterLabUrl] = useState(null);
 
+  const [userTasks, setUserTasks] = useState({});
+
+
   useEffect(() => {
     setIsLoading(true); // API 요청 시작 시 로딩 상태를 true로 설정
     api.post('/group/users', { groupCode })
@@ -27,12 +30,15 @@ function FLPage() {
           const serverUser = response.data[`user${index + 1}`];
           setCurrentUser(response.data.currentUser);
           setjupyterLabUrl(response.data.jupyterLabUrl);
+          console.log(index);
+          console.log(response.data.userTasks[user.id]?.taskStatus);
           return serverUser
             ? { ...user, username: serverUser.username }
             : { ...user, username: '아직 입장 안함' }; // 정보가 없으면 "아직 입장 안함"으로 설정
         });
 
         setUsers(updatedUsers);
+        setUserTasks(response.data.userTasks);
         setIsLoading(false); // API 요청 완료 후 로딩 상태를 false로 설정
       })
       .catch(error => {
@@ -67,9 +73,13 @@ function FLPage() {
           <div>Loading...</div> // 로딩 중이면 로딩 인디케이터 표시
         ) : (
           users.map(user => (
-            <div key={user.id} className={`user-component ${user.fileUploaded ? 'uploaded' : ''}`}>
+            <div key={user.id} className={`user-component ${userTasks[user.id]?.taskStatus === 'ready' ? 'ready' : ''}`}>
               <span>{user.name}</span>
               <span>{user.username}</span> {/* "아직 입장 안함" 메시지는 API 응답 처리 시 추가됨 */}
+              {/* "ready" 상태인 경우 표시 추가 */}
+              {userTasks[user.id]?.taskStatus === 'ready' && (
+              <span className="ready-tag">Ready</span>
+              )}
               {/* currentUser와 user의 username이 같은 경우 "현재 유저" 표시 추가 */}
               {currentUser && currentUser.username === user.username && (
                 <span className="current-user-tag"> (현재 유저)</span>
