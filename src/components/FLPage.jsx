@@ -130,15 +130,20 @@ function FLPage() {
 
       {/* User1에 대한 "연합 학습 시작" 버튼을 추가합니다. */}
       {users.some(user => user.id === 0) && (
-        <div className="mt-3 d-flex justify-content-end">
-          <Button
-            variant="primary"
-            onClick={startFederatedLearning}
-          >
-            연합 학습 시작
-          </Button>
-        </div>
-      )}
+      <div className="mt-3 d-flex justify-content-center">
+        <Button
+          variant="primary"
+          onClick={startFederatedLearning}
+          style={{
+            width: '140px',  // 버튼 너비를 적당한 크기로 조절하세요.
+            height: '50px', 
+          }}
+        >
+          연합 학습 시작
+        </Button>
+      </div>
+    )}
+
       
       {isLoading && (
         <div className="text-center">
