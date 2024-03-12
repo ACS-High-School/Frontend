@@ -31,8 +31,8 @@ const cookieStorage = new CookieStorage({
     secure: true,
 });
   
-// cognitoUserPoolsTokenProvider.setKeyValueStorage(cookieStorage);
-cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage);
+cognitoUserPoolsTokenProvider.setKeyValueStorage(cookieStorage);
+//cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage);
 
 
 // Verifier that expects valid access tokens:
