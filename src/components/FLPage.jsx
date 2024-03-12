@@ -61,6 +61,12 @@ function FLPage() {
   const reloadPage = () => {
     window.location.reload();
   };
+
+  // 연합 학습을 시작하는 함수
+  const startFederatedLearning = () => {
+    // 연합 학습 시작 로직을 여기에 추가하세요.
+    console.log('연합 학습 시작');
+  };
   
 
   return (
@@ -121,6 +127,18 @@ function FLPage() {
           </ListGroup.Item>
         ))}
       </ListGroup>
+
+      {/* User1에 대한 "연합 학습 시작" 버튼을 추가합니다. */}
+      {users.some(user => user.id === 0) && (
+        <div className="mt-3 d-flex justify-content-end">
+          <Button
+            variant="primary"
+            onClick={startFederatedLearning}
+          >
+            연합 학습 시작
+          </Button>
+        </div>
+      )}
       
       {isLoading && (
         <div className="text-center">
