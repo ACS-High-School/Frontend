@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/FLPage.css'; // 이 경로에 CSS 파일을 저장하세요.
+// import '../styles/FLPage.css'; // 이 경로에 CSS 파일을 저장하세요.
 import api from '../api/api';
 import { useParams } from 'react-router-dom';
+import { Button, Container, ListGroup, Spinner } from 'react-bootstrap';
+import { BsArrowRepeat } from 'react-icons/bs'; // React Icons 사용
 
 function FLPage() {
   const [users, setUsers] = useState([
-    { id: 1, name: 'User1', fileUploaded: false },
-    { id: 2, name: 'User2', fileUploaded: false },
-    { id: 3, name: 'User3', fileUploaded: false },
-    { id: 4, name: 'User4', fileUploaded: false }
+    { id: 0, name: 'User1' },
+    { id: 1, name: 'User2' },
+    { id: 2, name: 'User3' },
+    { id: 3, name: 'User4' }
   ]);
 
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
@@ -19,12 +21,16 @@ function FLPage() {
 
   const [jupyterLabUrl, setjupyterLabUrl] = useState(null);
 
+  const [userTasks, setUserTasks] = useState({});
+
+
   useEffect(() => {
     setIsLoading(true); // API 요청 시작 시 로딩 상태를 true로 설정
     api.post('/group/users', { groupCode })
       .then(response => {
-        const updatedUsers = users.map((user, index) => {
-          const serverUser = response.data[`user${index + 1}`];
+        console.log(response);
+        const updatedUsers = users.map((user) => {
+          const serverUser = response.data[`user${user.id + 1}`];
           setCurrentUser(response.data.currentUser);
           setjupyterLabUrl(response.data.jupyterLabUrl);
           return serverUser
@@ -33,6 +39,7 @@ function FLPage() {
         });
 
         setUsers(updatedUsers);
+        setUserTasks(response.data.userTasks);
         setIsLoading(false); // API 요청 완료 후 로딩 상태를 false로 설정
       })
       .catch(error => {
@@ -54,32 +61,99 @@ function FLPage() {
   const reloadPage = () => {
     window.location.reload();
   };
+
+  // 연합 학습을 시작하는 함수
+  const startFederatedLearning = () => {
+    // 연합 학습 시작 로직을 여기에 추가하세요.
+    console.log('연합 학습 시작');
+  };
   
 
   return (
-    <div className="fl-page">
-      <div className="btn_header">
-        <button onClick={openJupyterLab} className="jupyter-lab-btn">Jupyter LAB</button>
-        <button onClick={reloadPage} className="reload-btn"></button>
-      </div>  
-      <div className="user-list">
-        {isLoading ? (
-          <div>Loading...</div> // 로딩 중이면 로딩 인디케이터 표시
-        ) : (
-          users.map(user => (
-            <div key={user.id} className={`user-component ${user.fileUploaded ? 'uploaded' : ''}`}>
-              <span>{user.name}</span>
-              <span>{user.username}</span> {/* "아직 입장 안함" 메시지는 API 응답 처리 시 추가됨 */}
-              {/* currentUser와 user의 username이 같은 경우 "현재 유저" 표시 추가 */}
+    <Container className="fl-page mt-3">
+      <div className="d-flex justify-content-between mb-3">
+        <Button 
+          onClick={openJupyterLab} 
+          variant="dark"
+          style={{
+            width: '120px', 
+            height: '50px', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            padding: 0
+          }}
+          >
+            Jupyter LAB
+        </Button>
+        <Button 
+          onClick={reloadPage} 
+          variant="outline-secondary" 
+          style={{
+            width: '60px', 
+            height: '50px', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            marginLeft: '100px',
+            padding: 0
+          }}>
+          <BsArrowRepeat size={30} style={{ color: 'darkgrey' }}/> {/* 크기와 색상을 명시적으로 설정 */}
+        </Button>
+      </div>
+  
+      <ListGroup>
+        {users.map(user => (
+          <ListGroup.Item
+            key={user.id}
+            className={userTasks[user.id]?.taskStatus === 'ready' ? 'list-group-item-success' : ''}
+            action
+          >
+            <div className="d-flex justify-content-between align-items-center">
+              <div>
+                <span>{user.name}</span>
+                <span className="mx-2">|</span>
+                <span>{user.username}</span>
+              </div>
+  
               {currentUser && currentUser.username === user.username && (
-                <span className="current-user-tag"> (현재 유저)</span>
+                <span className="badge rounded-pill bg-info">현재 유저</span>
+              )}
+  
+              {userTasks[user.id]?.taskStatus === 'ready' && (
+                <span className="badge bg-success">Ready</span>
               )}
             </div>
-          ))
-        )}
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
+
+      {/* currentUser가 User1일 때만 "연합 학습 시작" 버튼 표시 */}
+    {currentUser && currentUser.username === users[0].username && (
+      <div className="mt-3 d-flex justify-content-center">
+        <Button
+          variant="primary"
+          onClick={startFederatedLearning}
+          style={{
+            width: '140px',
+            height: '50px',
+          }}
+        >
+          연합 학습 시작
+        </Button>
       </div>
-    </div>
+    )}
+
+      
+      {isLoading && (
+        <div className="text-center">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      )}
+    </Container>
   );
-}
+}  
 
 export default FLPage;
