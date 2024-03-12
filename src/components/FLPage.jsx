@@ -5,10 +5,10 @@ import { useParams } from 'react-router-dom';
 
 function FLPage() {
   const [users, setUsers] = useState([
-    { id: 1, name: 'User1' },
-    { id: 2, name: 'User2' },
-    { id: 3, name: 'User3' },
-    { id: 4, name: 'User4' }
+    { id: 0, name: 'User1' },
+    { id: 1, name: 'User2' },
+    { id: 2, name: 'User3' },
+    { id: 3, name: 'User4' }
   ]);
 
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
@@ -26,12 +26,11 @@ function FLPage() {
     setIsLoading(true); // API 요청 시작 시 로딩 상태를 true로 설정
     api.post('/group/users', { groupCode })
       .then(response => {
-        const updatedUsers = users.map((user, index) => {
-          const serverUser = response.data[`user${index + 1}`];
+        console.log(response);
+        const updatedUsers = users.map((user) => {
+          const serverUser = response.data[`user${user.id + 1}`];
           setCurrentUser(response.data.currentUser);
           setjupyterLabUrl(response.data.jupyterLabUrl);
-          console.log(index);
-          console.log(response.data.userTasks[user.id]?.taskStatus);
           return serverUser
             ? { ...user, username: serverUser.username }
             : { ...user, username: '아직 입장 안함' }; // 정보가 없으면 "아직 입장 안함"으로 설정
