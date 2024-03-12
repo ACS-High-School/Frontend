@@ -9,6 +9,8 @@ import { signUp, signIn, confirmSignUp, signOut, resetPassword, confirmResetPass
 import { CookieStorage } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 
+export const domain = process.env.REACT_APP_HOME_URL;
+
 const authConfig = {
     Cognito: {
       userPoolId: COGNITO_API.userPoolId,
@@ -20,14 +22,14 @@ Amplify.configure({
     Auth: authConfig
 });
 
-// 쿠키 설정
-// const cookieStorage = new CookieStorage({
-//     domain: "localhost",
-//     path: "/",
-//     expires: 7,
-//     sameSite: "none",
-//     secure: true,
-// });
+//쿠키 설정
+const cookieStorage = new CookieStorage({
+    domain: `${domain}`,
+    path: "/",
+    expires: 7,
+    sameSite: "none",
+    secure: true,
+});
   
 // cognitoUserPoolsTokenProvider.setKeyValueStorage(cookieStorage);
 cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage);
