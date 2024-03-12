@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/FLPage.css'; // 이 경로에 CSS 파일을 저장하세요.
+// import '../styles/FLPage.css'; // 이 경로에 CSS 파일을 저장하세요.
 import api from '../api/api';
 import { useParams } from 'react-router-dom';
+import { Button, Container, ListGroup, Spinner } from 'react-bootstrap';
+import { BsArrowRepeat } from 'react-icons/bs'; // React Icons 사용
 
 function FLPage() {
   const [users, setUsers] = useState([
@@ -62,33 +64,73 @@ function FLPage() {
   
 
   return (
-    <div className="fl-page">
-      <div className="btn_header">
-        <button onClick={openJupyterLab} className="jupyter-lab-btn">Jupyter LAB</button>
-        <button onClick={reloadPage} className="reload-btn"></button>
-      </div>  
-      <div className="user-list">
-        {isLoading ? (
-          <div>Loading...</div> // 로딩 중이면 로딩 인디케이터 표시
-        ) : (
-          users.map(user => (
-            <div key={user.id} className={`user-component ${userTasks[user.id]?.taskStatus === 'ready' ? 'ready' : ''}`}>
-              <span>{user.name}</span>
-              <span>{user.username}</span> {/* "아직 입장 안함" 메시지는 API 응답 처리 시 추가됨 */}
-              {/* "ready" 상태인 경우 표시 추가 */}
-              {userTasks[user.id]?.taskStatus === 'ready' && (
-              <span className="ready-tag">Ready</span>
-              )}
-              {/* currentUser와 user의 username이 같은 경우 "현재 유저" 표시 추가 */}
+    <Container className="fl-page mt-3">
+      <div className="d-flex justify-content-between mb-3">
+        <Button 
+          onClick={openJupyterLab} 
+          variant="dark"
+          style={{
+            width: '120px', 
+            height: '50px', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            padding: 0
+          }}
+          >
+            Jupyter LAB
+        </Button>
+        <Button 
+          onClick={reloadPage} 
+          variant="outline-secondary" 
+          style={{
+            width: '60px', 
+            height: '50px', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            marginLeft: '100px',
+            padding: 0
+          }}>
+          <BsArrowRepeat size={30} style={{ color: 'darkgrey' }}/> {/* 크기와 색상을 명시적으로 설정 */}
+        </Button>
+      </div>
+  
+      <ListGroup>
+        {users.map(user => (
+          <ListGroup.Item
+            key={user.id}
+            className={userTasks[user.id]?.taskStatus === 'ready' ? 'list-group-item-success' : ''}
+            action
+          >
+            <div className="d-flex justify-content-between align-items-center">
+              <div>
+                <span>{user.name}</span>
+                <span className="mx-2">|</span>
+                <span>{user.username}</span>
+              </div>
+  
               {currentUser && currentUser.username === user.username && (
-                <span className="current-user-tag"> (현재 유저)</span>
+                <span className="badge rounded-pill bg-info">현재 유저</span>
+              )}
+  
+              {userTasks[user.id]?.taskStatus === 'ready' && (
+                <span className="badge bg-success">Ready</span>
               )}
             </div>
-          ))
-        )}
-      </div>
-    </div>
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
+      
+      {isLoading && (
+        <div className="text-center">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      )}
+    </Container>
   );
-}
+}  
 
 export default FLPage;
