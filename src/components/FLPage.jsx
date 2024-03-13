@@ -66,6 +66,11 @@ function FLPage() {
   const startFederatedLearning = () => {
     // 연합 학습 시작 로직을 여기에 추가하세요.
     console.log('연합 학습 시작');
+
+    api.post('/group/start', { groupCode })
+    .then(response => {
+        console.log(response);
+    });
   };
   
 
