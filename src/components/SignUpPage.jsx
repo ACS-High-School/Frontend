@@ -3,7 +3,9 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { authService } from './authService'; // authService 임포트
 
-import "../styles/SignUpPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.
+// import "../styles/SignUpPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.
+
+import { Form, Button, InputGroup, Alert, Container } from 'react-bootstrap';
 
 
 const SignForm = (props) => {
@@ -61,31 +63,27 @@ const SignForm = (props) => {
   
 
   return (
-    <div className="sign-form-container">
-      <form onSubmit={handleSubmit(onSubmit)} className="sign-form">
-        <div>
-          <label htmlFor="email">이메일</label>
-          <input
-            id="email"
-            type="text"
+    <Container className="sign-form-container mt-3">
+      <Form onSubmit={handleSubmit(onSubmit)} className="sign-form">
+        <Form.Group controlId="email" className="mb-3">
+          <Form.Label>이메일</Form.Label>
+          <Form.Control
+            type="email"
             placeholder="test@email.com"
             {...register("email", {
               required: "이메일은 필수 입력입니다.",
               pattern: {
-                value:
-                  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
+                value: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
                 message: "이메일 형식에 맞지 않습니다.",
               },
             })}
           />
-          {errors.email && (
-            <small role="alert">{errors.email.message}</small>
-          )}
-        </div>
-        <div>
-          <label htmlFor="username">닉네임</label>
-          <input
-            id="username"
+          {errors.email && <Alert variant="danger" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.email.message}</Alert>}
+        </Form.Group>
+  
+        <Form.Group controlId="username" className="mb-3">
+          <Form.Label>닉네임</Form.Label>
+          <Form.Control
             type="text"
             placeholder="닉네임을 입력하세요"
             {...register("username", {
@@ -96,28 +94,24 @@ const SignForm = (props) => {
               },
             })}
           />
-          {errors.username && (
-            <small role="alert">{errors.username.message}</small>
-          )}
-        </div>
-        <div>
-            <label htmlFor="company">소속</label>
-            <input
-                id="company"
-                type="text"
-                placeholder="소속을 입력하세요"
-                {...register("company", {
-                    required: "소속은 필수 입력입니다.",
-                })}
-            />
-            {errors.company && (
-                <small role="alert">{errors.company.message}</small>
-            )}
-        </div>
-        <div className="form-control__items">
-          <label htmlFor="password">비밀번호</label>
-          <input
-            id="password"
+          {errors.username && <Alert variant="danger" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.username.message}</Alert>}
+        </Form.Group>
+  
+        <Form.Group controlId="company" className="mb-3">
+          <Form.Label>소속</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="소속을 입력하세요"
+            {...register("company", {
+              required: "소속은 필수 입력입니다.",
+            })}
+          />
+          {errors.company && <Alert variant="danger" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.company.message}</Alert>}
+        </Form.Group>
+  
+        <Form.Group controlId="password" className="mb-3">
+          <Form.Label>비밀번호</Form.Label>
+          <Form.Control
             type="password"
             placeholder="*******"
             {...register("password", {
@@ -130,18 +124,16 @@ const SignForm = (props) => {
                 containsUpperCase: value =>
                   /[A-Z]/.test(value) || "최소 1개 이상의 대문자가 포함되어야 합니다.",
                 containsSpecialChar: value =>
-                  /[!@#$%^&*(),.?":{}|<>]/.test(value) || "최소 1개 이상의 특수문자가 포함되어야 합니다."
-              }
+                  /[!@#$%^&*(),.?":{}|<>]/.test(value) || "최소 1개 이상의 특수문자가 포함되어야 합니다.",
+              },
             })}
           />
-          {errors.password && (
-            <small role="alert">{errors.password.message}</small>
-          )}
-        </div>
-        <div>
-          <label htmlFor="passwordConfirm">비밀번호 확인</label>
-          <input
-            id="passwordConfirm"
+          {errors.password && <Alert variant="danger" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.password.message}</Alert>}
+        </Form.Group>
+  
+        <Form.Group controlId="passwordConfirm" className="mb-3">
+          <Form.Label>비밀번호 확인</Form.Label>
+          <Form.Control
             type="password"
             placeholder="*******"
             {...register("passwordConfirm", {
@@ -155,36 +147,36 @@ const SignForm = (props) => {
               },
             })}
           />
-          {errors.passwordConfirm && (
-            <small role="alert">{errors.passwordConfirm.message}</small>
-          )}
-        <button type="submit">이메일 인증 코드 발송</button>
-
-        </div>
-        {/* 이메일 인증 코드 입력 필드와 버튼을 조건부 렌더링 */}
+          {errors.passwordConfirm && <Alert variant="danger" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.passwordConfirm.message}</Alert>}
+        </Form.Group>
+  
+        <Button variant="primary" type="submit" className="mb-3">
+          이메일 인증 코드 발송
+        </Button>
+  
         {showEmailVerification && (
           <div className="email-verification">
-            <div>
-              <label htmlFor="emailVerificationCode">이메일 인증 코드</label>
-              <input
-                id="emailVerificationCode"
+            <Form.Group controlId="emailVerificationCode" className="mb-3">
+              <Form.Label>이메일 인증 코드</Form.Label>
+              <Form.Control
                 type="text"
                 placeholder="인증 코드를 입력하세요"
                 {...register("emailVerificationCode", {
                   required: "이메일 인증 코드는 필수 입력입니다.",
                 })}
               />
-              {errors.emailVerificationCode && (
-                <small role="alert">{errors.emailVerificationCode.message}</small>
-              )}
-            </div>
-            <button type="button" onClick={handleSubmit(verifyCode)}>회원 가입 완료</button>
+              {errors.emailVerificationCode && <Alert variant="danger" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.emailVerificationCode.message}</Alert>}
+            </Form.Group>
+  
+            <Button variant="success" onClick={handleSubmit(verifyCode)}>
+              회원 가입 완료
+            </Button>
           </div>
         )}
-
-      </form>
-    </div>
+      </Form>
+    </Container>
   );
+  
 };
 
 export default SignForm;
