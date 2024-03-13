@@ -158,7 +158,7 @@ function MyPage() {
               required
             />
           </Form.Group>
-          <Button type="submit" variant="primary">비밀번호 변경</Button>
+          <Button type="submit" variant="primary" style={{marginTop : '10px'}}>비밀번호 변경</Button>
         </Form>
       </div>
     );
