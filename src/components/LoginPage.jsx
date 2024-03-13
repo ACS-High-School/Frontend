@@ -9,7 +9,7 @@ import { signInWithRedirect, getCurrentUser } from "aws-amplify/auth";
 
 import { useNavigate } from "react-router-dom";
 
-import "../styles/LoginPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.
+// import "../styles/LoginPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.s
 
 import awsConfig from '../config/aws-exports';
 
