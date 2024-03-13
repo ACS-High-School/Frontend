@@ -164,11 +164,6 @@ function MyPage() {
   
 // 인퍼런스 데이터를 표로 렌더링하는 컴포넌트
 const InferenceTable = () => {
-  // 파일 다운로드를 처리하는 함수
-  const handleDownload = (downloadUrl) => {
-    window.location.href = downloadUrl; // 다운로드 URL로 이동하여 다운로드 시작
-  };
-
   // 날짜 포맷을 변경하는 함수 (예시 포맷)
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -176,38 +171,68 @@ const InferenceTable = () => {
   };
 
   return (
-    <table className='table'>
-      <thead>
-        <tr> 
-          <th>Title</th>
-          <th>Model</th>
-          <th>Date</th>
-          <th>Result</th>
-          {/* 기타 필요한 테이블 헤더 */}
-        </tr>
-      </thead>
-      <tbody>
-        {inferenceData.map((inference) => (
-          <tr key={inference._id}>
-            <td>{inference.title}</td>
-            <td>{inference.model}</td>
-            <td>{formatDate(inference.date)}</td>
-            <td>
-              <Button 
-                variant="primary" 
-                onClick={() => handleDownload(inference.result)}
-              >
-                Download
-              </Button>
-            </td>
-            {/* 기타 필요한 테이블 데이터 셀 */}
+      <table className='table'>
+        <thead>
+          <tr> 
+            <th>Title</th>
+            <th>Model</th>
+            <th>Date</th>
+            <th>Result</th>
+            {/* 기타 필요한 테이블 헤더 */}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {inferenceData.map((inference) => (
+            <tr key={inference._id}>
+              <td>{inference.title}</td>
+              <td>{inference.model}</td>
+              <td>{formatDate(inference.date)}</td>
+              <td>
+                <Button 
+                  variant="primary" 
+                  disabled={inference.stats !== 'complete'} // 'complete'가 아니면 버튼을 비활성화합니다.
+                  onClick={() => handleDownload(inference.result)}
+                >
+                  Download
+                </Button>
+              </td>
+              {/* 기타 필요한 테이블 데이터 셀 */}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     );
-  };
+  }
 
+  const handleDownload = async (result) => {
+    if (result) {
+      // 'result'가 파일 이름 또는 다운로드 경로를 나타냅니다.
+      const filename = result; // 파일 이름 설정
+      const subFolderPath = 'output'; // 서브 폴더 설정
+
+      try {
+        // 다운로드를 위해 서버에 요청
+        const response = await api.get(`/s3/csv_download/${subFolderPath}/${filename}`, {
+          responseType: 'blob' // 파일 데이터를 바이너리 형태로 받음
+        });
+
+        // 브라우저에서 파일 다운로드를 위한 URL 생성
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename.split('/').pop()); // 파일 이름 설정
+        document.body.appendChild(link);
+        link.click();
+
+        // 정리
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Error during file download:', error);
+      }
+    }
+  };
+  
   // 탭 컨텐츠를 결정하는 컴포넌트
   const TabContent = () => {
     switch (activeTab) {
