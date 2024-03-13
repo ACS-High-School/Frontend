@@ -13,6 +13,8 @@ import "../styles/LoginPage.css"; // 스타일링을 위한 CSS 파일을 임포
 
 import awsConfig from '../config/aws-exports';
 
+import { Container, Form, Button, Alert, Image } from 'react-bootstrap';
+
 Amplify.configure(awsConfig);
 
 const LoginForm = (props) => {
@@ -48,66 +50,64 @@ const LoginForm = (props) => {
   }
 
   return (
-    <div className="login-container">
-      {/* 로고 또는 이미지를 표시할 공간 */}
-      <div className="logo-container">
-        {/* 로고 이미지를 이곳에 추가하거나 이미지 컴포넌트를 사용하세요 */}
-        {/* 예: <img src="logo.png" alt="로고" className="logo" /> */}
+    <Container className="login-container mt-3">
+      <div className="logo-container mb-3">
+        {/* 이미지 컴포넌트 사용 예시 */}
+        <Image src="logo.png" alt="로고" fluid />
       </div>
-      <form onSubmit={handleSubmit(onLogin)} className="login-form">
-        <div className="text_area">
-          <label htmlFor="email">이메일</label>
-          <input
-            id="email"
-            type="text"
-            placeholder="text@email.com"
-            className="text_input"
+      <Form onSubmit={handleSubmit(onLogin)} className="login-form">
+        <Form.Group className="mb-3" controlId="email">
+          <Form.Label>이메일</Form.Label>
+          <Form.Control 
+            type="email" 
+            placeholder="text@email.com" 
             {...register("email", {
               required: "이메일은 필수 입력입니다.",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: "유효하지 않은 이메일 형식입니다."
               }
-            })}
+            })
+            }
           />
-          {errors.email && <small role="alert">{errors.email.message}</small>}
-        </div>
-        <div className="text_area">
-          <label htmlFor="password">비밀번호</label>
-          <input
-            id="password"
-            type="password"
-            placeholder="*******"
-            className="text_input"
+          {errors.email && (
+        <Alert variant="danger" role="alert" style={{ fontSize: '0.8rem', marginTop: '10px' }}>
+            {errors.email.message}
+        </Alert>
+        )}
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="password">
+          <Form.Label>비밀번호</Form.Label>
+          <Form.Control 
+            type="password" 
+            placeholder="*******" 
             {...register("password", {
-              required: "\n비밀번호는 필수 입력입니다.",
+              required: "비밀번호는 필수 입력입니다.",
               minLength: {
                 value: 8,
-                message: "\n8자리 이상 비밀번호를 입력하세요.",
+                message: "8자리 이상 비밀번호를 입력하세요.",
               },
             })}
           />
-          {errors.password && (
-            <small role="alert">{errors.password.message}</small>
-          )}
-        </div>
-        <button type="submit">로그인</button>
-        
+          {errors.password && <Alert variant="danger" role="alert" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.password.message}</Alert>}
+        </Form.Group>
+        <Button variant="primary" type="submit" className="mb-2">로그인</Button>
+  
         {/* 구글 로그인 버튼 */}
-        <button type="submit" className="google-signin-btn" onClick={() =>
+        <Button variant="light" className="google-signin-btn mb-2" onClick={() =>
                 signInWithRedirect({
                 provider: "Google",
-            })
-        }>
-            <img src={googleLogo}></img>
-        </button>
-
+            })}
+        >
+            <Image src={googleLogo} alt="Google 로그인" />
+        </Button>
+  
         {/* 회원 가입 버튼 */}
-        <button type="button" onClick={handleSignUp}>
+        <Button variant="secondary" onClick={handleSignUp}>
           회원 가입
-        </button>
-      </form>
-    </div>
+        </Button>
+      </Form>
+    </Container>
   );
 };
 
