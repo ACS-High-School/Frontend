@@ -20,7 +20,7 @@ const Header = () => {
   const isHome = location.pathname === "/";
   const isLogin = location.pathname === "/login";
   const isSignUp = location.pathname === "/signup";
-  const isFLPage = location.pathname.startsWith("/fl/"); 
+  const isFLPage = location.pathname.startsWith("/fl/");
 
   // accessToken으로 끝나는 쿠키가 있는지 확인하는 함수
   const hasAccessTokenCookie = () => {
@@ -51,11 +51,20 @@ const Header = () => {
                   <Navbar.Toggle aria-controls="basic-navbar-nav" />
                   <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto">
+                      {isHome && hasAccessToken && (
+                        <>
+                          <Nav.Link href="/select">Main</Nav.Link>
+                          <Nav.Link href="/mypage">Profile</Nav.Link>
+                        </>
+                      )}
                       {!isHome && !isSignUp && (
                         <Nav.Link href="/select">Main</Nav.Link>
                       )}
                       {isMyPage ? (
-                        <Button variant="outline-danger" onClick={handleSignOut}>
+                        <Button
+                          variant="outline-danger"
+                          onClick={handleSignOut}
+                        >
                           Logout
                         </Button>
                       ) : (
