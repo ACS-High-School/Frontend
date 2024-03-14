@@ -20,9 +20,11 @@ const SelectionPage = () => {
         setShowJoinForm(false); // 참여 폼은 숨김
     };
 
-    const handleCreateGroup = async () => {
+    const handleCreateGroup = async (event) => {
+        event.preventDefault();
         const userConfirmed = window.confirm("그룹을 생성합니다"); // 사용자에게 확인 요청
         if (userConfirmed) {
+
             const randomCode = Math.floor(Math.random() * (10**6 - 10**5) + 10**5);
             setGroupCode(randomCode);
 
