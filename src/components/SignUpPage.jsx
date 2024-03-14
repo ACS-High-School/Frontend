@@ -63,9 +63,9 @@ const SignForm = (props) => {
   
 
   return (
-    <Container className="sign-form-container mt-3">
-      <Form onSubmit={handleSubmit(onSubmit)} className="sign-form">
-        <Form.Group controlId="email" className="mb-3">
+    <Container className="sign-form-container mt-3 d-flex justify-content-center">
+      <Form onSubmit={handleSubmit(onSubmit)} className="sign-form w-100" style={{ maxWidth: '500px' }}>
+        <Form.Group controlId="email" className="mb-4">
           <Form.Label>이메일</Form.Label>
           <Form.Control
             type="email"
@@ -81,7 +81,7 @@ const SignForm = (props) => {
           {errors.email && <Alert variant="danger" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.email.message}</Alert>}
         </Form.Group>
   
-        <Form.Group controlId="username" className="mb-3">
+        <Form.Group controlId="username" className="mb-4">
           <Form.Label>닉네임</Form.Label>
           <Form.Control
             type="text"
@@ -90,14 +90,14 @@ const SignForm = (props) => {
               required: "닉네임은 필수 입력입니다.",
               minLength: {
                 value: 3,
-                message: "닉네임는 최소 3자 이상이어야 합니다.",
+                message: "닉네임은 최소 3자 이상이어야 합니다.",
               },
             })}
           />
           {errors.username && <Alert variant="danger" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.username.message}</Alert>}
         </Form.Group>
   
-        <Form.Group controlId="company" className="mb-3">
+        <Form.Group controlId="company" className="mb-4">
           <Form.Label>소속</Form.Label>
           <Form.Control
             type="text"
@@ -109,7 +109,7 @@ const SignForm = (props) => {
           {errors.company && <Alert variant="danger" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.company.message}</Alert>}
         </Form.Group>
   
-        <Form.Group controlId="password" className="mb-3">
+        <Form.Group controlId="password" className="mb-4">
           <Form.Label>비밀번호</Form.Label>
           <Form.Control
             type="password"
@@ -131,31 +131,26 @@ const SignForm = (props) => {
           {errors.password && <Alert variant="danger" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.password.message}</Alert>}
         </Form.Group>
   
-        <Form.Group controlId="passwordConfirm" className="mb-3">
+        <Form.Group controlId="passwordConfirm" className="mb-4">
           <Form.Label>비밀번호 확인</Form.Label>
           <Form.Control
             type="password"
             placeholder="*******"
             {...register("passwordConfirm", {
               required: "비밀번호 확인은 필수 입력입니다.",
-              validate: {
-                check: (val) => {
-                  if (getValues("password") !== val) {
-                    return "비밀번호가 일치하지 않습니다.";
-                  }
-                },
-              },
+              validate: value =>
+                value === getValues("password") || "비밀번호가 일치하지 않습니다.",
             })}
           />
           {errors.passwordConfirm && <Alert variant="danger" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.passwordConfirm.message}</Alert>}
         </Form.Group>
   
-        <Button variant="primary" type="submit" className="mb-3">
+        <Button variant="primary" type="submit" className="mb-3 w-100">
           이메일 인증 코드 발송
         </Button>
   
         {showEmailVerification && (
-          <div className="email-verification">
+          <div className="email-verification mt-4 p-3" style={{ backgroundColor: '#f8f9fa', borderRadius: '5px' }}>
             <Form.Group controlId="emailVerificationCode" className="mb-3">
               <Form.Label>이메일 인증 코드</Form.Label>
               <Form.Control
@@ -168,7 +163,7 @@ const SignForm = (props) => {
               {errors.emailVerificationCode && <Alert variant="danger" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.emailVerificationCode.message}</Alert>}
             </Form.Group>
   
-            <Button variant="success" onClick={handleSubmit(verifyCode)}>
+            <Button variant="success" onClick={handleSubmit(verifyCode)} className="w-100">
               회원 가입 완료
             </Button>
           </div>
@@ -176,6 +171,7 @@ const SignForm = (props) => {
       </Form>
     </Container>
   );
+  
   
 };
 
