@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 // import '../styles/FLPage.css'; // 이 경로에 CSS 파일을 저장하세요.
 import api from '../api/api';
 import { useParams } from 'react-router-dom';
-import { Button, Container, ListGroup, Spinner } from 'react-bootstrap';
+import { Button, Container, ListGroup, Spinner, Alert} from 'react-bootstrap';
 import { BsArrowRepeat } from 'react-icons/bs'; // React Icons 사용
 
 function FLPage() {
@@ -24,6 +24,8 @@ function FLPage() {
   const [userTasks, setUserTasks] = useState({});
 
   const [description, setDescription] = useState('');
+
+  const [isLearningStarted, setIsLearningStarted] = useState(false);
 
 
   useEffect(() => {
@@ -71,6 +73,7 @@ function FLPage() {
   const startFederatedLearning = () => {
     // 연합 학습 시작 로직을 여기에 추가하세요.
     console.log('연합 학습 시작');
+    setIsLearningStarted(true); // 연합 학습 시작 상태를 true로 설정
 
     api.post('/group/start', { groupCode })
     .then(response => {
@@ -162,11 +165,20 @@ function FLPage() {
             width: '140px',
             height: '50px',
           }}
+          disabled={isLearningStarted}
         >
           연합 학습 시작
         </Button>
       </div>
     )}
+
+    {isLearningStarted && (
+            <div className="mt-3">
+            <Alert variant="alert alert-dismissible alert-warning" className="text-center">
+                연합 학습이 실행 중입니다!
+            </Alert>
+            </div>
+        )}
 
       
       {isLoading && (
