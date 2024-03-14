@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/MyPage.css'; // 스타일 시트 임포트
+
+import { Button, Table, Form, Nav, Tab } from 'react-bootstrap';
 import api from '../api/api'; // API 호출을 위한 axios 인스턴스 또는 유사한 것
 import { authService } from './authService';
-import { Button } from 'react-bootstrap';
 
 function MyPage() {
   const [activeTab, setActiveTab] = useState('edit');
@@ -114,8 +115,8 @@ function MyPage() {
   
   
     return (
-      <div className={styles.profileContainer}>
-        <table>
+        <div className={styles.profileContainer}>
+        <Table striped bordered hover>
           <tbody>
             <tr>
               <th>이메일</th>
@@ -127,36 +128,38 @@ function MyPage() {
             </tr>
             <tr>
               <th>소속 회사</th>
-              <td><input type="text" name="company" defaultValue={userData?.company} onChange={handleChange} /></td>
               <td>
-                <button onClick={(e) => handleSubmit('company', e)}>수정</button>
+                <Form.Control type="text" name="company" defaultValue={userData?.company} onChange={handleChange} />
+              </td>
+              <td>
+                <Button variant="secondary" onClick={(e) => handleSubmit('company', e)}>수정</Button>
               </td>
             </tr>
           </tbody>
-        </table>
-        <form onSubmit={handlePasswordChange} className={styles.passwordChangeForm}>
-        <div>
-          <label htmlFor="newPassword">이전 비밀번호</label>
-          <input
-            type="password"
-            name="oldPassword"
-            value={form.oldPassword}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="confirmPassword">새 비밀번호</label>
-          <input
-            type="password"
-            name="newPassword"
-            value={form.newPassword}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit">비밀번호 변경</button>
-      </form>
+        </Table>
+        <Form onSubmit={handlePasswordChange} className={styles.passwordChangeForm}>
+          <Form.Group>
+            <Form.Label>이전 비밀번호</Form.Label>
+            <Form.Control
+              type="password"
+              name="oldPassword"
+              value={form.oldPassword}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>새 비밀번호</Form.Label>
+            <Form.Control
+              type="password"
+              name="newPassword"
+              value={form.newPassword}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Button type="submit" variant="primary" style={{marginTop : '10px'}}>비밀번호 변경</Button>
+        </Form>
       </div>
     );
   };
@@ -249,21 +252,27 @@ const InferenceTable = () => {
 
   return (
     <div>
-      <nav className="profile-tabs">
-        <button onClick={() => setActiveTab('edit')} className={getTabClassName('edit')}>
+    <Nav variant="tabs" defaultActiveKey="/edit" style={{ marginTop: '10px' }}>
+      <Nav.Item>
+        <Nav.Link eventKey="edit" onClick={() => setActiveTab('edit')}>
           프로필 수정
-        </button>
-        <button onClick={() => setActiveTab('history')} className={getTabClassName('history')}>
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link eventKey="history" onClick={() => setActiveTab('history')}>
           Result History
-        </button>
-        <button onClick={() => setActiveTab('monitoring')} className={getTabClassName('monitoring')}>
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link eventKey="monitoring" onClick={() => setActiveTab('monitoring')}>
           Model Monitoring
-        </button>
-      </nav>
-      <div className="tab-content">
-        <TabContent />
-      </div>
-    </div>
+        </Nav.Link>
+      </Nav.Item>
+    </Nav>
+    <Tab.Content className="tab-content">
+      <TabContent />
+    </Tab.Content>
+  </div>
   );
 }
 

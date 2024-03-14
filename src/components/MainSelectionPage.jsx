@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+
+import { Button, Form, InputGroup, Container, Row, Col } from 'react-bootstrap';
+
 import '../styles/MainSelectionPage.css';
 import { useNavigate } from "react-router-dom";
 import api from '../api/api'; // API 호출을 위한 axios 인스턴스 또는 유사한 것
-import FLPage from './FLPage'; // FLPage 컴포넌트를 임포트합니다.
 
 const SelectionPage = () => {
     const navigate = useNavigate(); // useNavigate 훅 사용
@@ -15,6 +17,7 @@ const SelectionPage = () => {
 
     const handleShowDescriptionForm = () => {
         setShowDescriptionForm(true); // 설명 입력 폼을 보여줌
+        setShowJoinForm(false); // 참여 폼은 숨김
     };
 
     const handleCreateGroup = async () => {
@@ -36,6 +39,7 @@ const SelectionPage = () => {
 
     const handleJoinGroup = () => {
         setShowJoinForm(true); // 참여 폼 표시
+        setShowDescriptionForm(false); // 설명 입력 폼은 숨김
     };
 
     const handleChangeDescription = (event) => {
@@ -74,36 +78,40 @@ const SelectionPage = () => {
     };
 
     return (
-        <div className="selection-container">
-            <div className="inference-section" onClick={() => window.location.href = '/inference'}>
+        <Container className="selection-container" style={{ display: 'flex', flexDirection: 'column', height: '100vh', alignItems: 'center', padding: 0,  marginLeft: 0, marginRight: 0, height: '100vh', width: '100vw' }}>
+            <Row className="inference-section" style={{ flex: 1, alignItems: 'center', justifyContent: 'center', fontSize: '50px', cursor: 'pointer', width: '100%', margin: 0 }} onClick={() => navigate('/inference')}>
                 Inference
-            </div>
-            <div className={`fl-section ${hoverFL ? 'hover' : ''}`} onMouseEnter={() => setHoverFL(true)} onMouseLeave={() => setHoverFL(false)}>
-                <div className={`fl-content ${hoverFL ? 'hover' : ''}`}>
-                    <span className="fl-logo">FL</span>
-                    {hoverFL && (
-                        <>
-                            {!showDescriptionForm ? (
-                                <button className="fl-button" onClick={handleShowDescriptionForm}>그룹 생성</button>
-                            ) : (
-                                <form className="create-form">
-                                    <input type="text" placeholder="그룹 설명 입력" value={description} onChange={handleChangeDescription} />
-                                    <button type="button" onClick={handleCreateGroup}>그룹 생성 확인</button>
-                                </form>
-                            )}
-                            <button className="fl-button" onClick={handleJoinGroup}>그룹 참여</button>
-                            {showJoinForm && (
-                                <form className="join-form">
-                                    <input type="text" placeholder="그룹 코드 입력" value={groupCode} onChange={handleGroupCodeChange} />
-                                    <button type="submit" onClick={handleSubmitJoin}>참여</button>
-                                </form>
-                            )}
-                        </>
+            </Row>
+    
+            <Row className={`fl-section ${hoverFL ? 'hover' : ''}`} style={{ flex: 1, justifyContent: 'center', width: '100%', margin: 0 }} onMouseEnter={() => setHoverFL(true)} onMouseLeave={() => setHoverFL(false)}>
+                <Col className="fl-content" style={{ textAlign: 'center', paddingTop: '20px', paddingLeft: 0, paddingRight: 0 }}>
+                    <div className="fl-logo">FL</div>
+                    <Button style={{ fontSize: '18px', padding: '10px 20px', marginRight: '10px', cursor: 'pointer' }} onClick={handleShowDescriptionForm}>그룹 생성</Button>
+                    <Button variant="secondary" style={{ fontSize: '18px', padding: '10px 20px', cursor: 'pointer' }} onClick={handleJoinGroup}>그룹 참여</Button>
+                    
+                    {showDescriptionForm && (
+                        <Form className="create-form" style={{ marginTop: '20px', width: '100%', display: 'flex', justifyContent: 'center' }} onSubmit={handleCreateGroup}>
+                            <Form.Group controlId="formGroupDescription" style={{ width: '300px' }}>
+                                <Form.Control type="text" placeholder="그룹 설명 입력" value={description} onChange={handleChangeDescription} />
+                            </Form.Group>
+                            <Button variant="success" type="submit" style={{ marginLeft: '20px' }}>생성 확인</Button>
+                        </Form>
                     )}
-                </div>
-            </div>
-        </div>
+    
+                    {showJoinForm && (
+                        <Form className="join-form" onSubmit={handleSubmitJoin} style={{ marginTop: '20px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                            <Form.Group controlId="formGroupCode" style={{ width: '300px' }}>
+                                <Form.Control type="text" placeholder="그룹 코드 입력" value={groupCode} onChange={handleGroupCodeChange} />
+                            </Form.Group>
+                            <Button variant="success" type="submit" style={{ marginLeft: '20px' }}>참여</Button>
+                        </Form>
+                    )}
+                </Col>
+            </Row>
+        </Container>
     );
-};
+};    
+
+
 
 export default SelectionPage;

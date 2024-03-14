@@ -66,6 +66,11 @@ function FLPage() {
   const startFederatedLearning = () => {
     // 연합 학습 시작 로직을 여기에 추가하세요.
     console.log('연합 학습 시작');
+
+    api.post('/group/start', { groupCode })
+    .then(response => {
+        console.log(response);
+    });
   };
   
 
@@ -86,6 +91,18 @@ function FLPage() {
           >
             Jupyter LAB
         </Button>
+        {/* 중앙에 그룹 코드를 보여줍니다. */}
+        {groupCode && (
+            <div style={{
+                flex: 1,
+                // textAlign: 'right', // 텍스트를 오른쪽으로 정렬합니다.
+                paddingLeft: '50px', // 오른쪽에 여백을 줍니다.
+                fontSize: '1rem',
+                fontWeight: 'bold',
+              }}>
+            그룹 코드: {groupCode}
+            </div>
+        )}
         <Button 
           onClick={reloadPage} 
           variant="outline-secondary" 
