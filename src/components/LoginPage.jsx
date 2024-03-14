@@ -9,9 +9,11 @@ import { signInWithRedirect, getCurrentUser } from "aws-amplify/auth";
 
 import { useNavigate } from "react-router-dom";
 
-import "../styles/LoginPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.
+// import "../styles/LoginPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.s
 
 import awsConfig from '../config/aws-exports';
+
+import { Container, Form, Button, Alert, Image } from 'react-bootstrap';
 
 Amplify.configure(awsConfig);
 
@@ -48,67 +50,47 @@ const LoginForm = (props) => {
   }
 
   return (
-    <div className="login-container">
-      {/* 로고 또는 이미지를 표시할 공간 */}
-      <div className="logo-container">
-        {/* 로고 이미지를 이곳에 추가하거나 이미지 컴포넌트를 사용하세요 */}
-        {/* 예: <img src="logo.png" alt="로고" className="logo" /> */}
-      </div>
-      <form onSubmit={handleSubmit(onLogin)} className="login-form">
-        <div className="text_area">
-          <label htmlFor="email">이메일</label>
-          <input
-            id="email"
-            type="text"
-            placeholder="text@email.com"
-            className="text_input"
-            {...register("email", {
-              required: "이메일은 필수 입력입니다.",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "유효하지 않은 이메일 형식입니다."
-              }
-            })}
-          />
-          {errors.email && <small role="alert">{errors.email.message}</small>}
+    <Container className="login-container d-flex justify-content-center align-items-center mt-3" style={{ minHeight: '100vh' }}>
+      <div className="w-100" style={{ maxWidth: '400px' }}>
+        <div className="logo-container text-center mb-5">
+          <Image src="logo.png" alt="로고" fluid />
         </div>
-        <div className="text_area">
-          <label htmlFor="password">비밀번호</label>
-          <input
-            id="password"
-            type="password"
-            placeholder="*******"
-            className="text_input"
-            {...register("password", {
-              required: "\n비밀번호는 필수 입력입니다.",
-              minLength: {
-                value: 8,
-                message: "\n8자리 이상 비밀번호를 입력하세요.",
-              },
-            })}
-          />
-          {errors.password && (
-            <small role="alert">{errors.password.message}</small>
-          )}
-        </div>
-        <button type="submit">로그인</button>
-        
-        {/* 구글 로그인 버튼 */}
-        <button type="submit" className="google-signin-btn" onClick={() =>
-                signInWithRedirect({
+        <Form onSubmit={handleSubmit(onLogin)} className="login-form">
+          <Form.Group className="mb-4" controlId="email">
+            <Form.Label>이메일</Form.Label>
+            <Form.Control 
+              type="email" 
+              placeholder="text@email.com" 
+              {...register("email", { /* 검증 규칙 */ })}
+            />
+            {errors.email && <Alert variant="danger">{errors.email.message}</Alert>}
+          </Form.Group>
+  
+          <Form.Group className="mb-4" controlId="password">
+            <Form.Label>비밀번호</Form.Label>
+            <Form.Control 
+              type="password" 
+              placeholder="*******" 
+              {...register("password", { /* 검증 규칙 */ })}
+            />
+            {errors.password && <Alert variant="danger">{errors.password.message}</Alert>}
+          </Form.Group>
+  
+          <Button variant="primary" type="submit" className="w-100 mb-3">로그인</Button>
+    
+          <Button variant="light" className="w-100 google-signin-btn mb-3" onClick={() => signInWithRedirect({
                 provider: "Google",
-            })
-        }>
-            <img src={googleLogo}></img>
-        </button>
-
-        {/* 회원 가입 버튼 */}
-        <button type="button" onClick={handleSignUp}>
-          회원 가입
-        </button>
-      </form>
-    </div>
+            })}>
+            <Image src={googleLogo} alt="Google 로그인" />
+          </Button>
+    
+          <Button variant="btn btn-outline-primary" className="w-100" onClick={handleSignUp}>
+            회원 가입
+          </Button>
+        </Form>
+      </div>
+    </Container>
   );
-};
+};  
 
 export default LoginForm;
