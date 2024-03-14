@@ -100,11 +100,13 @@ function InferencePage() {
     // filename과 subFolderPath 값을 가져옵니다.
     const filename = downloadUrl; // 이전에 저장된 다운로드 URL을 filename으로 사용
     console.log(filename);
+    const intermediateFolderPath = 'inference'
     const subFolderPath = 'output'; // 고정된 서브 폴더 경로
+
     
     try {
       // 서버의 다운로드 엔드포인트에 요청을 보냅니다. URL의 일부로 subFolderPath와 filename을 포함합니다.
-      const response = await api.get(`/s3/csv_download/${subFolderPath}/${filename}`, {
+      const response = await api.get(`/s3/csv_download/${intermediateFolderPath}/${subFolderPath}/${filename}`, {
         responseType: 'blob' // 파일 데이터를 바이너리 형태로 받기 위한 설정
       });
   
