@@ -78,13 +78,13 @@ const SelectionPage = () => {
     };
 
     return (
-        <Container className="selection-container" style={{ display: 'flex', flexDirection: 'column', height: '100vh', alignItems: 'center' }}>
-            <Row className="inference-section" style={{ flex: 1, alignItems: 'center', justifyContent: 'center', fontSize: '50px', cursor: 'pointer', width: '100%' }} onClick={() => navigate('/inference')}>
+        <Container className="selection-container" style={{ display: 'flex', flexDirection: 'column', height: '100vh', alignItems: 'center', padding: 0,  marginLeft: 0, marginRight: 0, height: '100vh', width: '100vw' }}>
+            <Row className="inference-section" style={{ flex: 1, alignItems: 'center', justifyContent: 'center', fontSize: '50px', cursor: 'pointer', width: '100%', margin: 0 }} onClick={() => navigate('/inference')}>
                 Inference
             </Row>
-
-            <Row className={`fl-section ${hoverFL ? 'hover' : ''}`} style={{ flex: 1, justifyContent: 'center', width: '100%' }} onMouseEnter={() => setHoverFL(true)} onMouseLeave={() => setHoverFL(false)}>
-                <Col className="fl-content" style={{ textAlign: 'center', paddingTop: '20px' }}>
+    
+            <Row className={`fl-section ${hoverFL ? 'hover' : ''}`} style={{ flex: 1, justifyContent: 'center', width: '100%', margin: 0 }} onMouseEnter={() => setHoverFL(true)} onMouseLeave={() => setHoverFL(false)}>
+                <Col className="fl-content" style={{ textAlign: 'center', paddingTop: '20px', paddingLeft: 0, paddingRight: 0 }}>
                     <div className="fl-logo">FL</div>
                     <Button style={{ fontSize: '18px', padding: '10px 20px', marginRight: '10px', cursor: 'pointer' }} onClick={handleShowDescriptionForm}>그룹 생성</Button>
                     <Button variant="secondary" style={{ fontSize: '18px', padding: '10px 20px', cursor: 'pointer' }} onClick={handleJoinGroup}>그룹 참여</Button>
@@ -97,7 +97,7 @@ const SelectionPage = () => {
                             <Button variant="success" type="submit" style={{ marginLeft: '20px' }}>생성 확인</Button>
                         </Form>
                     )}
-
+    
                     {showJoinForm && (
                         <Form className="join-form" onSubmit={handleSubmitJoin} style={{ marginTop: '20px', width: '100%', display: 'flex', justifyContent: 'center' }}>
                             <Form.Group controlId="formGroupCode" style={{ width: '300px' }}>
@@ -110,7 +110,7 @@ const SelectionPage = () => {
             </Row>
         </Container>
     );
-};
+};    
 
 
 
