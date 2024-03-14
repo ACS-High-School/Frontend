@@ -15,6 +15,7 @@ function InferencePage() {
   const [downloadUrl, setDownloadUrl] = useState(''); // 다운로드 URL 상태 추가
   const [inferenceId, setInferenceId] = useState(null); // 인퍼런스 ID 상태 추가
   const [alert, setAlert] = useState({ show: false, message: '', variant: '' });
+  const [taskTitleError, setTaskTitleError] = useState(false);
 
   const statusIntervalRef = useRef();
 
@@ -40,36 +41,36 @@ function InferencePage() {
 
   const handleSubmit = async () => {
     setLoading(true); // 로딩 시작
+    setTaskTitleError(false); // 에러 상태 초기화
     const formData = new FormData();
     formData.append('model', model);
     formData.append('taskTitle', taskTitle); // 여기서 초기 taskTitle을 전송
-
+  
     try {
-      // /inference/upload 요청 보내기
       const inferenceResponse = await api.post('/inference/upload', formData);
-
-      if (inferenceResponse.status === 200 && dataFile) {
-        setInferenceId(inferenceResponse.data._id);
-
-        const newTaskTitle = inferenceResponse.data.input;
-        // S3에 파일 업로드하기
-        const uploadSuccess = await uploadFile(dataFile, 'input', newTaskTitle);
-
-        if (uploadSuccess) {
-          console.log('File uploaded successfully');
-          setAlert({ show: true, message: '파일이 성공적으로 업로드 되었습니다.', variant: 'success' });
-          setUploadSuccess(true); // 업로드 성공 상태 설정
-          setInferenceStatus('processing');
-        } else {
-          console.error('File upload to S3 failed');
-          setAlert({ show: true, message: '처리 중 오류가 발생했습니다.', variant: 'danger' });
-        }
+      setInferenceId(inferenceResponse.data._id);
+  
+      const newTaskTitle = inferenceResponse.data.input;
+      const uploadSuccess = await uploadFile(dataFile, 'input', newTaskTitle);
+  
+      if (uploadSuccess) {
+        console.log('File uploaded successfully');
+        setAlert({ show: true, message: '파일이 성공적으로 업로드 되었습니다.', variant: 'success' });
+        setUploadSuccess(true);
+        setInferenceStatus('processing');
       }
     } catch (error) {
-      console.error('Error during the process:', error);
-    } finally {
       setLoading(false); // 로딩 중지
       setSubmitted(true); // 폼 제출 상태 설정
+  
+      if (error.response && error.response.status === 500) {
+        // 서버에서 500 에러를 반환하는 경우
+        setTaskTitleError(true);
+      } else {
+        // 기타 다른 에러를 처리하는 경우
+        setAlert({ show: true, message: '처리 중 오류가 발생했습니다.', variant: 'danger' });
+        console.error('Error during the process:', error);
+      }
     }
   };
 
@@ -95,8 +96,37 @@ function InferencePage() {
     return () => clearInterval(statusIntervalRef.current);
   }, [uploadSuccess, inferenceId]); // useEffect의 의존성 배열에 inferenceId 추가
 
-  const handleDownload = () => {
-    window.location.href = downloadUrl; // 설정된 URL에서 파일 다운로드
+  const handleDownload = async () => {
+    // filename과 subFolderPath 값을 가져옵니다.
+    const filename = downloadUrl; // 이전에 저장된 다운로드 URL을 filename으로 사용
+    console.log(filename);
+    const subFolderPath = 'output'; // 고정된 서브 폴더 경로
+    
+    try {
+      // 서버의 다운로드 엔드포인트에 요청을 보냅니다. URL의 일부로 subFolderPath와 filename을 포함합니다.
+      const response = await api.get(`/s3/csv_download/${subFolderPath}/${filename}`, {
+        responseType: 'blob' // 파일 데이터를 바이너리 형태로 받기 위한 설정
+      });
+  
+      // 브라우저에서 파일을 다운로드하기 위한 URL 생성
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      
+      // 생성된 URL을 이용하여 링크 요소를 생성하고 프로그램적으로 클릭 이벤트를 발생시켜 다운로드
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename); // 다운로드 될 파일 이름 설정
+      document.body.appendChild(link);
+      link.click();
+      
+      // 사용 후 링크 요소 정리
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url); // 생성된 URL 해제
+      
+    } catch (error) {
+      // 에러 처리
+      console.error('Error during file download:', error);
+      setAlert({ show: true, message: '파일 다운로드 중 오류가 발생했습니다.', variant: 'danger' });
+    }
   };
 
 
@@ -133,10 +163,19 @@ function InferencePage() {
           </Col>
         </Form.Group>
 
-        <Form.Group as={Row} className="mb-3" controlId="formTaskTitle">
-          <Form.Label column sm="2">Task Title</Form.Label>
+        <Form.Group as={Row} className="mb-3">
+          <Form.Label column sm="2" htmlFor="inputTaskTitle">Task Title</Form.Label>
           <Col sm="10">
-            <Form.Control type="text" value={taskTitle} onChange={handleTaskTitleChange} placeholder="Task Name" className="mb-2"/>
+            <Form.Control
+              type="text"
+              id="inputTaskTitle"
+              value={taskTitle}
+              onChange={handleTaskTitleChange}
+              isInvalid={taskTitleError} // taskTitleError가 true일 때 유효성 검사 에러 스타일 적용
+            />
+            <Form.Control.Feedback type="invalid">
+              Task Title이 중복됩니다. 다른 Task Title을 입력해주세요.
+            </Form.Control.Feedback>
           </Col>
         </Form.Group>
 
