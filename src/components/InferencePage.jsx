@@ -15,6 +15,7 @@ function InferencePage() {
   const [downloadUrl, setDownloadUrl] = useState(''); // 다운로드 URL 상태 추가
   const [inferenceId, setInferenceId] = useState(null); // 인퍼런스 ID 상태 추가
   const [alert, setAlert] = useState({ show: false, message: '', variant: '' });
+  const [taskTitleError, setTaskTitleError] = useState(false);
 
   const statusIntervalRef = useRef();
 
@@ -40,6 +41,7 @@ function InferencePage() {
 
   const handleSubmit = async () => {
     setLoading(true); // 로딩 시작
+    setTaskTitleError(false); // 에러 상태 초기화
     const formData = new FormData();
     formData.append('model', model);
     formData.append('taskTitle', taskTitle); // 여기서 초기 taskTitle을 전송
@@ -63,7 +65,7 @@ function InferencePage() {
   
       if (error.response && error.response.status === 500) {
         // 서버에서 500 에러를 반환하는 경우
-        setAlert({ show: true, message: 'Task Title이 중복됩니다.', variant: 'danger' });
+        setTaskTitleError(true);
       } else {
         // 기타 다른 에러를 처리하는 경우
         setAlert({ show: true, message: '처리 중 오류가 발생했습니다.', variant: 'danger' });
@@ -161,10 +163,19 @@ function InferencePage() {
           </Col>
         </Form.Group>
 
-        <Form.Group as={Row} className="mb-3" controlId="formTaskTitle">
-          <Form.Label column sm="2">Task Title</Form.Label>
+        <Form.Group as={Row} className="mb-3">
+          <Form.Label column sm="2" htmlFor="inputTaskTitle">Task Title</Form.Label>
           <Col sm="10">
-            <Form.Control type="text" value={taskTitle} onChange={handleTaskTitleChange} placeholder="Task Name" className="mb-2"/>
+            <Form.Control
+              type="text"
+              id="inputTaskTitle"
+              value={taskTitle}
+              onChange={handleTaskTitleChange}
+              isInvalid={taskTitleError} // taskTitleError가 true일 때 유효성 검사 에러 스타일 적용
+            />
+            <Form.Control.Feedback type="invalid">
+              Task Title이 중복됩니다. 다른 Task Title을 입력해주세요.
+            </Form.Control.Feedback>
           </Col>
         </Form.Group>
 
