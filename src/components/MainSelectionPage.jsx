@@ -27,7 +27,10 @@ const SelectionPage = () => {
             setGroupCode(randomCode);
 
             try {
-                await api.post('/group/create', { groupCode: randomCode, description });
+                await api.post('/group/create', { 
+                    groupCode: randomCode, 
+                    description: description 
+                });
                 // 그룹 생성 후 추가 로직 (예: 팝업 창 열기)
                 window.open(`/fl/${randomCode}`, 'popup', 'width=600,height=400,left=200,top=200');
 
@@ -92,7 +95,7 @@ const SelectionPage = () => {
                     {showDescriptionForm && (
                         <Form className="create-form" style={{ marginTop: '20px', width: '100%', display: 'flex', justifyContent: 'center' }} onSubmit={handleCreateGroup}>
                             <Form.Group controlId="formGroupDescription" style={{ width: '300px' }}>
-                                <Form.Control type="text" placeholder="그룹 설명 입력" value={description} onChange={handleChangeDescription} />
+                                <Form.Control type="text" placeholder="Task 설명 입력" value={description} onChange={handleChangeDescription} />
                             </Form.Group>
                             <Button variant="success" type="submit" style={{ marginLeft: '20px' }}>생성 확인</Button>
                         </Form>
