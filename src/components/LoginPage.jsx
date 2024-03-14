@@ -50,65 +50,47 @@ const LoginForm = (props) => {
   }
 
   return (
-    <Container className="login-container mt-3">
-      <div className="logo-container mb-3">
-        {/* 이미지 컴포넌트 사용 예시 */}
-        <Image src="logo.png" alt="로고" fluid />
-      </div>
-      <Form onSubmit={handleSubmit(onLogin)} className="login-form">
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>이메일</Form.Label>
-          <Form.Control 
-            type="email" 
-            placeholder="text@email.com" 
-            {...register("email", {
-              required: "이메일은 필수 입력입니다.",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "유효하지 않은 이메일 형식입니다."
-              }
-            })
-            }
-          />
-          {errors.email && (
-        <Alert variant="danger" role="alert" style={{ fontSize: '0.8rem', marginTop: '10px' }}>
-            {errors.email.message}
-        </Alert>
-        )}
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>비밀번호</Form.Label>
-          <Form.Control 
-            type="password" 
-            placeholder="*******" 
-            {...register("password", {
-              required: "비밀번호는 필수 입력입니다.",
-              minLength: {
-                value: 8,
-                message: "8자리 이상 비밀번호를 입력하세요.",
-              },
-            })}
-          />
-          {errors.password && <Alert variant="danger" role="alert" style={{ fontSize: '0.8rem', marginTop: '10px' }}>{errors.password.message}</Alert>}
-        </Form.Group>
-        <Button variant="primary" type="submit" className="mb-2">로그인</Button>
+    <Container className="login-container d-flex justify-content-center align-items-center mt-3" style={{ minHeight: '100vh' }}>
+      <div className="w-100" style={{ maxWidth: '400px' }}>
+        <div className="logo-container text-center mb-5">
+          <Image src="logo.png" alt="로고" fluid />
+        </div>
+        <Form onSubmit={handleSubmit(onLogin)} className="login-form">
+          <Form.Group className="mb-4" controlId="email">
+            <Form.Label>이메일</Form.Label>
+            <Form.Control 
+              type="email" 
+              placeholder="text@email.com" 
+              {...register("email", { /* 검증 규칙 */ })}
+            />
+            {errors.email && <Alert variant="danger">{errors.email.message}</Alert>}
+          </Form.Group>
   
-        {/* 구글 로그인 버튼 */}
-        <Button variant="light" className="google-signin-btn mb-2" onClick={() =>
-                signInWithRedirect({
+          <Form.Group className="mb-4" controlId="password">
+            <Form.Label>비밀번호</Form.Label>
+            <Form.Control 
+              type="password" 
+              placeholder="*******" 
+              {...register("password", { /* 검증 규칙 */ })}
+            />
+            {errors.password && <Alert variant="danger">{errors.password.message}</Alert>}
+          </Form.Group>
+  
+          <Button variant="primary" type="submit" className="w-100 mb-3">로그인</Button>
+    
+          <Button variant="light" className="w-100 google-signin-btn mb-3" onClick={() => signInWithRedirect({
                 provider: "Google",
-            })}
-        >
+            })}>
             <Image src={googleLogo} alt="Google 로그인" />
-        </Button>
-  
-        {/* 회원 가입 버튼 */}
-        <Button variant="secondary" onClick={handleSignUp}>
-          회원 가입
-        </Button>
-      </Form>
+          </Button>
+    
+          <Button variant="btn btn-outline-primary" className="w-100" onClick={handleSignUp}>
+            회원 가입
+          </Button>
+        </Form>
+      </div>
     </Container>
   );
-};
+};  
 
 export default LoginForm;
