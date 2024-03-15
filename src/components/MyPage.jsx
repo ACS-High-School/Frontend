@@ -211,11 +211,12 @@ const InferenceTable = () => {
     if (result) {
       // 'result'가 파일 이름 또는 다운로드 경로를 나타냅니다.
       const filename = result; // 파일 이름 설정
+      const intermediateFolderPath = 'inference'
       const subFolderPath = 'output'; // 서브 폴더 설정
 
       try {
         // 다운로드를 위해 서버에 요청
-        const response = await api.get(`/s3/csv_download/${subFolderPath}/${filename}`, {
+        const response = await api.get(`/s3/csv_download/${intermediateFolderPath}/${subFolderPath}/${filename}`, {
           responseType: 'blob' // 파일 데이터를 바이너리 형태로 받음
         });
 
