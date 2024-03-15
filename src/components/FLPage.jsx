@@ -23,6 +23,8 @@ function FLPage() {
 
   const [userTasks, setUserTasks] = useState({});
 
+  const [description, setDescription] = useState('');
+
 
   useEffect(() => {
     setIsLoading(true); // API 요청 시작 시 로딩 상태를 true로 설정
@@ -31,12 +33,15 @@ function FLPage() {
         console.log(response);
         const updatedUsers = users.map((user) => {
           const serverUser = response.data[`user${user.id + 1}`];
-          setCurrentUser(response.data.currentUser);
-          setjupyterLabUrl(response.data.jupyterLabUrl);
+          
           return serverUser
             ? { ...user, username: serverUser.username }
             : { ...user, username: '아직 입장 안함' }; // 정보가 없으면 "아직 입장 안함"으로 설정
         });
+
+        setCurrentUser(response.data.currentUser);
+        setjupyterLabUrl(response.data.jupyterLabUrl);
+        setDescription(response.data.description);
 
         setUsers(updatedUsers);
         setUserTasks(response.data.userTasks);
@@ -97,11 +102,13 @@ function FLPage() {
                 flex: 1,
                 // textAlign: 'right', // 텍스트를 오른쪽으로 정렬합니다.
                 paddingLeft: '50px', // 오른쪽에 여백을 줍니다.
-                fontSize: '1rem',
+                fontSize: '0.8rem',
                 fontWeight: 'bold',
               }}>
             그룹 코드: {groupCode}
+            {description && <p style={{fontSize: '1rem'}}>{description}</p>}
             </div>
+            
         )}
         <Button 
           onClick={reloadPage} 
