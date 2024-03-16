@@ -8,6 +8,7 @@ import { authService } from './authService';
 function MyPage() {
   const [activeTab, setActiveTab] = useState('edit');
   const [inferenceData, setInferenceData] = useState([]);
+  const [flData, setFlData] = useState([]); // FL 데이터를 위한 상태 추가
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
@@ -21,9 +22,21 @@ function MyPage() {
           console.error('Error fetching inference data:', error);
         }
       };
-
       fetchData();
     }
+    // FL History 탭이 활성화될 때 데이터를 불러옵니다.
+    if (activeTab === 'fl-history') {
+        const fetchFlData = async () => {
+          try {
+            const response = await api.get('/fl/results'); // 예시 엔드포인트
+            setFlData(response.data); // 데이터를 상태에 저장합니다.
+          } catch (error) {
+            console.error('Error fetching FL data:', error);
+          }
+        };
+  
+        fetchFlData();
+      }
   }, [activeTab]); // activeTab이 변경될 때마다 실행됩니다.
 
   useEffect(() => {
@@ -207,6 +220,40 @@ const InferenceTable = () => {
     );
   }
 
+  // FL 데이터를 표로 렌더링하는 컴포넌트
+  const FlTable = () => {
+    return (
+      <table className='table'>
+        <thead>
+          <tr>
+            <th>TaskName</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          {flData.map((flItem) => (
+            <tr key={flItem._id}>
+              <td>{flItem.taskName}</td>
+              <td>{flItem.description}</td>
+              <td>{formatDate(flItem.date)}</td>
+              <td>
+                <Button
+                  variant="primary"
+                  disabled={flItem.status !== 'complete'} // 'complete'가 아니면 버튼을 비활성화합니다.
+                  onClick={() => handleDownload(flItem.result)}
+                >
+                  Download
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
   const handleDownload = async (result) => {
     if (result) {
       // 'result'가 파일 이름 또는 다운로드 경로를 나타냅니다.
@@ -245,7 +292,7 @@ const InferenceTable = () => {
       case 'inference-history':
         return <InferenceTable />; // 인퍼런스 테이블을 렌더링합니다.
       case 'fl-history':
-        return <div>Model Monitoring 컨텐츠</div>;
+        return <FlTable />; // FL 테이블을 렌더링합니다.
       default:
         return null;
     }
