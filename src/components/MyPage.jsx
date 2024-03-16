@@ -242,9 +242,9 @@ const InferenceTable = () => {
     switch (activeTab) {
       case 'edit':
         return <UserProfile />; 
-      case 'history':
+      case 'inference-history':
         return <InferenceTable />; // 인퍼런스 테이블을 렌더링합니다.
-      case 'monitoring':
+      case 'fl-history':
         return <div>Model Monitoring 컨텐츠</div>;
       default:
         return null;
@@ -260,13 +260,13 @@ const InferenceTable = () => {
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link eventKey="history" onClick={() => setActiveTab('history')}>
-          Result History
+        <Nav.Link eventKey="history" onClick={() => setActiveTab('inference-history')}>
+          Inference History
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link eventKey="monitoring" onClick={() => setActiveTab('monitoring')}>
-          Model Monitoring
+        <Nav.Link eventKey="monitoring" onClick={() => setActiveTab('fl-history')}>
+          FL History
         </Nav.Link>
       </Nav.Item>
     </Nav>
