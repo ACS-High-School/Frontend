@@ -207,7 +207,7 @@ const InferenceTable = () => {
                 <Button 
                   variant="primary" 
                   disabled={inference.stats !== 'complete'} // 'complete'가 아니면 버튼을 비활성화합니다.
-                  onClick={() => handleDownload(inference.result)}
+                  onClick={() => handleDownload(inference.result, 'inference', 'output')}
                 >
                   Download
                 </Button>
@@ -242,7 +242,8 @@ const InferenceTable = () => {
                 <Button
                   variant="primary"
                   disabled={flItem.status !== 'complete'} // 'complete'가 아니면 버튼을 비활성화합니다.
-                  onClick={() => handleDownload(flItem.result)}
+                  // FlTable 컴포넌트 내에서 handleDownload 호출
+                  onClick={() => handleDownload(flItem.result, 'fedlearn', 'output')}
                 >
                   Download
                 </Button>
@@ -254,35 +255,32 @@ const InferenceTable = () => {
     );
   };
 
-  const handleDownload = async (result) => {
-    if (result) {
-      // 'result'가 파일 이름 또는 다운로드 경로를 나타냅니다.
-      const filename = result; // 파일 이름 설정
-      const intermediateFolderPath = 'inference'
-      const subFolderPath = 'output'; // 서브 폴더 설정
+  const handleDownload = async (result, intermediateFolderPath, subFolderPath ) => {
+  if (result) {
+    const filename = result; // 파일 이름 설정
 
-      try {
-        // 다운로드를 위해 서버에 요청
-        const response = await api.get(`/s3/csv_download/${intermediateFolderPath}/${subFolderPath}/${filename}`, {
-          responseType: 'blob' // 파일 데이터를 바이너리 형태로 받음
-        });
+    try {
+      // 다운로드를 위해 서버에 요청
+      const response = await api.get(`/s3/csv_download/${intermediateFolderPath}/${subFolderPath}/${filename}`, {
+        responseType: 'blob' // 파일 데이터를 바이너리 형태로 받음
+      });
 
-        // 브라우저에서 파일 다운로드를 위한 URL 생성
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', filename.split('/').pop()); // 파일 이름 설정
-        document.body.appendChild(link);
-        link.click();
+      // 브라우저에서 파일 다운로드를 위한 URL 생성
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename.split('/').pop()); // 파일 이름 설정
+      document.body.appendChild(link);
+      link.click();
 
-        // 정리
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      } catch (error) {
-        console.error('Error during file download:', error);
-      }
+      // 정리
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error during file download:', error);
     }
-  };
+  }
+};
   
   // 탭 컨텐츠를 결정하는 컴포넌트
   const TabContent = () => {
