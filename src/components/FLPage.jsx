@@ -45,7 +45,7 @@ function FLPage() {
         setjupyterLabUrl(response.data.jupyterLabUrl);
         setDescription(response.data.description);
 
-        if (response.data.status === 'start') {
+        if (response.data.status === 'start' || response.data.status === 'done') {
           setIsLearningStarted(true);
         }
 
