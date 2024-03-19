@@ -45,6 +45,10 @@ function FLPage() {
         setjupyterLabUrl(response.data.jupyterLabUrl);
         setDescription(response.data.description);
 
+        if (response.data.status === 'start') {
+          setIsLearningStarted(true);
+        }
+
         setUsers(updatedUsers);
         setUserTasks(response.data.userTasks);
         setIsLoading(false); // API 요청 완료 후 로딩 상태를 false로 설정
