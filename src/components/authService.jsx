@@ -103,6 +103,19 @@ export const authService = {
   async handleSignOut() {
     try {
       await signOut({ global: true });
+      // 모든 쿠키를 조회
+    const cookies = document.cookie.split(';');
+
+    // 쿠키 이름에 'accessToken'을 포함하는 쿠키를 찾아 삭제
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i];
+      const eqPos = cookie.indexOf('=');
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      if (name.trim().includes('accessToken')) {
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+        // 필요한 경우 여기에 domain, secure, sameSite 등 다른 쿠키 속성을 추가
+      }
+    }
     } catch (error) {
       console.log('error signing out: ', error);
     }
