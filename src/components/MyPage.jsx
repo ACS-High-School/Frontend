@@ -12,6 +12,12 @@ function MyPage() {
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab'); // 'tab' 쿼리 파라미터의 값을 가져옵니다.
+    // 유효한 탭 값이 있는 경우, 해당 탭을 활성화합니다.
+    if (tab && ['edit', 'inference-history', 'fl-history'].includes(tab)) {
+        setActiveTab(tab);
+    }
     // Result History 탭이 활성화될 때 데이터를 불러옵니다.
     if (activeTab === 'history') {
       const fetchData = async () => {

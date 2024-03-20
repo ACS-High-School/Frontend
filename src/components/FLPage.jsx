@@ -52,7 +52,7 @@ function FLPage() {
         if (response.data.status === 'done') {
             // 'done' 상태일 때 alert을 띄우고, 확인을 누르면 mypage 페이지로 리다이렉트
             alert('학습이 완료되었습니다. 마이페이지로 이동합니다.');
-            window.open('/mypage');
+            window.open('/mypage?tab=fl-history');
           }
 
         setUsers(updatedUsers);
