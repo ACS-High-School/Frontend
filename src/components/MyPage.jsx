@@ -19,7 +19,7 @@ function MyPage() {
         setActiveTab(tab);
     }
     // Result History 탭이 활성화될 때 데이터를 불러옵니다.
-    if (activeTab === 'history') {
+    if (activeTab === 'inference-history') {
       const fetchData = async () => {
         try {
           const response = await api.get('/inference/results');
