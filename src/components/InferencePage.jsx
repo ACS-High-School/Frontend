@@ -183,9 +183,14 @@ function InferencePage() {
 
         <Form.Group as={Row} className="mb-3" controlId="formDataFile">
           <Form.Label column sm="2">Input Data</Form.Label>
-          <Col sm="10">
+          <Col sm="9">
             <Form.Control type="file" onChange={handleDataFileChange} className="mb-2"/>
             {fileError && <Alert variant="danger" className="mt-2">파일은 .csv 확장자여야 합니다.</Alert>}
+          </Col>
+          <Col sm="1" className="text-right"> {/* 여기서 오른쪽 정렬을 위해 text-right 클래스를 추가합니다. */}
+            <Button variant="primary" onClick={handleSubmit} disabled={!model || !taskTitle || !dataFile || fileError}>
+              Upload
+            </Button>
           </Col>
         </Form.Group>
 
@@ -194,10 +199,6 @@ function InferencePage() {
           {alert.message}
         </Alert>
         )}
-
-        <Button variant="primary" onClick={handleSubmit} disabled={!model || !taskTitle || !dataFile || fileError} className="mb-4">
-          Send
-        </Button>
       </Form>
 
       {inferenceStatus === 'processing' && <div className="text-center"><BootstrapSpinner animation="border" /></div>}
@@ -206,9 +207,11 @@ function InferencePage() {
           <Alert variant="success" className="mt-3">
             파일 처리가 완료되었습니다. 결과를 다운로드하세요.
           </Alert>
-          <Button variant="success" onClick={handleDownload} className="mt-2">
-            Download Result File
-          </Button>
+          <div className="text-center">
+            <Button variant="success" onClick={handleDownload} className="mt-2">
+              Download Result File
+            </Button>
+          </div>
         </>
       )}
     </Container>
