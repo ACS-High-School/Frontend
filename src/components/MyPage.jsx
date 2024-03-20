@@ -8,9 +8,16 @@ import { authService } from './authService';
 function MyPage() {
   const [activeTab, setActiveTab] = useState('edit');
   const [inferenceData, setInferenceData] = useState([]);
+  const [flData, setFlData] = useState([]); // FL 데이터를 위한 상태 추가
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab'); // 'tab' 쿼리 파라미터의 값을 가져옵니다.
+    // 유효한 탭 값이 있는 경우, 해당 탭을 활성화합니다.
+    if (tab && ['edit', 'inference-history', 'fl-history'].includes(tab)) {
+        setActiveTab(tab);
+    }
     // Result History 탭이 활성화될 때 데이터를 불러옵니다.
     if (activeTab === 'history') {
       const fetchData = async () => {
@@ -21,9 +28,21 @@ function MyPage() {
           console.error('Error fetching inference data:', error);
         }
       };
-
       fetchData();
     }
+    // FL History 탭이 활성화될 때 데이터를 불러옵니다.
+    if (activeTab === 'fl-history') {
+        const fetchFlData = async () => {
+          try {
+            const response = await api.get('/fl/results'); // 예시 엔드포인트
+            setFlData(response.data); // 데이터를 상태에 저장합니다.
+          } catch (error) {
+            console.error('Error fetching FL data:', error);
+          }
+        };
+  
+        fetchFlData();
+      }
   }, [activeTab]); // activeTab이 변경될 때마다 실행됩니다.
 
   useEffect(() => {
@@ -194,7 +213,7 @@ const InferenceTable = () => {
                 <Button 
                   variant="primary" 
                   disabled={inference.stats !== 'complete'} // 'complete'가 아니면 버튼을 비활성화합니다.
-                  onClick={() => handleDownload(inference.result)}
+                  onClick={() => handleDownload(inference.result, 'inference', 'output')}
                 >
                   Download
                 </Button>
@@ -207,45 +226,77 @@ const InferenceTable = () => {
     );
   }
 
-  const handleDownload = async (result) => {
-    if (result) {
-      // 'result'가 파일 이름 또는 다운로드 경로를 나타냅니다.
-      const filename = result; // 파일 이름 설정
-      const intermediateFolderPath = 'inference'
-      const subFolderPath = 'output'; // 서브 폴더 설정
-
-      try {
-        // 다운로드를 위해 서버에 요청
-        const response = await api.get(`/s3/csv_download/${intermediateFolderPath}/${subFolderPath}/${filename}`, {
-          responseType: 'blob' // 파일 데이터를 바이너리 형태로 받음
-        });
-
-        // 브라우저에서 파일 다운로드를 위한 URL 생성
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', filename.split('/').pop()); // 파일 이름 설정
-        document.body.appendChild(link);
-        link.click();
-
-        // 정리
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      } catch (error) {
-        console.error('Error during file download:', error);
-      }
-    }
+  // FL 데이터를 표로 렌더링하는 컴포넌트
+  const FlTable = () => {
+    return (
+      <table className='table'>
+        <thead>
+          <tr>
+            <th>TaskName</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          {flData.map((flItem) => (
+            <tr key={flItem._id}>
+              <td>{flItem.taskName}</td>
+              <td>{flItem.description}</td>
+              <td>{formatDate(flItem.date)}</td>
+              <td>
+                <Button
+                  variant="primary"
+                  disabled={flItem.status !== 'complete'} // 'complete'가 아니면 버튼을 비활성화합니다.
+                  // FlTable 컴포넌트 내에서 handleDownload 호출
+                  onClick={() => handleDownload(flItem.result, 'fedlearn', 'output')}
+                >
+                  Download
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
   };
+
+  const handleDownload = async (result, intermediateFolderPath, subFolderPath ) => {
+  if (result) {
+    const filename = result; // 파일 이름 설정
+
+    try {
+      // 다운로드를 위해 서버에 요청
+      const response = await api.get(`/s3/csv_download/${intermediateFolderPath}/${subFolderPath}/${filename}`, {
+        responseType: 'blob' // 파일 데이터를 바이너리 형태로 받음
+      });
+
+      // 브라우저에서 파일 다운로드를 위한 URL 생성
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename.split('/').pop()); // 파일 이름 설정
+      document.body.appendChild(link);
+      link.click();
+
+      // 정리
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error during file download:', error);
+    }
+  }
+};
   
   // 탭 컨텐츠를 결정하는 컴포넌트
   const TabContent = () => {
     switch (activeTab) {
       case 'edit':
         return <UserProfile />; 
-      case 'history':
+      case 'inference-history':
         return <InferenceTable />; // 인퍼런스 테이블을 렌더링합니다.
-      case 'monitoring':
-        return <div>Model Monitoring 컨텐츠</div>;
+      case 'fl-history':
+        return <FlTable />; // FL 테이블을 렌더링합니다.
       default:
         return null;
     }
@@ -260,13 +311,13 @@ const InferenceTable = () => {
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link eventKey="history" onClick={() => setActiveTab('history')}>
-          Result History
+        <Nav.Link eventKey="history" onClick={() => setActiveTab('inference-history')}>
+          Inference History
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link eventKey="monitoring" onClick={() => setActiveTab('monitoring')}>
-          Model Monitoring
+        <Nav.Link eventKey="monitoring" onClick={() => setActiveTab('fl-history')}>
+          FL History
         </Nav.Link>
       </Nav.Item>
     </Nav>
