@@ -357,7 +357,7 @@ function MyPage() {
 
   return (
     <div>
-    <Nav variant="tabs" defaultActiveKey="/edit" style={{ marginTop: '10px' }}>
+    <Nav variant="underline" defaultActiveKey="/edit" style={{ marginTop: '10px' }}>
       <Nav.Item>
         <Nav.Link eventKey="edit" onClick={() => setActiveTab('edit')}>
           프로필 수정
