@@ -134,50 +134,65 @@ function MyPage() {
   
   
     return (
-        <div className={styles.profileContainer}>
-        <Table striped bordered hover>
-          <tbody>
-            <tr>
-              <th>이메일</th>
-              <td>{userData?.email}</td>
-            </tr>
-            <tr>
-              <th>닉네임</th>
-              <td>{userData?.username}</td>
-            </tr>
-            <tr>
-              <th>소속 회사</th>
-              <td>
-                <Form.Control type="text" name="company" defaultValue={userData?.company} onChange={handleChange} />
-              </td>
-              <td>
-                <Button variant="secondary" onClick={(e) => handleSubmit('company', e)}>수정</Button>
-              </td>
-            </tr>
-          </tbody>
-        </Table>
-        <Form onSubmit={handlePasswordChange} className={styles.passwordChangeForm}>
-          <Form.Group>
-            <Form.Label>이전 비밀번호</Form.Label>
+      <div className={styles.profileContainer} style={{ marginTop: '20px' }}>
+        <Form>
+          <Form.Group className="mb-3" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Form.Label style={{ width: '20%' }}>이메일</Form.Label>
+            <Form.Control
+              type="text"
+              readOnly
+              defaultValue={userData?.email}
+              style={{ flex: 1, marginRight: '10px' }}
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Form.Label style={{ width: '20%' }}>닉네임</Form.Label>
+            <Form.Control
+              type="text"
+              readOnly
+              defaultValue={userData?.username}
+              style={{ flex: 1, marginRight: '10px' }}
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Form.Label style={{ width: '20%' }}>소속 회사</Form.Label>
+            <Form.Control
+              type="text"
+              name="company"
+              defaultValue={userData?.company}
+              onChange={handleChange}
+              style={{ flex: 1, marginRight: '10px' }}
+            />
+            <Button variant="primary" onClick={(e) => handleSubmit('company', e)} style={{ width: '20%' }}>수정</Button>
+          </Form.Group>
+        </Form>
+
+        <Form onSubmit={handlePasswordChange}>
+          <Form.Group className="mb-3" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Form.Label style={{ width: '20%' }}>이전 비밀번호</Form.Label>
             <Form.Control
               type="password"
               name="oldPassword"
               value={form.oldPassword}
               onChange={handleChange}
               required
+              style={{ flex: 1, marginRight: '10px' }}
             />
           </Form.Group>
-          <Form.Group>
-            <Form.Label>새 비밀번호</Form.Label>
+          <Form.Group className="mb-3" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Form.Label style={{ width: '20%' }}>새 비밀번호</Form.Label>
             <Form.Control
               type="password"
               name="newPassword"
               value={form.newPassword}
               onChange={handleChange}
               required
+              style={{ flex: 1, marginRight: '10px' }}
             />
+            <Button type="submit" variant="primary" style={{ width: '20%' }}>비밀번호 변경</Button>
           </Form.Group>
-          <Button type="submit" variant="primary" style={{marginTop : '10px'}}>비밀번호 변경</Button>
         </Form>
       </div>
     );
