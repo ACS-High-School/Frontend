@@ -37,58 +37,60 @@ const Header = () => {
 
   return (
     <header>
-      <Navbar bg="dark" variant="dark" expand="lg">
-        <Container fluid>
-          {isFLPage ? (
-            // FL Page에서는 B3O 로고만 보이고, 클릭 비활성화
-            <Navbar.Brand style={{ pointerEvents: "none" }}>B3O</Navbar.Brand>
-          ) : (
-            // 다른 페이지에서는 기존 로직 유지
-            <>
-              <Navbar.Brand href="/">B3O</Navbar.Brand>
-              {!isLogin && (
-                <>
-                  <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                  <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="ms-auto">
-                      {isHome && hasAccessToken && (
-                        <>
+      {isHome ? null : (
+        <Navbar bg="dark" variant="dark" expand="lg">
+          <Container fluid>
+            {isFLPage ? (
+              // FL Page에서는 B3O 로고만 보이고, 클릭 비활성화
+              <Navbar.Brand style={{ pointerEvents: "none" }}>B3O</Navbar.Brand>
+            ) : (
+              // 다른 페이지에서는 기존 로직 유지
+              <>
+                <Navbar.Brand href="/">B3O</Navbar.Brand>
+                {!isLogin && (
+                  <>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Collapse id="basic-navbar-nav">
+                      <Nav className="ms-auto">
+                        {isHome && hasAccessToken && (
+                          <>
+                            <Nav.Link href="/select">Main</Nav.Link>
+                            <Nav.Link href="/mypage">Profile</Nav.Link>
+                          </>
+                        )}
+                        {!isHome && !isSignUp && (
                           <Nav.Link href="/select">Main</Nav.Link>
-                          <Nav.Link href="/mypage">Profile</Nav.Link>
-                        </>
-                      )}
-                      {!isHome && !isSignUp && (
-                        <Nav.Link href="/select">Main</Nav.Link>
-                      )}
-                      {isMyPage ? (
-                        <Button
-                          variant="outline-danger"
-                          onClick={handleSignOut}
-                        >
-                          Logout
-                        </Button>
-                      ) : (
-                        (isHome || isSignUp) &&
-                        !hasAccessToken && (
+                        )}
+                        {isMyPage ? (
                           <Button
-                            variant="outline-primary"
-                            onClick={() => navigate("/login")}
+                            variant="outline-danger"
+                            onClick={handleSignOut}
                           >
-                            Login
+                            Logout
                           </Button>
-                        )
-                      )}
-                      {!isHome && !isSignUp && !isMyPage && (
-                        <Nav.Link href="/mypage">Profile</Nav.Link>
-                      )}
-                    </Nav>
-                  </Navbar.Collapse>
-                </>
-              )}
-            </>
-          )}
-        </Container>
-      </Navbar>
+                        ) : (
+                          (isHome || isSignUp) &&
+                          !hasAccessToken && (
+                            <Button
+                              variant="outline-primary"
+                              onClick={() => navigate("/login")}
+                            >
+                              Login
+                            </Button>
+                          )
+                        )}
+                        {!isHome && !isSignUp && !isMyPage && (
+                          <Nav.Link href="/mypage">Profile</Nav.Link>
+                        )}
+                      </Nav>
+                    </Navbar.Collapse>
+                  </>
+                )}
+              </>
+            )}
+          </Container>
+        </Navbar>
+      )}
     </header>
   );
 };
