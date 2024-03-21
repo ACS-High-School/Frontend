@@ -46,7 +46,6 @@ const Header = () => {
             // FL Page에서는 B3O 로고만 보이고, 클릭 비활성화
             <Navbar.Brand style={{ pointerEvents: "none" }}>B3O</Navbar.Brand>
           ) : (
-            // 다른 페이지에서는 기존 로직 유지
             <>
               <Navbar.Brand href="/">B3O</Navbar.Brand>
               {!isLogin && (
@@ -64,14 +63,23 @@ const Header = () => {
                         <Nav.Link href="/select">Main</Nav.Link>
                       )}
                       {isMyPage ? (
-                        <Button variant="outline-danger" onClick={handleSignOut}>
+                        <Nav.Link 
+                          href="#" 
+                          style={{ color: '#FA5882' }} // Logout 빨간색 인라인 스타일
+                          onClick={handleSignOut}>
                           Logout
-                        </Button>
-                      ) : isSignUp && !hasAccessToken ? (
-                        <Button variant="outline-primary" onClick={() => navigate("/login")}>
-                          Login
-                        </Button>
-                      ) : null}
+                        </Nav.Link>
+                      ) : (
+                        (isHome || isSignUp) &&
+                        !hasAccessToken && (
+                          <Nav.Link 
+                            href="#" 
+                            style={{ color: '#DA81F5' }} // Login 연초록색 인라인 스타일
+                            onClick={() => navigate("/login")}>
+                            Login
+                          </Nav.Link>
+                        )
+                      )}
                       {!isHome && !isSignUp && !isMyPage && (
                         <Nav.Link href="/mypage">Profile</Nav.Link>
                       )}
