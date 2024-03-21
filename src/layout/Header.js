@@ -37,7 +37,6 @@ const Header = () => {
 
   return (
     <header>
-      {isHome ? null : (
         <Navbar bg="dark" variant="dark" expand="lg">
           <Container fluid>
             {isFLPage ? (
@@ -69,7 +68,7 @@ const Header = () => {
                             Logout
                           </Button>
                         ) : (
-                          (isHome || isSignUp) &&
+                          (isSignUp) &&
                           !hasAccessToken && (
                             <Button
                               variant="outline-primary"
@@ -90,7 +89,6 @@ const Header = () => {
             )}
           </Container>
         </Navbar>
-      )}
     </header>
   );
 };
