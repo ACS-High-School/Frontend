@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/MyPage.css'; // 스타일 시트 임포트
 
-import { Button, Table, Form, Nav, Tab } from 'react-bootstrap';
+import { Button, Table, Form, Nav, Tab, Pagination } from 'react-bootstrap';
 import api from '../api/api'; // API 호출을 위한 axios 인스턴스 또는 유사한 것
 import { authService } from './authService';
 
@@ -10,6 +10,9 @@ function MyPage() {
   const [inferenceData, setInferenceData] = useState([]);
   const [flData, setFlData] = useState([]); // FL 데이터를 위한 상태 추가
   const [userData, setUserData] = useState({});
+  const [currentPageInference, setCurrentPageInference] = useState(1);
+  const [currentPageFL, setCurrentPageFL] = useState(1);
+  const dataPerPage = 5;
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -57,6 +60,26 @@ function MyPage() {
   
       fetchUserData();
     }, []);
+
+    // 페이징을 위한 페이지 번호 컴포넌트 생성 함수
+    const PaginationNumbers = ({ total, current, onPageChange }) => {
+      let items = [];
+      for (let number = 1; number <= Math.ceil(total / dataPerPage); number++) {
+        items.push(
+          <div className="pagination-wrapper">
+            <Pagination.Item key={number} active={number === current} onClick={() => onPageChange(number)}>
+              {number}
+            </Pagination.Item>,
+          </div>
+        );
+      }
+      return (
+        <div className="pagination-wrapper"> {/* 여기에 클래스를 적용합니다 */}
+          <Pagination>{items}</Pagination>
+        </div>
+      );
+    };
+  
 
   
   const getTabClassName = (tabName) => {
@@ -134,117 +157,144 @@ function MyPage() {
   
   
     return (
-        <div className={styles.profileContainer}>
-        <Table striped bordered hover>
-          <tbody>
-            <tr>
-              <th>이메일</th>
-              <td>{userData?.email}</td>
-            </tr>
-            <tr>
-              <th>닉네임</th>
-              <td>{userData?.username}</td>
-            </tr>
-            <tr>
-              <th>소속 회사</th>
-              <td>
-                <Form.Control type="text" name="company" defaultValue={userData?.company} onChange={handleChange} />
-              </td>
-              <td>
-                <Button variant="secondary" onClick={(e) => handleSubmit('company', e)}>수정</Button>
-              </td>
-            </tr>
-          </tbody>
-        </Table>
-        <Form onSubmit={handlePasswordChange} className={styles.passwordChangeForm}>
-          <Form.Group>
-            <Form.Label>이전 비밀번호</Form.Label>
+      <div className={styles.profileContainer} style={{ marginTop: '20px' }}>
+        <Form>
+          <Form.Group className="mb-3" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Form.Label style={{ width: '20%' }}>이메일</Form.Label>
+            <Form.Control
+              type="text"
+              readOnly
+              defaultValue={userData?.email}
+              style={{ flex: 1, marginRight: '10px' }}
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Form.Label style={{ width: '20%' }}>닉네임</Form.Label>
+            <Form.Control
+              type="text"
+              readOnly
+              defaultValue={userData?.username}
+              style={{ flex: 1, marginRight: '10px' }}
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Form.Label style={{ width: '20%' }}>소속 회사</Form.Label>
+            <Form.Control
+              type="text"
+              name="company"
+              defaultValue={userData?.company}
+              onChange={handleChange}
+              style={{ flex: 1, marginRight: '10px' }}
+            />
+            <Button variant="primary" onClick={(e) => handleSubmit('company', e)} style={{ width: '20%' }}>수정</Button>
+          </Form.Group>
+        </Form>
+
+        <Form onSubmit={handlePasswordChange}>
+          <Form.Group className="mb-3" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Form.Label style={{ width: '20%' }}>이전 비밀번호</Form.Label>
             <Form.Control
               type="password"
               name="oldPassword"
               value={form.oldPassword}
               onChange={handleChange}
               required
+              style={{ flex: 1, marginRight: '10px' }}
             />
           </Form.Group>
-          <Form.Group>
-            <Form.Label>새 비밀번호</Form.Label>
+          <Form.Group className="mb-3" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Form.Label style={{ width: '20%' }}>새 비밀번호</Form.Label>
             <Form.Control
               type="password"
               name="newPassword"
               value={form.newPassword}
               onChange={handleChange}
               required
+              style={{ flex: 1, marginRight: '10px' }}
             />
+            <Button type="submit" variant="primary" style={{ width: '20%' }}>비밀번호 변경</Button>
           </Form.Group>
-          <Button type="submit" variant="primary" style={{marginTop : '10px'}}>비밀번호 변경</Button>
         </Form>
       </div>
     );
   };
   
-  
-// 인퍼런스 데이터를 표로 렌더링하는 컴포넌트
-const InferenceTable = () => {
-  // 날짜 포맷을 변경하는 함수 (예시 포맷)
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
+  // 인퍼런스 데이터를 표로 렌더링하는 컴포넌트
+  const InferenceTable = () => {
 
-  return (
-      <table className='table'>
-        <thead>
-          <tr> 
-            <th>Title</th>
-            <th>Model</th>
-            <th>Date</th>
-            <th>Result</th>
-            {/* 기타 필요한 테이블 헤더 */}
-          </tr>
-        </thead>
-        <tbody>
-          {inferenceData.map((inference) => (
-            <tr key={inference._id}>
-              <td>{inference.title}</td>
-              <td>{inference.model}</td>
-              <td>{formatDate(inference.date)}</td>
-              <td>
-                <Button 
-                  variant="primary" 
-                  disabled={inference.stats !== 'complete'} // 'complete'가 아니면 버튼을 비활성화합니다.
-                  onClick={() => handleDownload(inference.result, 'inference', 'output')}
-                >
-                  Download
-                </Button>
-              </td>
-              {/* 기타 필요한 테이블 데이터 셀 */}
+    const formatDate = (dateString) => {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+    // 현재 페이지에 표시할 데이터 계산
+    const currentData = inferenceData.slice((currentPageInference - 1) * dataPerPage, currentPageInference * dataPerPage);
+
+    return (
+      <>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Model</th>
+              <th>Date</th>
+              <th>Result</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentData.map((inference, index) => (
+              <tr key={index}>
+                <td>{inference.title}</td>
+                <td>{inference.model}</td>
+                <td>{formatDate(inference.date)}</td>
+                <td>
+                  <Button 
+                    variant="primary" 
+                    disabled={inference.stats !== 'complete'} // 'complete'가 아니면 버튼을 비활성화합니다.
+                    onClick={() => handleDownload(inference.result, 'inference', 'output')}
+                  >
+                    Download
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+        <PaginationNumbers total={inferenceData.length} current={currentPageInference} onPageChange={setCurrentPageInference} />
+      </>
     );
-  }
+  };
 
   // FL 데이터를 표로 렌더링하는 컴포넌트
   const FlTable = () => {
+
+    const formatDate = (dateString) => {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+
+    // 현재 페이지에 표시할 데이터 계산
+    const currentData = flData.slice((currentPageFL - 1) * dataPerPage, currentPageFL * dataPerPage);
+
     return (
-      <table className='table'>
-        <thead>
-          <tr>
-            <th>TaskName</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Result</th>
-          </tr>
-        </thead>
-        <tbody>
-          {flData.map((flItem) => (
-            <tr key={flItem._id}>
-              <td>{flItem.taskName}</td>
-              <td>{flItem.description}</td>
-              <td>{formatDate(flItem.date)}</td>
-              <td>
+      <>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>TaskName</th>
+              <th>Description</th>
+              <th>Date</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentData.map((flItem, index) => (
+              <tr key={index}>
+                <td>{flItem.taskName}</td>
+                <td>{flItem.description}</td>
+                <td>{formatDate(flItem.date)}</td>
+                <td>
                 <Button
                   variant="primary"
                   disabled={flItem.status !== 'complete'} // 'complete'가 아니면 버튼을 비활성화합니다.
@@ -254,12 +304,15 @@ const InferenceTable = () => {
                   Download
                 </Button>
               </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+        <PaginationNumbers total={flData.length} current={currentPageFL} onPageChange={setCurrentPageFL} />
+      </>
     );
   };
+
 
   const handleDownload = async (result, intermediateFolderPath, subFolderPath ) => {
   if (result) {
@@ -304,7 +357,7 @@ const InferenceTable = () => {
 
   return (
     <div>
-    <Nav variant="tabs" defaultActiveKey="/edit" style={{ marginTop: '10px' }}>
+    <Nav variant="underline" defaultActiveKey="/edit" style={{ marginTop: '10px' }}>
       <Nav.Item>
         <Nav.Link eventKey="edit" onClick={() => setActiveTab('edit')}>
           프로필 수정
