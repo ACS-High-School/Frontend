@@ -25,7 +25,6 @@ function App() {
   return (
     <Router>
       <Layout>
-        <Container style={{ minHeight: "75vh" }}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<HomePage />} />
@@ -34,7 +33,9 @@ function App() {
               path="/mypage"
               element={
                 <ProtectedRoute>
-                  <MyPage />
+                  <Container style={{ minHeight: "75vh" }}> 
+                    <MyPage />
+                </Container>
                 </ProtectedRoute>
               }
             />
@@ -58,12 +59,13 @@ function App() {
               path="/fl/:groupCode"
               element={
                 <ProtectedRoute>
-                  <FLPage />
+                  <Container style={{ minHeight: "75vh" }}> 
+                    <FLPage />
+                  </Container>
                 </ProtectedRoute>
               }
             />
           </Routes>
-        </Container>
       </Layout>
     </Router>
   );
