@@ -98,7 +98,7 @@ const SelectionPage = () => {
                             <Form.Group controlId="formGroupDescription" style={{ width: '300px' }}>
                                 <Form.Control type="text" placeholder="Task 설명 입력" value={description} onChange={handleChangeDescription} />
                             </Form.Group>
-                            <Button variant="success" type="submit" style={{ marginLeft: '20px' }}>생성 확인</Button>
+                            <Button variant="success" type="submit" style={{ marginLeft: '20px', backgroundColor: '#0B0B61' }}>생성 확인</Button>
                         </Form>
                     )}
     
@@ -107,7 +107,7 @@ const SelectionPage = () => {
                             <Form.Group controlId="formGroupCode" style={{ width: '300px' }}>
                                 <Form.Control type="text" placeholder="그룹 코드 입력" value={groupCode} onChange={handleGroupCodeChange} />
                             </Form.Group>
-                            <Button variant="success" type="submit" style={{ marginLeft: '20px' }}>참여</Button>
+                            <Button variant="success" type="submit" style={{ marginLeft: '20px', backgroundColor: '#29088A' }}>참여</Button>
                         </Form>
                     )}
                 </Col>
