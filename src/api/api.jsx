@@ -3,6 +3,7 @@ import {COGNITO_API} from '../config/config';
 import {authService} from '../components/authService';
 export const API_BASE_URL = process.env.REACT_APP_API_ROOT;
 
+export const domain = process.env.REACT_APP_HOME_URL;
 
 
 // Axios 인스턴스 생성
@@ -48,12 +49,12 @@ async function updateAccessTokenInCookie(newAccessToken) {
   
       // 쿠키 이름에 'accessToken'이 포함되어 있다면, 해당 쿠키를 새 액세스 토큰 값으로 업데이트합니다.
       if (cookieName.includes('accessToken')) {
-        const updatedCookie = `${cookieName}=${newAccessToken}; path=/; max-age=3600`; // max-age는 쿠키의 유효 시간을 설정합니다.
+        const updatedCookie = `${cookieName}=${newAccessToken}; domain=${domain}; path=/; `; // max-age는 쿠키의 유효 시간을 설정합니다.
         document.cookie = updatedCookie; // 쿠키 업데이트
         break; // 쿠키를 찾았으니 루프를 종료합니다.
       }
       else {
-        const updatedCookie = `accessToken=${newAccessToken}; path=/; max-age=3600`; // max-age는 쿠키의 유효 시간을 설정합니다.
+        const updatedCookie = `accessToken=${newAccessToken}; domain=${domain}; path=/; `; // max-age는 쿠키의 유효 시간을 설정합니다.
         document.cookie = updatedCookie; // 쿠키 업데이트
       }
     }
