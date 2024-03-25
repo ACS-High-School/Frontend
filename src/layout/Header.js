@@ -35,14 +35,13 @@ const Header = () => {
   // accessToken 쿠키의 존재 여부
   const hasAccessToken = hasAccessTokenCookie();
 
+  if (isHome) return null;
+
   return (
     <header>
       <Navbar variant="dark" expand="lg" style={{ backgroundColor: "#000000" }}>
         <Container fluid>
-          {isHome ? (
-            // 홈 페이지에서는 B3O 로고만 보여주고 클릭 비활성화
-            <Navbar.Brand style={{ pointerEvents: "none" }}>B3O</Navbar.Brand>
-          ) : isFLPage ? (
+          {isFLPage ? (
             // FL Page에서는 B3O 로고만 보이고, 클릭 비활성화
             <Navbar.Brand style={{ pointerEvents: "none" }}>B3O</Navbar.Brand>
           ) : (
