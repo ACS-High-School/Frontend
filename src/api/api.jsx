@@ -83,6 +83,7 @@ api.interceptors.response.use(
         } catch (refreshError) {
           // 토큰 갱신 시도 후 실패했을 경우, 로그인 페이지로 리디렉션
           alert("다시 로그인 해주세요!!");
+          await authService.handleSignOut();
           window.location.href = '/'; // 로그인 페이지 경로 확인 필요
         }
       }
