@@ -35,6 +35,7 @@ const HomePage = () => {
       </div>
       <div className="home-auth-container">
         <Button onClick={handleEnter} className="auth-button" variant="primary">Enter</Button>
+        <div className="b3o-footer-text">B3O</div> {/* 여기에 B3O 텍스트 추가 */}
       </div>
     </div>
   );
