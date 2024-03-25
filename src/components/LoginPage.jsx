@@ -81,12 +81,12 @@ const LoginForm = (props) => {
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
             <Button variant="primary" type="submit" style={{ flex: 1, marginRight: '10px' }}>로그인</Button>
 
-            <Button variant="light" style={{ flex: 1, padding: 0, border: 'none', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }}>
+            <Button variant="light" style={{ flex: 1, padding: 0, border: 'none', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }} onClick={() => signInWithRedirect({ provider: "Google" })}>
                 <Image src={googleLogo} alt="Google 로그인" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
             </Button>
           </div>
 
-            <Button variant="btn btn-outline-primary" className="w-100" style={{ color: '#FFFFFF', backgroundColor: '#2c3e50', marginTop: '15px' }}>
+            <Button variant="btn btn-outline-primary" className="w-100" style={{ color: '#FFFFFF', backgroundColor: '#2c3e50', marginTop: '15px' }} onClick={handleSignUp}>
             회원 가입
             </Button>
 
