@@ -54,7 +54,7 @@ async function updateAccessTokenInCookie(newAccessToken) {
         break; // 쿠키를 찾았으니 루프를 종료합니다.
       }
       else {
-        const updatedCookie = `accessToken=${newAccessToken}; domain=${domain}; path=/; `; // max-age는 쿠키의 유효 시간을 설정합니다.
+        const updatedCookie = `${cookieName}=${newAccessToken}; domain=${domain}; path=/; `; // max-age는 쿠키의 유효 시간을 설정합니다.
         document.cookie = updatedCookie; // 쿠키 업데이트
       }
     }
