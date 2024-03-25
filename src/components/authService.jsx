@@ -26,7 +26,6 @@ Amplify.configure({
 const cookieStorage = new CookieStorage({
     domain: `${domain}`,
     path: "/",
-    expires: 7,
     sameSite: "none",
     secure: true,
 });
