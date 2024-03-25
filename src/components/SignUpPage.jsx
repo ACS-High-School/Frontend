@@ -63,7 +63,15 @@ const SignForm = (props) => {
   
 
   return (
-    <Container className="sign-form-container mt-3 d-flex justify-content-center">
+    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+        <div className="w-100" style={{ 
+    maxWidth: '600px', // 폼의 최대 너비를 설정
+    padding: '40px', // 내부 패딩을 설정하여 폼 주변의 공간을 확장
+    borderRadius: '15px', // 폼의 모서리를 둥글게 처리
+    border: '2px solid #707070', // 폼의 테두리에 색상을 추가
+    backgroundColor: '#fff', // 폼의 배경색을 흰색으로 설정
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)' // 폼에 그림자 효과를 추가하여 입체감을 줌
+    }}>
       <Form onSubmit={handleSubmit(onSubmit)} className="sign-form w-100" style={{ maxWidth: '500px' }}>
         <Form.Group controlId="email" className="mb-4">
           <Form.Label>이메일</Form.Label>
@@ -169,6 +177,7 @@ const SignForm = (props) => {
           </div>
         )}
       </Form>
+      </div>
     </Container>
   );
   
