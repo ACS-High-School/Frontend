@@ -35,13 +35,25 @@
     padding: 20px;
     background-color: rgb(0, 0, 0);
 }
+
 .auth-button {
-    position: absolute !important; /* 절대 위치 지정 */
+    position: absolute !important;
     margin: 10px !important;
-    padding: 10px 20px !important;
-    transform: translateY(-210%) !important; /* Y축으로 50%만큼 이동하여 정 중앙에 배치 */
-    top: 50% !important; /* 상단에서부터 50%의 위치 */
-    right: 80px !important; /* 오른쪽에서부터 50px 떨어진 위치 */
-    font-size: 30px !important;
+    padding: 15px 30px !important; /* 버튼의 패딩을 늘려 더 크게 만듭니다 */
+    transform: translateY(-210%) !important;
+    top: 43% !important;
+    right: 80px !important;
+    font-size: 24px !important; /* 폰트 사이즈를 조정하여 가독성을 높입니다 */
     cursor: pointer !important;
+    border-radius: 8px !important; /* 모서리를 둥글게 하여 현대적인 느낌을 줍니다 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important; /* 버튼에 그림자 효과를 추가합니다 */
+    background-color: #222f3c !important; /* 부트스트랩의 기본 파란색을 사용합니다 */
+    color: #fff !important; /* 글자 색상을 흰색으로 설정합니다 */
+    border: none !important; /* 테두리를 제거합니다 */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* 상호작용 시 애니메이션 효과를 추가합니다 */
+}
+
+.auth-button:hover {
+    transform: translateY(-210%) scale(1.05) !important; /* 호버 시 버튼이 약간 커지도록 합니다 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5) !important; /* 그림자 효과를 강조합니다 */
 }
