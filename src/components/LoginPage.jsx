@@ -51,10 +51,13 @@ const LoginForm = (props) => {
 
   return (
     <Container className="login-container d-flex justify-content-center align-items-center mt-3" style={{ minHeight: '100vh' }}>
-      <div className="w-100" style={{ maxWidth: '400px' }}>
-        <div className="logo-container text-center mb-5">
-          <Image src="logo.png" alt="로고" fluid />
-        </div>
+      <div className="w-100" style={{ 
+            maxWidth: '600px', // 폼의 최대 너비를 늘림
+            padding: '80px', // 내부 패딩을 늘려 폼 주변의 공간 확장
+            borderRadius: '15px',
+            // boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+            border: '2px solid #707070' // 테두리 색상을 약간 회색빛이 도는 색으로 변경
+        }}>
         <Form onSubmit={handleSubmit(onLogin)} className="login-form">
           <Form.Group className="mb-4" controlId="email">
             <Form.Label>이메일</Form.Label>
@@ -75,18 +78,18 @@ const LoginForm = (props) => {
             />
             {errors.password && <Alert variant="danger">{errors.password.message}</Alert>}
           </Form.Group>
-  
-          <Button variant="primary" type="submit" className="w-100 mb-3">로그인</Button>
-    
-          <Button variant="light" className="w-100 google-signin-btn mb-3" onClick={() => signInWithRedirect({
-                provider: "Google",
-            })}>
-            <Image src={googleLogo} alt="Google 로그인" />
-          </Button>
-    
-          <Button variant="btn btn-outline-primary" className="w-100" onClick={handleSignUp}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
+            <Button variant="primary" type="submit" style={{ flex: 1, marginRight: '10px' }}>로그인</Button>
+
+            <Button variant="light" style={{ flex: 1, padding: 0, border: 'none', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }} onClick={() => signInWithRedirect({ provider: "Google" })}>
+                <Image src={googleLogo} alt="Google 로그인" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+            </Button>
+          </div>
+
+            <Button variant="btn btn-outline-primary" className="w-100" style={{ color: '#FFFFFF', backgroundColor: '#2c3e50', marginTop: '15px' }} onClick={handleSignUp}>
             회원 가입
-          </Button>
+            </Button>
+
         </Form>
       </div>
     </Container>
