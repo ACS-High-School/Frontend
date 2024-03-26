@@ -33,6 +33,26 @@ const cookieStorage = new CookieStorage({
 cognitoUserPoolsTokenProvider.setKeyValueStorage(cookieStorage);
 //cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage);
 
+// 'accessToken' 과 'refreshToken' 을 세션 쿠키로 설정
+async function updateTokenToSessionInCookie() {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      const [cookieName, cookieValue] = cookie.split('=');
+  
+      // 쿠키 이름에 'accessToken'이 포함되어 있다면, 해당 쿠키를 새 액세스 토큰 값으로 업데이트합니다.
+      if (cookieName.includes('accessToken')) {
+        const updatedCookie = `${cookieName}=${cookieValue}; domain=${domain}; path=/; `; // max-age는 쿠키의 유효 시간을 설정합니다.
+        document.cookie = updatedCookie; // 쿠키 업데이트
+      }
+      else if (cookieName.includes('refreshToken')) {
+        const updatedCookie = `${cookieName}=${cookieValue}; domain=${domain}; path=/; `; // max-age는 쿠키의 유효 시간을 설정합니다.
+        document.cookie = updatedCookie; // 쿠키 업데이트
+      }
+    }
+  }
+
+
 
 // Verifier that expects valid access tokens:
 const verifier = CognitoJwtVerifier.create({
@@ -88,6 +108,8 @@ export const authService = {
   async login({ username, password }) {
     try {
       const { isSignedIn, nextStep } = await signIn({ username, password });
+
+      await updateTokenToSessionInCookie();
       console.log(`User signed in: ${isSignedIn}`);
       // Handle the sign-in result here. You can use `isSignedIn` and `nextStep` for further actions.
       return { isSignedIn, nextStep }; // Return the sign-in result
