@@ -48,9 +48,6 @@
 <br>
 <br>
 
-
-# Getting Started
-
 ## Prerequisites
 
 ### AWS Amplify Set up
@@ -93,6 +90,39 @@ export const COGNITO_API = {
 <br>
 <br>
 
-# Contribution
+## Trouble Shooting 
+<예시>
+### 웹 서비스 배포 과정에서의 5XX 에러
+- 문제 원인
+  - Replica 설정과 HPA 설정의 충돌 발생
+  - Rolling Update 배포에 대한 추가 설정 필요
+  
+- 해결 방안
+  - ReadinessGate 설정으로 ALB 에서 Pod 의 상태에 따른 트래픽 조정
+  - Readiness / Liveness Probe 를 통한 클러스터에서의 Pod 상태 확인
+  - PreStop 설정을 통한 Draining 상태에 대한 Pod 접근 제어
+
+
+  
+<br>
+<br>
+
+## Feature improvements
+<예시>
+### 웹 서비스 배포 과정에서의 5XX 에러
+- 문제 원인
+  - Replica 설정과 HPA 설정의 충돌 발생
+  - Rolling Update 배포에 대한 추가 설정 필요
+  
+- 해결 방안
+  - ReadinessGate 설정으로 ALB 에서 Pod 의 상태에 따른 트래픽 조정
+  - Readiness / Liveness Probe 를 통한 클러스터에서의 Pod 상태 확인
+  - PreStop 설정을 통한 Draining 상태에 대한 Pod 접근 제어
+
+<br>
+<br>
+
+
+## Contribution
 - 🫠 [김선우](https://github.com/sw801733)
 - 🫢 [홍준표](https://github.com/hjp1016)
