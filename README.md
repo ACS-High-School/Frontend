@@ -91,16 +91,25 @@ export const COGNITO_API = {
 <br>
 
 ## Trouble Shooting 
-<예시>
-### 웹 서비스 배포 과정에서의 5XX 에러
+### 사용자 인가를 위한 토큰 설정
 - 문제 원인
-  - Replica 설정과 HPA 설정의 충돌 발생
-  - Rolling Update 배포에 대한 추가 설정 필요
-  
+  - 인가 처리 방식에 대한 설계 구현
+  - 프론트 서버와 백엔드 서버 간의 CORS 에러
+  - 쿠키 설정 시 도메인 설정 에러 발생
+
 - 해결 방안
-  - ReadinessGate 설정으로 ALB 에서 Pod 의 상태에 따른 트래픽 조정
-  - Readiness / Liveness Probe 를 통한 클러스터에서의 Pod 상태 확인
-  - PreStop 설정을 통한 Draining 상태에 대한 Pod 접근 제어
+  - 클라이언트의 쿠키를 통한 토큰 저장과 백엔드 서버에서의 유효성 검증 처리
+  - Spring Security 의 CORS 설정 추가
+  - 서버에 맞는 도메인으로 쿠키 설정
+
+### React 이미지 배포 시 CSS 미적용
+- 문제 원인
+  - Nginx로 React 배포 시 CSS 파일 경로를 찾지 못함
+
+
+- 해결 방안
+  - nginx mime.types 내용 추가
+  - nginx conf 파일에 html 초기 경로를 지정
 
 
   
@@ -108,16 +117,22 @@ export const COGNITO_API = {
 <br>
 
 ## Feature improvements
-<예시>
-### 웹 서비스 배포 과정에서의 5XX 에러
-- 문제 원인
-  - Replica 설정과 HPA 설정의 충돌 발생
+### ML 모델 결과에 대한 시각 효과 부족
+- 개선 이유
+  - 시각 자료를 통한 모델 개선 여부와 서비스 진행 확인
   - Rolling Update 배포에 대한 추가 설정 필요
   
-- 해결 방안
-  - ReadinessGate 설정으로 ALB 에서 Pod 의 상태에 따른 트래픽 조정
-  - Readiness / Liveness Probe 를 통한 클러스터에서의 Pod 상태 확인
-  - PreStop 설정을 통한 Draining 상태에 대한 Pod 접근 제어
+- 개선 방안
+  - ML 모니터링 툴을 사용하여 모델 버전 별 관리 ex) mlflow, tensorboard
+  
+### FL 진행 방식과 유저 친화적 기능 추가
+- 개선 이유
+  - FL 페이지 내에서 그룹원들 간의 소통을 위한 방안이 부족
+  - 원활한 서비스 진행을 위한 유저 친화적인 기능 추가 필요 
+
+- 개선 방안
+  -  채팅, 사용자 지정 상태 표시 등을 통해 그룹원들 간의 소통을 기존 FL 페이지에서 진행하도록 기능 추가
+  -  서비스 진행을 위한 도움말과 같은 진행 방법을 도와주는 요소 추가 필요
 
 <br>
 <br>
