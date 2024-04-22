@@ -8,7 +8,7 @@
   - Federated Learining ( *FL* )
   - MyPage
 
-
+<br>
 ## Features
 ### Home
 - 웹사이트 소개 GIF 재생
@@ -45,7 +45,7 @@
 - [Bootstrap](https://getbootstrap.com/) 5.3.3
 - [AWS Amplify](https://aws.amazon.com/ko/amplify/) 6.0.16
 
-<br>
+
 <br>
 
 ## Prerequisites
@@ -88,7 +88,6 @@ export const COGNITO_API = {
 ```
 
 <br>
-<br>
 
 ## Trouble Shooting 
 ### 사용자 인가를 위한 토큰 설정
@@ -112,8 +111,7 @@ export const COGNITO_API = {
   - nginx conf 파일에 html 초기 경로를 지정
 
 
-  
-<br>
+
 <br>
 
 ## Feature improvements
@@ -134,7 +132,6 @@ export const COGNITO_API = {
   -  채팅, 사용자 지정 상태 표시 등을 통해 그룹원들 간의 소통을 기존 FL 페이지에서 진행하도록 기능 추가
   -  서비스 진행을 위한 도움말과 같은 진행 방법을 도와주는 요소 추가 필요
 
-<br>
 <br>
 
 
